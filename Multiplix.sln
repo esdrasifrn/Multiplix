@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - UI", "1 - UI", "{67A52A24-67B6-49D2-B007-F5A17FC0C51A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{790545AF-F4AC-49D8-94C2-18FF188ED460}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infrastructure", "3 - Infrastructure", "{85AE0339-017A-4B75-AD23-AD461E7B3EA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multiplix.Domain", "Multiplix.Domain\Multiplix.Domain.csproj", "{2C6E4198-658D-4A51-82DD-BDFE3FCBE384}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multiplix.Infrastructure", "Multiplix.Infrastructure\Multiplix.Infrastructure.csproj", "{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multiplix.UI", "Multiplix.UI\Multiplix.UI.csproj", "{0CA92506-1A68-438D-AE23-EB58B5485F42}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C6E4198-658D-4A51-82DD-BDFE3FCBE384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C6E4198-658D-4A51-82DD-BDFE3FCBE384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C6E4198-658D-4A51-82DD-BDFE3FCBE384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C6E4198-658D-4A51-82DD-BDFE3FCBE384}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA92506-1A68-438D-AE23-EB58B5485F42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA92506-1A68-438D-AE23-EB58B5485F42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA92506-1A68-438D-AE23-EB58B5485F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA92506-1A68-438D-AE23-EB58B5485F42}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C6E4198-658D-4A51-82DD-BDFE3FCBE384} = {790545AF-F4AC-49D8-94C2-18FF188ED460}
+		{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68} = {85AE0339-017A-4B75-AD23-AD461E7B3EA2}
+		{0CA92506-1A68-438D-AE23-EB58B5485F42} = {67A52A24-67B6-49D2-B007-F5A17FC0C51A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {715CE010-92C7-4400-82ED-4A11FE2CFC0C}
+	EndGlobalSection
+EndGlobal
