@@ -1,0 +1,110 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Multiplix.UI.Utils
+@model Multiplix.Domain.DTOs.UsuarioDTO
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">Listagem de patrocinadores</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Usuario/Index">Listagem de patrocinadores</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Cadastro de patrocinador
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<section id="horizontal-form-layouts">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="horz-layout-basic">Dados do patrocinador</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-content collpase show">
+                    <div class="card-body">
+                        <form method="post" id="form-patrocinador" class="form form-horizontal">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="ft-user"></i> Informações pessoais</h4>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Nome">Nome</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Nome" class="form-control" placeholder="Nome" name="Nome">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Celular">Celular</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Celular" class="form-control" placeholder="Last Name" name="Celular">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Email">E-mail</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Email" class="form-control" placeholder="E-mail" name="Email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Liberado">Liberado</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <select asp-for="Liberado" asp-items="@BooleanUtil.SimNaoSelect()" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-clipboard"></i> Autenticação</h4>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Login">Login</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Login" class="form-control" placeholder="Login" name="Login">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Senha">Senha</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="password" id="Senha" class="form-control" placeholder="Senha" name="Senha">
+                                    </div>
+                                </div>
+                            </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="la la-check-square-o"></i> Salvar
+                                    </button>
+                                    <button type="button" class="btn btn-warning mr-1">
+                                        <i class="ft-x"></i> Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

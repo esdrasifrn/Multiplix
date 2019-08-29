@@ -90,8 +90,8 @@ namespace Multiplix.Domain.Services
                 //associa o usuário ao patrocinador
                 patrocinador = new Patrocinador(
                     usuario: usuario,
-                    patrocinadorId: PatrocinadorRaiz // patrocinador raiz multiplix
-                    );
+                    patrocinadorId: PatrocinadorRaiz // patrocinador raiz multiplix                   
+                    ) ; 
 
                 patrocinador.Id = 0;
             }

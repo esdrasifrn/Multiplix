@@ -57,6 +57,8 @@ namespace Multiplix.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("IdCarteira");
+
                     b.Property<int?>("PatrocinadorId");
 
                     b.Property<int?>("UsuarioId");

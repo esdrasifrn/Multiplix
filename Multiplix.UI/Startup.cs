@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +20,7 @@ using Multiplix.Domain.Interfaces.Services;
 using Multiplix.Domain.Services;
 using Multiplix.Infrastructure.Data;
 using Multiplix.Infrastructure.RepositoryEF;
+using Multiplix.UI.Utils;
 using QuizCorp.Domain.Services;
 
 namespace Multiplix.UI
@@ -39,6 +45,7 @@ namespace Multiplix.UI
             #endregion
 
             #region Injeções de dependência
+            services.AddScoped<GlobalFilter>();
             services.AddScoped<IServiceUsuario, ServiceUsuario>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
@@ -53,6 +60,25 @@ namespace Multiplix.UI
 
             #endregion
 
+            #region CookieAuth
+            // configura autenticação por cookie
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Usuario/LogOn/";
+                });
+
+            //Diz que para acessar qualquer action precisa está autenticado
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            #endregion CookieAuth
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -60,6 +86,13 @@ namespace Multiplix.UI
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+
+            services.AddMvc().AddMvcOptions(options => {
+                options.Filters.AddService(typeof(GlobalFilter)); // Adiciona o middleware a todos os actions
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -67,6 +100,15 @@ namespace Multiplix.UI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Definindo a cultura padrão: pt-BR
+            var supportedCultures = new[] { new CultureInfo("pt-BR") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(culture: "pt-BR", uiCulture: "pt-BR"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -81,12 +123,14 @@ namespace Multiplix.UI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Dashboard}/{id?}");
             });
         }
     }

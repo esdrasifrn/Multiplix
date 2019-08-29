@@ -15,6 +15,7 @@ namespace Multiplix.Domain.Entities
         {
             Usuario = usuario;
             PatrocinadorId = patrocinadorId;
+            IdCarteira = $"{DateTime.Now.Year.ToString()}{PatrocinadorId:00000000}";
             _patrocinados = new List<Patrocinador>();
         }
 
@@ -24,6 +25,7 @@ namespace Multiplix.Domain.Entities
         }
 
         public int Id { get; set; }
+        public string IdCarteira { get; set; }
         public virtual Usuario Usuario { get; set; }
         public int? PatrocinadorId { get; set; }
         public virtual ICollection<Patrocinador> Patrocinados { get => _patrocinados; set { } }             
@@ -31,6 +33,11 @@ namespace Multiplix.Domain.Entities
         public void AddPatrocinado(Patrocinador patrocinador)
         {
             _patrocinados.Add(patrocinador);
+        }
+
+        public string GenerateCarteiraPatrocinador()
+        {
+            return $"{DateTime.Now.Year.ToString()}{PatrocinadorId:00000000}";
         }
     }
 }

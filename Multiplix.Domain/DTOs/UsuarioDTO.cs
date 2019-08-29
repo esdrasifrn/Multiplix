@@ -8,6 +8,7 @@ namespace Multiplix.Domain.DTOs
     public class UsuarioDTO
     {
         public int UsuarioId { get; set; }
+        public string IdCateira { get; set; }
         public int PatrocinadorId { get; set; }
         public string Nome { get; set; }
         public string Celular { get; set; }
