@@ -7,7 +7,7 @@
 
 @section breadcrumbs{
     <div class="content-header-left col-md-6 col-12 mb-2">
-        <h3 class="content-header-title mb-0">Listagem de patrocinadores</h3>
+        <h3 class="content-header-title mb-0">Listagem de associados</h3>
         <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
@@ -23,7 +23,7 @@
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
         <div class="btn-group">
-            <a id="btn_add_patrocinador" href="/Usuario/AdicionarPatrocinador" class="btn btn-round btn-info"><i class="icon-cog3"></i> Adicionar patrocinador</a>
+            <a id="btn_add_patrocinador" href="/Usuario/AdicionarAssociado" class="btn btn-round btn-info"><i class="icon-cog3"></i> Adicionar associado</a>
         </div>
     </div>
 }
@@ -45,8 +45,8 @@
                                         <th>Identificador</th>
                                         <th>Nome</th>
                                         <th>Celular</th>
-                                        <th>Email</th>
-                                        <th>Login</th>
+                                        <th>Email</th>                                        
+                                        <th>Patrocinador</th>
                                         <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
                                     </tr>
                                 </thead>
@@ -69,10 +69,10 @@
             var podeVisualizarPermissaoUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_usuario").ToString().ToLower();
             var botoes = [{ title: "Permissões", url: "/Permissao/PermissaoUsuario/?usuarioId=", permission: podeVisualizarPermissaoUsuario }];
             generateDataTable("#data-table-usuarios",
-                "Patrocinadores",
+                "Associado",
                 "/Usuario/ListaPatrocinadores",
                 podeAlterarUsuario,
-                "/Usuario/Editar/?usuarioId=",
+                "/Usuario/EditarAssociado/?associadoId=",
                 podeExcluirUsuario,
                 "/Usuario/Excluir/?usuarioId=", botoes);
         });

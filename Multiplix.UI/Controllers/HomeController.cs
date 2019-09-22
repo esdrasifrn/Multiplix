@@ -41,7 +41,7 @@ namespace Multiplix.UI.Controllers
             usuarioDTO.Liberado = true;
             usuarioDTO.SuperUser = 0;
 
-            var result = _servicePatrocinador.SalvarPatrocinadorSemConvite(usuarioDTO);
+            var result = _servicePatrocinador.SalvarAssociadoSemConvite(usuarioDTO);
             return View();
         }
 

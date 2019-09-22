@@ -10,9 +10,9 @@ namespace Multiplix.Domain.ValueObject
         public String Cidade { get; private set; }
         public String Estado { get; private set; }      
         public String CEP { get; private set; }
-        public String Numero { get; private set; }       
-      
-        private Endereco(){ }
+        public String Numero { get; private set; }
+
+        public Endereco(){ }
 
         public Endereco(string rua, string cidade, string estado, string cep, string numero)
         {

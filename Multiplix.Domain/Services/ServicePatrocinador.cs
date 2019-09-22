@@ -4,6 +4,7 @@ using Multiplix.Domain.Entities;
 using Multiplix.Domain.Interfaces.Repository;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.Domain.Validations;
+using Multiplix.Domain.ValueObject;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -16,49 +17,52 @@ namespace Multiplix.Domain.Services
         private const int PatrocinadorRaiz = 1;
         private readonly IPatrocinadorRepository _patrocinadorRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IBancoRepository _bancoRepository;
 
-        public ServicePatrocinador(IPatrocinadorRepository patrocinadorRepository, IUsuarioRepository usuarioRepository)
+        public ServicePatrocinador(IPatrocinadorRepository patrocinadorRepository, 
+            IUsuarioRepository usuarioRepository, IBancoRepository bancoRepository)
         {
             _patrocinadorRepository = patrocinadorRepository;
             _usuarioRepository = usuarioRepository;
+            _bancoRepository = bancoRepository;
         }
 
-        public Patrocinador Adicionar(Patrocinador entity)
+        public Associado Adicionar(Associado entity)
         {
             return _patrocinadorRepository.Adicionar(entity);
         }
 
-        public void Atualizar(Patrocinador entity)
+        public void Atualizar(Associado entity)
         {
             _patrocinadorRepository.Atualizar(entity);
         }
 
-        public IEnumerable<Patrocinador> Buscar(Expression<Func<Patrocinador, bool>> predicado)
+        public IEnumerable<Associado> Buscar(Expression<Func<Associado, bool>> predicado)
         {
             return _patrocinadorRepository.Buscar(predicado);
         }
 
-        public Patrocinador BuscarEntidade(Expression<Func<Patrocinador, bool>> predicado)
+        public Associado BuscarEntidade(Expression<Func<Associado, bool>> predicado)
         {
             return _patrocinadorRepository.BuscarEntidade(predicado);
         }
 
-        public Patrocinador ObterPorId(int id)
+        public Associado ObterPorId(int id)
         {
             return _patrocinadorRepository.ObterPorId(id);
         }
 
-        public IEnumerable<Patrocinador> ObterTodos()
+        public IEnumerable<Associado> ObterTodos()
         {
             return _patrocinadorRepository.ObterTodos();
         }
 
-        public IEnumerable<Patrocinador> ObterTodosPaginado(int skip, int take)
+        public IEnumerable<Associado> ObterTodosPaginado(int skip, int take)
         {
             return _patrocinadorRepository.ObterTodosPaginado(skip, take);
         }
 
-        public void Remover(Patrocinador entity)
+        public void Remover(Associado entity)
         {
             _patrocinadorRepository.Remover(entity);
         }
@@ -69,14 +73,15 @@ namespace Multiplix.Domain.Services
         /// </summary>
         /// <param name="usuarioDTO"></param>
         /// <returns></returns>
-        public ValidationResult SalvarPatrocinadorSemConvite(UsuarioDTO usuarioDTO)
+        public ValidationResult SalvarAssociadoSemConvite(UsuarioDTO usuarioDTO)
         {
             // usuário
             Usuario usuario;
-            Patrocinador patrocinador;
+            Associado associado;
+           
+            if (usuarioDTO.AssociadoId == 0)
+            { 
 
-            if (usuarioDTO.PatrocinadorId == 0)
-            {
                 //cria o usuário do patrocinador
                 usuario = new Usuario(
                     login: usuarioDTO.Login,
@@ -86,52 +91,98 @@ namespace Multiplix.Domain.Services
                     email: usuarioDTO.Email,
                     liberado: usuarioDTO.Liberado
                 );
+                               
 
-                //associa o usuário ao patrocinador
-                patrocinador = new Patrocinador(
+                //associa o associado ao patrocinador
+                associado = new Associado(
                     usuario: usuario,
-                    patrocinadorId: PatrocinadorRaiz // patrocinador raiz multiplix                   
+                    patrocinadorId: PatrocinadorRaiz, // patrocinador raiz multiplix
+                    rua: usuarioDTO.Rua,
+                    numero: usuarioDTO.Numero,
+                    cep: usuarioDTO.CEP,
+                    cidade: usuarioDTO.Cidade,
+                    bairro: usuarioDTO.Bairro,
+                    complemento: usuarioDTO.Complemento,
+                    estado: usuarioDTO.Estado,
+                    nascimento: usuarioDTO.Nascimento,
+                    sexo: usuarioDTO.Sexo,
+                    cpf: usuarioDTO.CPF,
+                    emailAlternativo: usuarioDTO.EmailAlternativo,
+                    banco: _bancoRepository.ObterPorId(usuarioDTO.BancoId),
+                    tipoConta: usuarioDTO.TipoConta,
+                    agengia: usuarioDTO.Agencia,
+                    conta: usuarioDTO.Conta
+
                     ) ; 
 
-                patrocinador.Id = 0;
+                associado.Id = 0;
             }
             else
             {
-                patrocinador = _patrocinadorRepository.ObterPorId(usuarioDTO.PatrocinadorId);
+                associado = _patrocinadorRepository.ObterPorId(usuarioDTO.AssociadoId);
 
-                patrocinador.Usuario.Login = usuarioDTO.Login;
-                patrocinador.Usuario.Senha = usuarioDTO.Senha;
-                patrocinador.Usuario.Nome = usuarioDTO.Nome;
-                patrocinador.Usuario.Celular = usuarioDTO.Celular;
-                patrocinador.Usuario.Email = usuarioDTO.Email;
-                patrocinador.Usuario.Liberado = usuarioDTO.Liberado;
+                associado.Usuario.Login = usuarioDTO.Login;
+                associado.Usuario.Senha = usuarioDTO.Senha;
+                associado.Usuario.Nome = usuarioDTO.Nome;
+                associado.Usuario.Celular = usuarioDTO.Celular;
+                associado.Usuario.Email = usuarioDTO.Email;
+                associado.Usuario.Liberado = usuarioDTO.Liberado;
+
+                associado.Rua = usuarioDTO.Rua;
+                associado.Numero = usuarioDTO.Numero;
+                associado.CEP = usuarioDTO.CEP;
+                associado.Cidade = usuarioDTO.Cidade;
+                associado.Bairro = usuarioDTO.Bairro;
+                associado.Complemento = usuarioDTO.Complemento;
+                associado.Estado = usuarioDTO.Estado;
+                associado.Nascimento = usuarioDTO.Nascimento;
+                associado.Sexo = usuarioDTO.Sexo;
+                associado.CPF = usuarioDTO.CPF;
+                associado.EmailAlternativo = usuarioDTO.EmailAlternativo;
+                associado.Banco = _bancoRepository.ObterPorId(usuarioDTO.BancoId);
+                associado.TipoConta = usuarioDTO.TipoConta;
+                associado.Agencia = usuarioDTO.Agencia;
+                associado.Conta = usuarioDTO.Conta;
             }
 
             // grupos do usuário do patrocinador
             if (usuarioDTO.PatrocinadorId > 0)
-                _usuarioRepository.DeleteUsuarioGrupos(patrocinador.Usuario.UsuarioId);
+                _usuarioRepository.DeleteUsuarioGrupos(associado.Usuario.UsuarioId);
 
             if (usuarioDTO.Grupos.Count > 0)
             {
                 foreach (var grupoDTO in usuarioDTO.Grupos)
                 {
                     UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
-                    usuarioGrupo.UsuarioId = patrocinador.Usuario.UsuarioId;
+                    usuarioGrupo.UsuarioId = associado.Usuario.UsuarioId;
                     usuarioGrupo.GrupoId = grupoDTO.GrupoId;
 
                     // adiciona o grupo ao usuário via patrocinador
-                    patrocinador.Usuario.AddUsuarioGrupo(usuarioGrupo);
+                    associado.Usuario.AddUsuarioGrupo(usuarioGrupo);
                 }
             }
 
-            ValidationResult result = new UsuarioValidator().Validate(patrocinador.Usuario);
+            ValidationResult result = new UsuarioValidator().Validate(associado.Usuario);
+
+            if (associado.Banco == null)
+            {
+                result.Errors.Add(new ValidationFailure("Banco", "Campo obrigatório."));
+            }
 
             if (result.IsValid)
             {
-                if (patrocinador.Id == 0)
-                    _patrocinadorRepository.Adicionar(patrocinador);
+                if (associado.Id == 0)
+                {
+                    _patrocinadorRepository.Adicionar(associado);
+                    associado.IdCarteira = associado.GenerateCarteiraPatrocinador();
+                    _patrocinadorRepository.Atualizar(associado);
+                }
+
                 else
-                    _patrocinadorRepository.Atualizar(patrocinador);
+                {
+                    _patrocinadorRepository.Atualizar(associado);
+                }
+                   
             }
             else
             {

@@ -10,8 +10,8 @@ using Multiplix.Infrastructure.Data;
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    [Migration("20190824185636_posicao")]
-    partial class posicao
+    [Migration("20190921205801_tamanhoCampoUsuario")]
+    partial class tamanhoCampoUsuario
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,80 @@ namespace Multiplix.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Multiplix.Domain.Entities.Associado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Agencia");
+
+                    b.Property<int?>("BancoId");
+
+                    b.Property<string>("CEP")
+                        .HasColumnName("CEP")
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("CPF")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Cidade")
+                        .HasColumnName("Cidade")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("EmailAlternativo");
+
+                    b.Property<string>("Estado")
+                        .HasColumnName("Estado")
+                        .HasColumnType("varchar(2)");
+
+                    b.Property<string>("IdCarteira");
+
+                    b.Property<DateTime>("Nascimento");
+
+                    b.Property<string>("Numero")
+                        .HasColumnName("Numero")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int?>("PatrocinadorId");
+
+                    b.Property<string>("Rua")
+                        .HasColumnName("Rua")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Sexo")
+                        .HasColumnType("varchar(1)");
+
+                    b.Property<int>("TipoConta");
+
+                    b.Property<int?>("UsuarioId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BancoId");
+
+                    b.HasIndex("PatrocinadorId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Associado");
+                });
+
+            modelBuilder.Entity("Multiplix.Domain.Entities.Banco", b =>
+                {
+                    b.Property<int>("BancoId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Codigo");
+
+                    b.Property<string>("Nome");
+
+                    b.HasKey("BancoId");
+
+                    b.ToTable("Banco");
+                });
 
             modelBuilder.Entity("Multiplix.Domain.Entities.Grupo", b =>
                 {
@@ -36,23 +110,21 @@ namespace Multiplix.Infrastructure.Migrations
                     b.ToTable("Grupo");
                 });
 
-            modelBuilder.Entity("Multiplix.Domain.Entities.Patrocinador", b =>
+            modelBuilder.Entity("Multiplix.Domain.Entities.Parceiro", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ParceiroId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("PatrocinadorId");
+                    b.Property<string>("HorarioFuncionamento");
 
                     b.Property<int?>("UsuarioId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatrocinadorId");
+                    b.HasKey("ParceiroId");
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Patrocinador");
+                    b.ToTable("Parceiro");
                 });
 
             modelBuilder.Entity("Multiplix.Domain.Entities.Permissao", b =>
@@ -115,10 +187,10 @@ namespace Multiplix.Infrastructure.Migrations
                     b.Property<bool>("Liberado");
 
                     b.Property<string>("Login")
-                        .HasColumnType("varchar(15)");
+                        .HasColumnType("varchar(55)");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Senha")
                         .HasColumnType("varchar(50)");
@@ -160,15 +232,62 @@ namespace Multiplix.Infrastructure.Migrations
                     b.ToTable("UsuarioGrupo");
                 });
 
-            modelBuilder.Entity("Multiplix.Domain.Entities.Patrocinador", b =>
+            modelBuilder.Entity("Multiplix.Domain.Entities.Associado", b =>
                 {
-                    b.HasOne("Multiplix.Domain.Entities.Patrocinador")
+                    b.HasOne("Multiplix.Domain.Entities.Banco", "Banco")
+                        .WithMany()
+                        .HasForeignKey("BancoId");
+
+                    b.HasOne("Multiplix.Domain.Entities.Associado")
                         .WithMany("Patrocinados")
                         .HasForeignKey("PatrocinadorId");
 
                     b.HasOne("Multiplix.Domain.Entities.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId");
+                });
+
+            modelBuilder.Entity("Multiplix.Domain.Entities.Parceiro", b =>
+                {
+                    b.HasOne("Multiplix.Domain.Entities.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
+
+                    b.OwnsOne("Multiplix.Domain.ValueObject.Endereco", "Endereco", b1 =>
+                        {
+                            b1.Property<int>("ParceiroId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("CEP")
+                                .HasColumnName("CEP")
+                                .HasColumnType("varchar(15)");
+
+                            b1.Property<string>("Cidade")
+                                .HasColumnName("Cidade")
+                                .HasColumnType("varchar(200)");
+
+                            b1.Property<string>("Estado")
+                                .HasColumnName("Estado")
+                                .HasColumnType("varchar(2)");
+
+                            b1.Property<string>("Numero")
+                                .HasColumnName("Numero")
+                                .HasColumnType("varchar(10)");
+
+                            b1.Property<string>("Rua")
+                                .HasColumnName("Rua")
+                                .HasColumnType("varchar(200)");
+
+                            b1.HasKey("ParceiroId");
+
+                            b1.ToTable("Parceiro");
+
+                            b1.HasOne("Multiplix.Domain.Entities.Parceiro")
+                                .WithOne("Endereco")
+                                .HasForeignKey("Multiplix.Domain.ValueObject.Endereco", "ParceiroId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 
             modelBuilder.Entity("Multiplix.Domain.Entities.PermissaoGrupo", b =>

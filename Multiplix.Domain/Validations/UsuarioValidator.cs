@@ -21,6 +21,10 @@ namespace Multiplix.Domain.Validations
             RuleFor(usuario => usuario.Senha)
                 .NotEmpty()
                 .WithMessage("A Senha é obrigatória.");
+
+            RuleFor(usuario => usuario.Email)
+               .NotEmpty()
+               .WithMessage("O email é obrigatório.");           
         }
     }
 }

@@ -58,6 +58,9 @@ namespace Multiplix.UI
             services.AddScoped<IServicePatrocinador, ServicePatrocinador>();
             services.AddScoped<IPatrocinadorRepository, PatrocinadorRepository>();
 
+            services.AddScoped<IServiceBanco, ServiceBanco>();
+            services.AddScoped<IBancoRepository, BancoRepository>();
+
             #endregion
 
             #region CookieAuth

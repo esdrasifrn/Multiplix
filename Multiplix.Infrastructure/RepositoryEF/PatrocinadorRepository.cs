@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Multiplix.Infrastructure.RepositoryEF
 {
-    public class PatrocinadorRepository : EFRepository<Patrocinador>, IPatrocinadorRepository
+    public class PatrocinadorRepository : EFRepository<Associado>, IPatrocinadorRepository
     {
         public PatrocinadorRepository(MultiplixContext multiplixContext, IConfiguration configuration) : base(multiplixContext, configuration)
         {

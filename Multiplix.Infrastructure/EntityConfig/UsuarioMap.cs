@@ -15,7 +15,7 @@ namespace Multiplix.Infrastructure.EntityConfig
 
             builder
                 .Property(u => u.Login)
-                .HasColumnType("varchar(15)");
+                .HasColumnType("varchar(55)");
 
             builder
                 .Property(u => u.Senha)
@@ -23,7 +23,7 @@ namespace Multiplix.Infrastructure.EntityConfig
 
             builder
                 .Property(u => u.Nome)
-                .HasColumnType("varchar(50)");
+                .HasColumnType("varchar(100)");
 
             builder
                 .Property(u => u.Celular)

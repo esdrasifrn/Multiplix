@@ -4,56 +4,45 @@ using Multiplix.Domain.Entities;
 
 namespace Multiplix.Infrastructure.EntityConfig
 {
-    public class AssociadoMap : IEntityTypeConfiguration<Associado>
+    public class ParceiroMap : IEntityTypeConfiguration<Parceiro>
     {
-        public void Configure(EntityTypeBuilder<Associado> builder)
+        public void Configure(EntityTypeBuilder<Parceiro> builder)
         {
-            builder.HasKey(pa => pa.Id);
+            builder.HasKey(a => a.ParceiroId);
             builder
-               .Property(pa => pa.Id)
+               .Property(a => a.ParceiroId)
                .UseSqlServerIdentityColumn();
 
             builder
                .HasOne(pa => pa.Usuario);
 
             builder
-               .HasOne(pa => pa.Banco);
-
-            builder.HasMany(pa => pa.Patrocinados)
-                .WithOne()//opcional ou anulável
-                .HasForeignKey(pa => pa.PatrocinadorId);                
+                .OwnsOne(a => a.Endereco);
 
             builder
-                .Property(pa => pa.PatrocinadorId)
-                .IsRequired(false);
-            
-            builder                
+                .OwnsOne(a => a.Endereco)
                 .Property(a => a.Rua).HasColumnName("Rua")
                 .HasColumnType("varchar(200)");
 
-            builder               
+            builder
+                .OwnsOne(a => a.Endereco)
                 .Property(a => a.Cidade).HasColumnName("Cidade")
                 .HasColumnType("varchar(200)");
 
-            builder                
+            builder
+                .OwnsOne(a => a.Endereco)
                 .Property(a => a.Estado).HasColumnName("Estado")
                 .HasColumnType("varchar(2)"); ;
 
-            builder               
+            builder
+                .OwnsOne(a => a.Endereco)
                 .Property(a => a.CEP).HasColumnName("CEP")
                 .HasColumnType("varchar(15)");
 
-            builder              
+            builder
+                .OwnsOne(a => a.Endereco)
                 .Property(a => a.Numero).HasColumnName("Numero")
                 .HasColumnType("varchar(10)");
-
-            builder
-               .Property(u => u.Sexo)
-               .HasColumnType("varchar(1)");
-
-            builder
-              .Property(u => u.CPF)
-              .HasColumnType("varchar(25)");
         }
            
     }

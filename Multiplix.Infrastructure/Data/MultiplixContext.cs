@@ -22,8 +22,8 @@ namespace Multiplix.Infrastructure.Data
         public DbSet<PermissaoUsuario> PermissaoUsuarios { get; set; }     
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<UsuarioGrupo> UsuarioGrupos { get; set; }
-        public DbSet<UsuarioGrupo> Patrocinadores { get; set; }
-        public DbSet<UsuarioGrupo> Associados { get; set; }
+        public DbSet<Associado> Patrocinadores { get; set; }
+        public DbSet<Parceiro> Parceiros { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,8 +38,8 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.Entity<PermissaoUsuario>().ToTable("PermissaoUsuario");          
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
             modelBuilder.Entity<UsuarioGrupo>().ToTable("UsuarioGrupo");
-            modelBuilder.Entity<Patrocinador>().ToTable("Patrocinador");
             modelBuilder.Entity<Associado>().ToTable("Associado");
+            modelBuilder.Entity<Parceiro>().ToTable("Parceiro");
 
             modelBuilder.ApplyConfiguration(new GrupoMap());          
             modelBuilder.ApplyConfiguration(new PermissaoMap());           
@@ -47,8 +47,8 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new PermissaoGrupoMap());
             modelBuilder.ApplyConfiguration(new UsuarioMap());
             modelBuilder.ApplyConfiguration(new UsuarioGrupoMap());
-            modelBuilder.ApplyConfiguration(new PatrocinadorMap());
             modelBuilder.ApplyConfiguration(new AssociadoMap());
+            modelBuilder.ApplyConfiguration(new ParceiroMap());
         }
     }
 }

@@ -86,23 +86,64 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult AdicionarPatrocinador()
+        public IActionResult AdicionarAssociado()
         {
-            ViewData["Title"] = "Novo Patrocinador";
+            ViewData["Title"] = "Novo Associado";
             UsuarioDTO usuarioDTO = new UsuarioDTO();
             return View("AdicionarEditarPatrocinador", usuarioDTO);
         }
 
         [HttpPost]
-        public IActionResult AdicionarPatrocinador(UsuarioDTO usuarioDTO)
+        public IActionResult AdicionarAssociado(UsuarioDTO usuarioDTO)
         {
-            ViewData["Title"] = "Novo Patrocinador";
-            return SalvarPatrocinador(usuarioDTO, "Patrocinador adicionado com sucesso!");
+            ViewData["Title"] = "Novo Associado";
+            return SalvarAssociado(usuarioDTO, "Associado adicionado com sucesso!");
         }
 
-        private IActionResult SalvarPatrocinador(UsuarioDTO usuarioDTO, string mensagemRetorno)
+        [HttpGet]
+        public IActionResult EditarAssociado(int associadoId)
         {
-            var result = _servicePatrocinador.SalvarPatrocinadorSemConvite(usuarioDTO);
+            ViewData["Title"] = "Editar Associado";
+            Associado associado = _servicePatrocinador.ObterPorId(associadoId);
+            UsuarioDTO usuarioDTO = new UsuarioDTO()
+            {
+                Nome = associado.Usuario.Nome,
+                Nascimento = associado.Nascimento,
+                Sexo = associado.Sexo,
+                CPF = associado.CPF,
+                Liberado = associado.Usuario.Liberado,
+                Rua = associado.Rua,
+                Numero = associado.Numero,
+                CEP = associado.CEP,
+                Cidade = associado.Cidade,
+                Bairro = associado.Bairro,
+                Complemento = associado.Complemento,
+                Estado = associado.Estado,
+                Email = associado.Usuario.Email,
+                EmailAlternativo = associado.EmailAlternativo,
+                Celular = associado.Usuario.Celular,
+                BancoNome = associado.Banco.Nome,
+                BancoId = associado.Banco.BancoId,
+                TipoConta = associado.TipoConta,
+                Agencia = associado.Agencia,
+                Conta = associado.Conta,
+                Login = associado.Usuario.Login
+
+            };
+
+            return View("AdicionarEditarPatrocinador", usuarioDTO);
+        }
+
+        [HttpPost]
+        public IActionResult EditarAssociado(UsuarioDTO usuarioDTO)
+        {
+            ViewData["Title"] = "Editar associado";
+            return SalvarAssociado(usuarioDTO, "Associado alterado com sucesso!");
+        }
+
+        private IActionResult SalvarAssociado(UsuarioDTO usuarioDTO, string mensagemRetorno)
+        {
+            var result = _servicePatrocinador.SalvarAssociadoSemConvite(usuarioDTO);
 
             if (result.IsValid)
             {
@@ -125,7 +166,7 @@ namespace Multiplix.UI.Controllers
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
             string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
 
-            IEnumerable<Patrocinador> patrocinadores = new List<Patrocinador>();
+            IEnumerable<Associado> patrocinadores = new List<Associado>();
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
@@ -142,7 +183,7 @@ namespace Multiplix.UI.Controllers
 
             if (firstOrderColumnIdx.Length > 0)
             {
-                Func<Patrocinador, Object> orderByExpr = null;
+                Func<Associado, Object> orderByExpr = null;
 
                 switch (firstOrderColumnIdx)
                 {
@@ -189,12 +230,13 @@ namespace Multiplix.UI.Controllers
             foreach (var patrocinador in patrocinadores)
             {               
                 List<object> result_item = new List<object> {
-                    patrocinador.Usuario.UsuarioId,
+                    patrocinador.Id,
                     patrocinador.IdCarteira,
                     patrocinador.Usuario.Nome,
                     patrocinador.Usuario.Celular,
                     patrocinador.Usuario.Email,
-                    patrocinador.Usuario.Login                   
+                   
+                    _servicePatrocinador.ObterPorId(id: patrocinador.PatrocinadorId.Value).Usuario.Nome ?? "-"
                 };
                 result_data.Add(result_item);
             }

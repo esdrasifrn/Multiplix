@@ -1,0 +1,61 @@
+﻿@{
+    Layout = null;
+}
+<script>
+    @if (Model.ValidationErrors.Count > 0)
+    {
+        <text>formWithErrors();</text>
+    }
+    @foreach(var error in Model.ValidationErrors)
+    {
+        <text>formSetError('@error.PropertyName', '@error.ErrorMessage');</text>
+    }
+    function formWithErrors() {
+        $(document).ready(function () {
+            $("#form-errors").show();
+        });
+    }
+    function formSetError(element_name, error_message) {
+        $(document).ready(function () {
+            if (element_name !== "") {
+                var element = null;
+                var element_p1 = $("[name=" + element_name + "]");
+                var element_p2 = $("[name=" + element_name.toLowerCase() + "]");
+                var element_p3 = $("[name=" + element_name.toUpperCase() + "]");
+                var element_p4 = $("[name=" + element_name.charAt(0).toUpperCase() + element_name.slice(1) + "]");
+                if ($(element_p1).length > 0)
+                    element = element_p1;
+                else if ($(element_p2).length > 0)
+                    element = element_p2;
+                else if ($(element_p3).length > 0)
+                    element = element_p3;
+                else if ($(element_p4).length > 0)
+                    element = element_p4;
+                if (element !== null && element !== "") {
+                    console.log(element, 111111);
+                    $(element).addClass("error").css("border-color", "red");
+                    $(element).attr("data-error", "." + element_name + "-error");
+                    $(element).attr("aria-describedby", element_name + "-error");
+                    $(element).attr("aria-invalid", "true");
+                    $(element).after('<div class="' +
+                        element_name +
+                        "-error" +
+                        '"><div id="' +
+                        element_name +
+                        '-error" class="error" for="' +
+                        element_name +
+                        '">' +
+                        error_message +
+                        '</div></div>');
+                } else {
+                    $("#form-errors").find(".list-errors-gerais").append('<li class="error list-group-item list-group-item-danger">' + error_message + '</li>');
+                    console.log(element, 222222);
+                }
+            } else {
+                $("#form-errors").find(".list-errors-gerais").append('<li class="error list-group-item list-group-item-danger">' + error_message + '</li>');
+                console.log(element, 3333333);
+            }
+        });
+    }
+    // fim parte 2: form validation server side com Fluent
+</script>

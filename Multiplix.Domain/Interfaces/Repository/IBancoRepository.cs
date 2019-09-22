@@ -5,8 +5,7 @@ using System.Text;
 
 namespace Multiplix.Domain.Interfaces.Repository
 {
-    public interface IPatrocinadorRepository : IRepositoryBase<Associado>
-    {
-      
+    public interface IBancoRepository : IRepositoryBase<Banco>
+    {       
     }
 }

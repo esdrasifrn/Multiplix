@@ -4,11 +4,12 @@
 }
 
 @using Multiplix.UI.Utils
+@using Multiplix.Domain.Enums
 @model Multiplix.Domain.DTOs.UsuarioDTO
 
 @section breadcrumbs{
     <div class="content-header-left col-md-6 col-12 mb-2">
-        <h3 class="content-header-title mb-0">Listagem de patrocinadores</h3>
+        <h3 class="content-header-title mb-0">@ViewData["Title"]</h3>
         <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
@@ -16,10 +17,10 @@
                         <a href="/Home/Dashboard">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="/Usuario/Index">Listagem de patrocinadores</a>
+                        <a href="/Usuario/Index">Listagem de associados</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        Cadastro de patrocinador
+                        Cadastro de associado
                     </li>
                 </ol>
             </div>
@@ -27,12 +28,14 @@
     </div>
 }
 
+<partial name="_componente_form_validation_fluent_messages_container" />
+
 <section id="horizontal-form-layouts">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title" id="horz-layout-basic">Dados do patrocinador</h4>
+                    <h4 class="card-title" id="horz-layout-basic">Dados do associado</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -47,24 +50,30 @@
                     <div class="card-body">
                         <form method="post" id="form-patrocinador" class="form form-horizontal">
                             <div class="form-body">
-                                <h4 class="form-section"><i class="ft-user"></i> Informações pessoais</h4>
+                                <h4 class="form-section"><i class="ft-user"></i> Dados pessoais</h4>
                                 <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Nome">Nome</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <input type="text" id="Nome" class="form-control" placeholder="Nome" name="Nome">
+                                    <label class="col-md-3 label-control" for="Nome">Nome completo*</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="Nome" asp-for="Nome" class="form-control"  placeholder="Nome" name="Nome">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Celular">Celular</label>
+                                    <label class="col-md-3 label-control" for="Celular">Nascimento</label>
+                                    <div class="col-md-9 mx-auto">                                        
+                                        <input type="date" id="Nascimento" asp-for="Nascimento" class="form-control" placeholder="Nascimento" name="Nascimento">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="sexo">Sexo</label>
                                     <div class="col-md-9 mx-auto">
-                                        <input type="text" id="Celular" class="form-control" placeholder="Last Name" name="Celular">
+                                        <select asp-for="Sexo" asp-items="@BooleanUtil.SexoSelect()" class="form-control"></select>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Email">E-mail</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <input type="text" id="Email" class="form-control" placeholder="E-mail" name="Email">
+                                    <label class="col-md-3 label-control" for="CPF">CPF</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="CPF" asp-for="CPF" class="form-control cpf-formatter" placeholder="CPF" name="CPF">
                                     </div>
                                 </div>
 
@@ -75,32 +84,137 @@
                                     </div>
                                 </div>
 
-                                <h4 class="form-section"><i class="ft-clipboard"></i> Autenticação</h4>
-
+                                <h4 class="form-section"><i class="ft-navigation"></i> Endereço</h4>
                                 <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Login">Login</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <input type="text" id="Login" class="form-control" placeholder="Login" name="Login">
+                                    <label class="col-md-3 label-control" for="Nome">Rua</label>
+                                    <div class="col-md-9 mx-auto">                                 
+                                        <input type="text" id="Rua" asp-for="Rua" class="form-control" placeholder="Rua" name="Rua">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Numero">Número</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="Numero" asp-for="Numero" class="form-control" placeholder="Numero" name="Numero">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="CEP">CEP</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="CEP" asp-for="CEP" class="form-control cep-formatter" placeholder="CEP" name="CEP">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Complemento">Complemento</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="Complemento" asp-for="Complemento" class="form-control" placeholder="Complemento" name="Complemento">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Bairro">Bairro</label>
+                                    <div class="col-md-9 mx-auto">                                   
+                                        <input type="text" id="Bairro" asp-for="Bairro" class="form-control" placeholder="Bairro" name="Bairro">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Cidade">Cidade</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="Cidade" asp-for="Cidade" class="form-control" placeholder="Cidade" name="Cidade">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Senha">Senha</label>
+                                    <label class="col-md-3 label-control" for="Estado">Estado</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <select asp-for="Estado" name="Estado" asp-items="@BooleanUtil.UFSelect()" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-edit-3"></i> informações para contato</h4>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Email">E-mail*</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="Email" asp-for="Email" class="form-control" placeholder="Email" name="Email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="EmailAlternativo">E-mail alternativo</label>
+                                    <div class="col-md-9 mx-auto">                                     
+                                        <input type="text" id="EmailAlternativo" asp-for="EmailAlternativo" class="form-control" placeholder="EmailAlternativo" name="EmailAlternativo">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Celular">Celular</label>
+                                    <div class="col-md-9 mx-auto">                                      
+                                        <input type="text" id="Celular" autocomplete="off" asp-for="Celular" class="form-control phone-formatter" placeholder="Celular" name="Celular">
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-check-square"></i> Informações para recebimento</h4>                               
+                                <div class="form-group row">
+                                     <label class="col-md-3 label-control" for="Banco">Banco</label>
+                                        <div class="col-md-9 mx-auto">
+                                        <select id="Banco"
+                                                name="Banco"
+                                                class="has-select2"
+                                                data-select2-url="/Banco/PesquisaBanco"
+                                                data-js-callback-init-data="iniciar_Banco"
+                                                data-mapper-attr-id="BancoId"
+                                                data-mapper-attr-text="BancoNome">
+                                            <!-- Select2 -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="TipoConta">Tipo de Conta</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <select class="form-control" id="TipoConta" name="TipoConta">
+                                            @foreach (var tipoConta in ETipoContaChoices.Choices)
+                                            {
+                                                <option value="@tipoConta.ValueInt">@tipoConta.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Agencia">Agência</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="Agencia" asp-for="Agencia" class="form-control" placeholder="Agencia" name="Agencia">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Conta">Conta</label>
+                                    <div class="col-md-9 mx-auto">                                        
+                                        <input type="text" id="Conta" asp-for="Conta" class="form-control" placeholder="Conta" name="Conta">
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-clipboard"></i> Autenticação</h4>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Login">Login*</label>
+                                    <div class="col-md-9 mx-auto">                                       
+                                        <input type="text" id="Login" asp-for="Login" autocomplete="off" class="form-control" placeholder="Login" name="Login">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Senha">Senha*</label>
                                     <div class="col-md-9 mx-auto">
                                         <input type="password" id="Senha" class="form-control" placeholder="Senha" name="Senha">
                                     </div>
                                 </div>
                             </div>
 
-                                <div class="form-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="la la-check-square-o"></i> Salvar
-                                    </button>
-                                    <button type="button" class="btn btn-warning mr-1">
-                                        <i class="ft-x"></i> Cancelar
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="la la-check-square-o"></i> Salvar
+                                </button>
+                                <a href="/Usuario/Index" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>                               
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -108,3 +222,32 @@
     </div>
 </section>
 
+
+@section Scripts
+{
+ <partial name="_componente_form_validation_fluent_messages_script" />
+
+<script>   
+    function iniciar_Banco() {
+        var objs = [];
+        objs.push({ id: "@Model.BancoId", text: "@Model.BancoNome" });
+        return objs;
+    }
+
+    //Cel mask
+	$('.phone-formatter').formatter({
+		'pattern': "({{99}}) {{99999}}-{{9999}}"
+    });
+
+    //Cel mask
+	$('.cpf-formatter').formatter({
+		'pattern': "{{999}}.{{999}}.{{999}}-{{99}}"
+    });
+
+     //Cel mask
+	$('.cep-formatter').formatter({
+		'pattern': "{{99}}.{{999}}-{{999}}"
+	});
+</script>
+
+}

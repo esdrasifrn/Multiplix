@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Multiplix.Domain.Enums;
 
 namespace Multiplix.UI.Utils
 {
@@ -15,9 +16,34 @@ namespace Multiplix.UI.Utils
                 _(false, "Não"),
             };
         }
+
+        public static List<SelectListItem> SexoSelect()
+        {
+            return new List<SelectListItem>()
+            {
+                _("M", "M"),
+                _("F", "F"),
+            };
+        }
+
+        public static List<SelectListItem> UFSelect()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach (var estado in EUnidadeFederativa.All())
+            {
+                items.Add(_(estado.Key, estado.Value));
+            }
+            return items;
+        }
+
         private static SelectListItem _(bool valor, string titulo)
         {
             return new SelectListItem() {Text = titulo, Value = valor.ToString()};
+        }
+
+        private static SelectListItem _(string valor, string titulo)
+        {
+            return new SelectListItem() { Text = titulo, Value = valor.ToString() };
         }
 
         public static string AplicarFormatacao(bool result)

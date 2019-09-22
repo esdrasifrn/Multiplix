@@ -5,10 +5,10 @@ using Multiplix.Domain.Entities;
 
 namespace Multiplix.Domain.Interfaces.Services
 {
-    public interface IServicePatrocinador : IServiceBase<Patrocinador>
+    public interface IServicePatrocinador : IServiceBase<Associado>
     {
        
-        ValidationResult SalvarPatrocinadorSemConvite(UsuarioDTO usuarioDTO);       
+        ValidationResult SalvarAssociadoSemConvite(UsuarioDTO usuarioDTO);       
     
     }
 }

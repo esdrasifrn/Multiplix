@@ -10,14 +10,40 @@ namespace Multiplix.Domain.DTOs
         public int UsuarioId { get; set; }
         public string IdCateira { get; set; }
         public int PatrocinadorId { get; set; }
+        public int AssociadoId { get; set; }
         public string Nome { get; set; }
         public string Celular { get; set; }
         public string Email { get; set; }
+
+        public string Sexo { get; set; }
+
+        public string UF { get; set; }
 
         public string Login { get; set; }
         public string Senha { get; set; }
 
         public bool Liberado { get; set; }
+
+        public String Rua { get;  set; }
+        public String Cidade { get;  set; }
+        public String Estado { get;  set; }
+        public String CEP { get;  set; }
+        public String Numero { get;  set; }
+
+        public int BancoId { get; set; }
+        public string BancoNome { get; set; }
+        public int TipoConta { get; set; }
+
+        public DateTime Nascimento { get; set; }
+        public string CPF { get; set; }
+        public string Complemento { get; set; }
+        public string Bairro { get; set; }
+        public string EmailAlternativo { get; set; }
+
+        public string Agencia { get; set; }
+        public string Conta { get; set; }
+
+
 
         public IList<GrupoDTO> Grupos { get; set; } = new List<GrupoDTO>();
 
