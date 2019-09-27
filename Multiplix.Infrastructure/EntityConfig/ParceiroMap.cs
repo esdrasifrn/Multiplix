@@ -14,35 +14,31 @@ namespace Multiplix.Infrastructure.EntityConfig
                .UseSqlServerIdentityColumn();
 
             builder
-               .HasOne(pa => pa.Usuario);
+               .HasOne(pa => pa.Usuario);         
 
-            builder
-                .OwnsOne(a => a.Endereco);
-
-            builder
-                .OwnsOne(a => a.Endereco)
+            builder               
                 .Property(a => a.Rua).HasColumnName("Rua")
                 .HasColumnType("varchar(200)");
 
-            builder
-                .OwnsOne(a => a.Endereco)
+            builder               
                 .Property(a => a.Cidade).HasColumnName("Cidade")
                 .HasColumnType("varchar(200)");
 
-            builder
-                .OwnsOne(a => a.Endereco)
+            builder                
                 .Property(a => a.Estado).HasColumnName("Estado")
                 .HasColumnType("varchar(2)"); ;
 
-            builder
-                .OwnsOne(a => a.Endereco)
+            builder               
                 .Property(a => a.CEP).HasColumnName("CEP")
                 .HasColumnType("varchar(15)");
 
-            builder
-                .OwnsOne(a => a.Endereco)
+            builder                
                 .Property(a => a.Numero).HasColumnName("Numero")
                 .HasColumnType("varchar(10)");
+
+            builder
+                .Property(a => a.HorarioFuncionamento).HasColumnName("HorarioFuncionamento")
+                .HasColumnType("varchar(75)");
         }
            
     }

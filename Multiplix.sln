@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infrastructure", "3 - Infrastructure", "{85AE0339-017A-4B75-AD23-AD461E7B3EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multiplix.Domain", "Multiplix.Domain\Multiplix.Domain.csproj", "{2C6E4198-658D-4A51-82DD-BDFE3FCBE384}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiplix.Domain", "Multiplix.Domain\Multiplix.Domain.csproj", "{2C6E4198-658D-4A51-82DD-BDFE3FCBE384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multiplix.Infrastructure", "Multiplix.Infrastructure\Multiplix.Infrastructure.csproj", "{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiplix.Infrastructure", "Multiplix.Infrastructure\Multiplix.Infrastructure.csproj", "{F51B7DC5-0D50-47AB-9C98-6CA9C5684B68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multiplix.UI", "Multiplix.UI\Multiplix.UI.csproj", "{0CA92506-1A68-438D-AE23-EB58B5485F42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiplix.UI", "Multiplix.UI\Multiplix.UI.csproj", "{0CA92506-1A68-438D-AE23-EB58B5485F42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

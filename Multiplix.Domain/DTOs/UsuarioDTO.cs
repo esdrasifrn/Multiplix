@@ -43,7 +43,13 @@ namespace Multiplix.Domain.DTOs
         public string Agencia { get; set; }
         public string Conta { get; set; }
 
-
+        //Parceiro
+        public string HorarioFuncionamento { get; set; }
+        public string Ramo { get; set; }
+        public int PontoPorReal { get; set; }
+        public int ParceiroId { get; set; }
+        public string CNPJ { get; set; }
+        
 
         public IList<GrupoDTO> Grupos { get; set; } = new List<GrupoDTO>();
 
