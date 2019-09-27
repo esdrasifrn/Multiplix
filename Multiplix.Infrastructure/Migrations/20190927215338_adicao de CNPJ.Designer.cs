@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Multiplix.Infrastructure.Data;
 
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    partial class MultiplixContextModelSnapshot : ModelSnapshot
+    [Migration("20190927215338_adicao de CNPJ")]
+    partial class adicaodeCNPJ
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,7 +150,7 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<int>("PontoPorReal");
 
-                    b.Property<int?>("RamoAtividadeId");
+                    b.Property<string>("Ramo");
 
                     b.Property<string>("Rua")
                         .HasColumnName("Rua")
@@ -157,8 +159,6 @@ namespace Multiplix.Infrastructure.Migrations
                     b.Property<int?>("UsuarioId");
 
                     b.HasKey("ParceiroId");
-
-                    b.HasIndex("RamoAtividadeId");
 
                     b.HasIndex("UsuarioId");
 
@@ -206,21 +206,6 @@ namespace Multiplix.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("PermissaoUsuario");
-                });
-
-            modelBuilder.Entity("Multiplix.Domain.Entities.RamoAtividade", b =>
-                {
-                    b.Property<int>("RamoAtividadeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Nome")
-                        .HasColumnName("Nome")
-                        .HasColumnType("varchar(150)");
-
-                    b.HasKey("RamoAtividadeId");
-
-                    b.ToTable("RamoDeAtividade");
                 });
 
             modelBuilder.Entity("Multiplix.Domain.Entities.Usuario", b =>
@@ -302,10 +287,6 @@ namespace Multiplix.Infrastructure.Migrations
 
             modelBuilder.Entity("Multiplix.Domain.Entities.Parceiro", b =>
                 {
-                    b.HasOne("Multiplix.Domain.Entities.RamoAtividade", "Ramo")
-                        .WithMany("Parceiros")
-                        .HasForeignKey("RamoAtividadeId");
-
                     b.HasOne("Multiplix.Domain.Entities.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId");

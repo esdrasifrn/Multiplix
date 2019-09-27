@@ -10,7 +10,7 @@ namespace Multiplix.Domain.Entities
         public int ParceiroId { get; set; }
         public virtual Usuario Usuario { get; set; }
         public String HorarioFuncionamento { get; set; }
-        public string Ramo { get; set; }
+        public virtual RamoAtividade Ramo { get; set; }
         public int PontoPorReal { get; set; }
         public string CNPJ { get; set; }
 
@@ -27,7 +27,7 @@ namespace Multiplix.Domain.Entities
         public Parceiro() { }
 
         public Parceiro(Usuario usuario, string horarioFuncionamento, string rua, string numero, string cep, string cidade,
-            string bairro, string complemento, string estado, string ramo, int pontoPorReal, string cnpj)
+            string bairro, string complemento, string estado, RamoAtividade ramo, int pontoPorReal, string cnpj)
         {
             Usuario = usuario;
             HorarioFuncionamento = horarioFuncionamento;

@@ -14,6 +14,10 @@ namespace Multiplix.Infrastructure.EntityConfig
                .UseSqlServerIdentityColumn();
 
             builder
+                .HasOne(pa => pa.Ramo)
+                .WithMany(r => r.Parceiros);
+
+            builder
                .HasOne(pa => pa.Usuario);         
 
             builder               

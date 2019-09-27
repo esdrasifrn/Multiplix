@@ -1,0 +1,218 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Multiplix.UI.Utils
+@using Multiplix.Domain.Enums
+@model Multiplix.Domain.DTOs.UsuarioDTO
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">@ViewData["Title"]</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Usuario/Index">Listagem de parceiros</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Cadastro de parceiro
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<partial name="_componente_form_validation_fluent_messages_container" />
+
+<section id="horizontal-form-layouts">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="horz-layout-basic">Dados do parceiro</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-content collpase show">
+                    <div class="card-body">
+                        <form method="post" id="form-parceiro" class="form form-horizontal">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="ft-user"></i> Dados gerais</h4>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Nome">Razão social/Nome*</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Nome" asp-for="Nome" class="form-control" placeholder="Nome" name="Nome">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="CNPJ">CNPJ</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="CPF" asp-for="CNPJ" class="form-control cnpj-formatter" placeholder="CNPJ" name="CNPJ">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="HorarioFuncionamento">Horário de Funcionamento</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="HorarioFuncionamento" asp-for="HorarioFuncionamento" class="form-control" placeholder="Horário de Funcionamento" name="HorarioFuncionamento">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="RamoAtividade">Ramo de atividade</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <select id="RamoAtividade"
+                                                name="RamoAtividade"
+                                                class="has-select2"
+                                                data-select2-url="/RamoAtividade/PesquisaRamoAtividade"
+                                                data-js-callback-init-data="iniciar_RamoAtividade"
+                                                data-mapper-attr-id="RamoAtividadeId"
+                                                data-mapper-attr-text="RamoAtividadeNome">
+                                            <!-- Select2 -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-shopping-cart"></i> Pontos por real</h4>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="PontoPorReal">Pontos Por Real</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="PontoPorReal" asp-for="PontoPorReal" class="form-control" placeholder="Pontos por Real" name="PontoPorReal">
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-navigation"></i> Endereço</h4>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Nome">Rua</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Rua" asp-for="Rua" class="form-control" placeholder="Rua" name="Rua">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Numero">Número</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Numero" asp-for="Numero" class="form-control" placeholder="Numero" name="Numero">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="CEP">CEP</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="CEP" asp-for="CEP" class="form-control cep-formatter" placeholder="CEP" name="CEP">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Complemento">Complemento</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Complemento" asp-for="Complemento" class="form-control" placeholder="Complemento" name="Complemento">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Bairro">Bairro</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Bairro" asp-for="Bairro" class="form-control" placeholder="Bairro" name="Bairro">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Cidade">Cidade</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Cidade" asp-for="Cidade" class="form-control" placeholder="Cidade" name="Cidade">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Estado">Estado</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <select asp-for="Estado" name="Estado" asp-items="@BooleanUtil.UFSelect()" class="form-control"></select>
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-edit-3"></i> informações para contato</h4>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Email">E-mail*</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Email" asp-for="Email" class="form-control" placeholder="Email" name="Email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Celular">Celular</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Celular" autocomplete="off" asp-for="Celular" class="form-control phone-formatter" placeholder="Celular" name="Celular">
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-clipboard"></i> Autenticação</h4>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Login">Login*</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Login" asp-for="Login" autocomplete="off" class="form-control" placeholder="Login" name="Login">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Senha">Senha*</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="password" id="Senha" class="form-control" placeholder="Senha" name="Senha">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="la la-check-square-o"></i> Salvar
+                                </button>
+                                <a href="/Parceiro/IndexParceiro" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts
+{
+    <partial name="_componente_form_validation_fluent_messages_script" />
+
+    <script>
+
+        function iniciar_RamoAtividade() {
+            var objs = [];
+            objs.push({ id: "@Model.RamoAtividadeId", text: "@Model.RamoAtividadeNome" });
+            return objs;
+        }
+
+    //Cel mask
+	$('.phone-formatter').formatter({
+		'pattern': "({{99}}) {{99999}}-{{9999}}"
+    });
+
+    //Cel mask
+	$('.cnpj-formatter').formatter({
+		'pattern': "{{99}}.{{999}}.{{999}}/{{9999}}-{{99}}"
+    });
+
+     //Cel mask
+	$('.cep-formatter').formatter({
+		'pattern': "{{99}}.{{999}}-{{999}}"
+	});
+    </script>
+
+}

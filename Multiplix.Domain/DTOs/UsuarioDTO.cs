@@ -44,12 +44,15 @@ namespace Multiplix.Domain.DTOs
         public string Conta { get; set; }
 
         //Parceiro
-        public string HorarioFuncionamento { get; set; }
-        public string Ramo { get; set; }
+        public string HorarioFuncionamento { get; set; }      
         public int PontoPorReal { get; set; }
         public int ParceiroId { get; set; }
         public string CNPJ { get; set; }
-        
+
+        //Ramo de Atividade
+        public string RamoAtividadeNome { get; set; }
+        public int RamoAtividadeId { get; set; }
+
 
         public IList<GrupoDTO> Grupos { get; set; } = new List<GrupoDTO>();
 

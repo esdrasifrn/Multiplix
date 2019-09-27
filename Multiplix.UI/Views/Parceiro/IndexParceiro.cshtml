@@ -1,0 +1,80 @@
+﻿@using Multiplix.UI.Utils
+@{
+    ViewData["Title"] = "IndexParceiro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">Listagem de parceiros</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Listagem
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="content-header-right text-md-right col-md-6 col-12">
+        <div class="btn-group">
+            <a id="btn_add_parceiro" href="/Parceiro/AdicionarParceiro" class="btn btn-round btn-info"><i class="icon-cog3"></i> Adicionar parceiro</a>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">@ViewData["Title"]</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="table-responsive">
+                            <table id="data-table-parceiros" class="table table-striped table-bordered text-nowrap w-100">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th> <!-- ocultada pelo datatable -->
+                                        <th>Nome</th>
+                                        <th>CNPJ</th>
+                                        <th>Celular</th>
+                                        <th>Email</th>
+                                        <th>Cidade</th>
+                                        <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/js/datatable-generator.js"></script>
+    <script>
+        $(document).ready(function() {
+            var podeAlterarParceiro = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_parceiro").ToString().ToLower();
+            var podeExcluirParceiro = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_parceiro").ToString().ToLower();
+            var podeVisualizarPermissaoParceiro = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_parceiro").ToString().ToLower();
+            var botoes = [{ title: "Permissões", url: "/Permissao/PermissaoUsuario/?parceiroId=", permission: podeVisualizarPermissaoParceiro }];
+            generateDataTable("#data-table-parceiros",
+                "Parceiro",
+                "/Parceiro/ListaParceiros",
+                podeAlterarParceiro,
+                "/Parceiro/EditarParceiro/?parceiroId=",
+                podeExcluirParceiro,
+                "/Parceiro/Excluir/?parceiroId=", botoes);
+        });
+    </script>
+}
+

@@ -16,13 +16,15 @@ namespace Multiplix.Domain.Services
     {
         private const int PatrocinadorRaiz = 1;
         private readonly IParceiroRepository _parceiroRepository;
-        private readonly IUsuarioRepository _usuarioRepository;        
+        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IRamoAtividadeRepository _ramoAtividade;
 
         public ServiceParceiro(IParceiroRepository parceiroRepository, 
-            IUsuarioRepository usuarioRepository)
+            IUsuarioRepository usuarioRepository, IRamoAtividadeRepository ramoAtividade)
         {
             _parceiroRepository = parceiroRepository;
-            _usuarioRepository = usuarioRepository;           
+            _usuarioRepository = usuarioRepository;
+            _ramoAtividade = ramoAtividade;
         }
 
         public Parceiro Adicionar(Parceiro entity)
@@ -76,8 +78,9 @@ namespace Multiplix.Domain.Services
             // usuário
             Usuario usuario;
             Parceiro parceiro;
+            RamoAtividade ramoAtividade;
            
-            if (usuarioDTO.AssociadoId == 0)
+            if (usuarioDTO.ParceiroId == 0)
             { 
 
                 //cria o usuário do patrocinador
@@ -88,7 +91,7 @@ namespace Multiplix.Domain.Services
                     celular: usuarioDTO.Celular,
                     email: usuarioDTO.Email,
                     liberado: usuarioDTO.Liberado
-                );                               
+                );               
 
                 //associa o usuário ao parceiro
                 parceiro = new Parceiro(
@@ -101,7 +104,7 @@ namespace Multiplix.Domain.Services
                     bairro: usuarioDTO.Bairro,
                     complemento: usuarioDTO.Complemento,
                     estado: usuarioDTO.Estado,
-                    ramo: usuarioDTO.Ramo,
+                    ramo: _ramoAtividade.ObterPorId(usuarioDTO.RamoAtividadeId),
                     pontoPorReal: usuarioDTO.PontoPorReal,                   
                     cnpj: usuarioDTO.CNPJ
                     
@@ -127,14 +130,15 @@ namespace Multiplix.Domain.Services
                 parceiro.Bairro = usuarioDTO.Bairro;
                 parceiro.Complemento = usuarioDTO.Complemento;
                 parceiro.Estado = usuarioDTO.Estado;
-                parceiro.Ramo = usuarioDTO.Ramo;
+                parceiro.Ramo = _ramoAtividade.ObterPorId(usuarioDTO.RamoAtividadeId);
                 parceiro.PontoPorReal = usuarioDTO.PontoPorReal;
+                parceiro.HorarioFuncionamento = usuarioDTO.HorarioFuncionamento;
                 parceiro.CNPJ = usuarioDTO.CNPJ;
            
             }
 
             // grupos do usuário do parceiro
-            if (usuarioDTO.PatrocinadorId > 0)
+            if (usuarioDTO.ParceiroId > 0)
                 _usuarioRepository.DeleteUsuarioGrupos(parceiro.Usuario.UsuarioId);
 
             if (usuarioDTO.Grupos.Count > 0)

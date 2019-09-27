@@ -61,6 +61,12 @@ namespace Multiplix.UI
             services.AddScoped<IServiceBanco, ServiceBanco>();
             services.AddScoped<IBancoRepository, BancoRepository>();
 
+            services.AddScoped<IServiceParceiro, ServiceParceiro>();
+            services.AddScoped<IParceiroRepository, ParceiroRepository>();
+
+            services.AddScoped<IServiceRamoAtividade, ServiceRamoAtividade>();
+            services.AddScoped<IRamoAtividadeRepository, RamoAtividadeRepository>();
+
             #endregion
 
             #region CookieAuth
