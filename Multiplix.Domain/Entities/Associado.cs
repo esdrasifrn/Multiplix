@@ -13,6 +13,11 @@ namespace Multiplix.Domain.Entities
         /// </summary>
         private IList<Associado> _patrocinados;
 
+        /// <summary>
+        /// Um associado pode fazer várias compras em um associado
+        /// </summary>
+        private IList<Compra> _compras = new List<Compra>();
+
         public Associado(Usuario usuario, int? patrocinadorId, string rua, string numero, string cep,  string cidade, 
             string bairro, string complemento, string estado, DateTime nascimento,
             string sexo, string cpf, string emailAlternativo, Banco banco, int tipoConta, string agengia, string conta)
@@ -68,7 +73,8 @@ namespace Multiplix.Domain.Entities
         public String Complemento { get; set; }
 
 
-        public virtual ICollection<Associado> Patrocinados { get => _patrocinados; set { } }             
+        public virtual ICollection<Associado> Patrocinados { get => _patrocinados; set { } }
+        public virtual ICollection<Compra> Compras { get => _compras; set { } }
 
         /// <summary>
         /// Adiciona o associado patrocinado ao associado patrocinador que fez o convite
@@ -77,6 +83,11 @@ namespace Multiplix.Domain.Entities
         public void AddPatrocinado(Associado patrocinado)
         {
             _patrocinados.Add(patrocinado);
+        }
+
+        public void AddCompra(Compra compra)
+        {
+            _compras.Add(compra);
         }
 
         public string GenerateCarteiraPatrocinador()

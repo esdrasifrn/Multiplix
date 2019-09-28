@@ -135,6 +135,9 @@ namespace Multiplix.UI.Controllers
                     case "5":
                         orderByExpr = x => x.CNPJ;
                         break;
+                    case "6":
+                        orderByExpr = x => x.PontoPorReal;
+                        break;
                 }
 
                 if (orderByExpr != null)
@@ -168,7 +171,7 @@ namespace Multiplix.UI.Controllers
                     parceiro.CNPJ,
                     parceiro.Usuario.Celular,
                     parceiro.Usuario.Email,
-                    parceiro.Cidade,
+                    parceiro.PontoPorReal,
 
                     _serviceParceiro.ObterPorId(id: parceiro.ParceiroId).Usuario.Nome ?? "-"
                 };
@@ -180,6 +183,45 @@ namespace Multiplix.UI.Controllers
                 recordsTotal = totalResultados,
                 recordsFiltered = totalResultados,
                 data = result_data
+            });
+        }
+
+
+        public JsonResult PesquisaParceiro(string searchTerm, int pageNumber)
+        {
+            /*
+             * consumido por um Select2 ajax
+             * 
+             * o código deste controlador pode ser usado como base para futuras implementações genéricas com Select2
+             */
+
+            int pageSize = 10;
+
+            List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
+
+            IEnumerable<Parceiro> parceiros = new List<Parceiro>();
+
+            if (!String.IsNullOrEmpty(searchTerm))
+                parceiros = _serviceParceiro.Buscar(x => x.Usuario.Nome.Contains(searchTerm));
+            else
+                parceiros = _serviceParceiro.ObterTodos();
+
+            int totalResults = parceiros.Count();
+            parceiros = parceiros.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            foreach (var parceiro in parceiros)
+            {
+                Dictionary<string, string> result_item = new Dictionary<string, string>();
+                result_item.Add("id", parceiro.ParceiroId + "");
+                result_item.Add("text", parceiro.Usuario.Nome);
+                results.Add(result_item);
+            }
+
+            return Json(new
+            {
+                pageSize,
+                results,
+                totalResults
             });
         }
     }

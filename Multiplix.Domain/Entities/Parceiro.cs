@@ -7,12 +7,19 @@ namespace Multiplix.Domain.Entities
 {
     public class Parceiro
     {
+        /// <summary>
+        /// Um Parceiro pode fazer várias vendas para um associado
+        /// </summary>
+        private IList<Compra> _compras = new List<Compra>();
+
         public int ParceiroId { get; set; }
         public virtual Usuario Usuario { get; set; }
         public String HorarioFuncionamento { get; set; }
         public virtual RamoAtividade Ramo { get; set; }
         public int PontoPorReal { get; set; }
         public string CNPJ { get; set; }
+
+        public virtual ICollection<Compra> Compras { get => _compras; set { } }
 
 
         //Endereço
@@ -41,6 +48,11 @@ namespace Multiplix.Domain.Entities
             Ramo = ramo;
             PontoPorReal = pontoPorReal;
             CNPJ = cnpj;
+        }
+
+        public void AddCompra(Compra compra)
+        {
+            _compras.Add(compra);
         }
     }
 }

@@ -248,5 +248,43 @@ namespace Multiplix.UI.Controllers
                 data = result_data
             });
         }
+
+        public JsonResult PesquisaAssociado(string searchTerm, int pageNumber)
+        {
+            /*
+             * consumido por um Select2 ajax
+             * 
+             * o código deste controlador pode ser usado como base para futuras implementações genéricas com Select2
+             */
+
+            int pageSize = 10;
+
+            List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
+
+            IEnumerable<Associado> associados = new List<Associado>();
+
+            if (!String.IsNullOrEmpty(searchTerm))
+                associados = _servicePatrocinador.Buscar(x => x.Usuario.Nome.Contains(searchTerm));
+            else
+                associados = _servicePatrocinador.ObterTodos();
+
+            int totalResults = associados.Count();
+            associados = associados.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            foreach (var associado in associados)
+            {
+                Dictionary<string, string> result_item = new Dictionary<string, string>();
+                result_item.Add("id", associado.Id + "");
+                result_item.Add("text", associado.Usuario.Nome);
+                results.Add(result_item);
+            }
+
+            return Json(new
+            {
+                pageSize,
+                results,
+                totalResults
+            });
+        }
     }
 }

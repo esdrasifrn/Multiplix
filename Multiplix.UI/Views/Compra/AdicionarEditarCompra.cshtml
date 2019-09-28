@@ -1,0 +1,133 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Multiplix.UI.Utils
+@using Multiplix.Domain.Enums
+@model Multiplix.Domain.DTOs.CompraDTO
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">@ViewData["Title"]</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Usuario/Index">Listagem de compras</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Cadastro de compra
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<partial name="_componente_form_validation_fluent_messages_container" />
+
+<section id="horizontal-form-layouts">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="horz-layout-basic">Dados da compra</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-content collpase show">
+                    <div class="card-body">
+                        <form method="post" id="form-parceiro" class="form form-horizontal">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="ft-user"></i> Dados da compra</h4>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Parceiro">Parceiro</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <select id="Parceiro"
+                                                name="Parceiro"
+                                                class="has-select2"
+                                                data-select2-url="/Parceiro/PesquisaParceiro"
+                                                data-js-callback-init-data="iniciar_Parceiro"
+                                                data-mapper-attr-id="ParceiroId"
+                                                data-mapper-attr-text="ParceiroNome">
+                                            <!-- Select2 -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Associado">Associado</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <select id="Associado"
+                                                name="Associado"
+                                                class="has-select2"
+                                                data-select2-url="/Usuario/PesquisaAssociado"
+                                                data-js-callback-init-data="iniciar_Associado"
+                                                data-mapper-attr-id="AssociadoId"
+                                                data-mapper-attr-text="AssociadoNome">
+                                            <!-- Select2 -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Valor">Valor da compra*</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Valor" asp-for="Valor"  autocomplete="off" class="form-control" placeholder="Valor" name="Valor">
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="la la-check-square-o"></i> Salvar
+                                    </button>
+                                    <a href="/Compra/IndexCompra" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts
+{
+    <partial name="_componente_form_validation_fluent_messages_script" />
+
+    <script>
+
+        function iniciar_Parceiro() {
+            var objs = [];
+            objs.push({ id: "@Model.ParceiroId", text: "@Model.ParceiroNome" });
+            return objs;
+        }
+
+         function iniciar_Associado() {
+            var objs = [];
+            objs.push({ id: "@Model.AssociadoId", text: "@Model.AssociadoNome" });
+            return objs;
+        }
+
+    //Cel mask
+	$('.curency-formatter').formatter({
+		'pattern': "^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$"
+    });
+   
+    </script>
+
+}
