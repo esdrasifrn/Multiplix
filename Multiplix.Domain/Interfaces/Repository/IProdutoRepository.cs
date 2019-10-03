@@ -5,8 +5,7 @@ using System.Text;
 
 namespace Multiplix.Domain.Interfaces.Repository
 {
-    public interface IParceiroRepository : IRepositoryBase<Parceiro>
-    {
-        void DeleteProdutosParceiro(int parceiroId);
+    public interface IProdutoRepository : IRepositoryBase<Produto>
+    {       
     }
 }

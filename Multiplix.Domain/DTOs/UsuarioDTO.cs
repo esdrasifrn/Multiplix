@@ -48,6 +48,7 @@ namespace Multiplix.Domain.DTOs
         public int PontoPorReal { get; set; }
         public int ParceiroId { get; set; }
         public string CNPJ { get; set; }
+        public IList<ProdutoDTO> Produtos { get; set; } = new List<ProdutoDTO>();
 
         //Ramo de Atividade
         public string RamoAtividadeNome { get; set; }
@@ -55,6 +56,7 @@ namespace Multiplix.Domain.DTOs
 
 
         public IList<GrupoDTO> Grupos { get; set; } = new List<GrupoDTO>();
+        
 
         public IList<ValidationFailure> ValidationErrors { get; set; } = new List<ValidationFailure>();
 

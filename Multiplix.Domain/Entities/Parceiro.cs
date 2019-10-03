@@ -12,6 +12,11 @@ namespace Multiplix.Domain.Entities
         /// </summary>
         private IList<Compra> _compras = new List<Compra>();
 
+        /// <summary>
+        /// Um parceiro pode ter vários produtos associados a ele
+        /// </summary>
+        private IList<ParceiroProduto> _parceiroProdutos = new List<ParceiroProduto>();
+
         public int ParceiroId { get; set; }
         public virtual Usuario Usuario { get; set; }
         public String HorarioFuncionamento { get; set; }
@@ -20,6 +25,7 @@ namespace Multiplix.Domain.Entities
         public string CNPJ { get; set; }
 
         public virtual ICollection<Compra> Compras { get => _compras; set { } }
+        public virtual ICollection<ParceiroProduto> ParceiroProdutos { get => _parceiroProdutos; set { } }
 
 
         //Endereço
@@ -53,6 +59,11 @@ namespace Multiplix.Domain.Entities
         public void AddCompra(Compra compra)
         {
             _compras.Add(compra);
+        }
+
+        public void AddProdutoParceiro(ParceiroProduto parceiroProduto)
+        {
+            _parceiroProdutos.Add(parceiroProduto);
         }
     }
 }

@@ -77,8 +77,7 @@ namespace Multiplix.Domain.Services
         {
             // usuário
             Usuario usuario;
-            Parceiro parceiro;
-            RamoAtividade ramoAtividade;
+            Parceiro parceiro;           
            
             if (usuarioDTO.ParceiroId == 0)
             { 
@@ -136,8 +135,8 @@ namespace Multiplix.Domain.Services
                 parceiro.CNPJ = usuarioDTO.CNPJ;
            
             }
-
-            // grupos do usuário do parceiro
+                       
+            #region  grupos do usuário do parceiro
             if (usuarioDTO.ParceiroId > 0)
                 _usuarioRepository.DeleteUsuarioGrupos(parceiro.Usuario.UsuarioId);
 
@@ -153,6 +152,28 @@ namespace Multiplix.Domain.Services
                     parceiro.Usuario.AddUsuarioGrupo(usuarioGrupo);
                 }
             }
+            #endregion
+                        
+            #region produtos do parceiro
+            if (usuarioDTO.ParceiroId > 0)
+                _parceiroRepository.DeleteProdutosParceiro(parceiro.ParceiroId);
+
+            if (usuarioDTO.Produtos.Count > 0)
+            {
+                foreach (var produto in usuarioDTO.Produtos)
+                {
+                    ParceiroProduto parceiroProduto = new ParceiroProduto();
+                    parceiroProduto.ParceiroId = parceiro.ParceiroId;
+                    parceiroProduto.ProdutoId = produto.ProdutoId;
+                    parceiroProduto.PontosPorRealProduto = produto.PontosPorRealProduto;
+                    parceiroProduto.ValorProduto = produto.ValorProduto;
+
+                    // adiciona o produto ao parceiro
+                    parceiro.AddProdutoParceiro(parceiroProduto);
+                }
+            }
+
+            #endregion
 
             ValidationResult result = new UsuarioValidator().Validate(parceiro.Usuario);           
 

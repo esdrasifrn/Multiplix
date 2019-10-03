@@ -70,6 +70,9 @@ namespace Multiplix.UI
             services.AddScoped<IServiceCompra, ServiceCompra>();
             services.AddScoped<ICompraRepository, CompraRepository>();
 
+            services.AddScoped<IServiceProduto, ServiceProduto>();
+            services.AddScoped<IProdutoRepository, ProdutoRepository>();
+
             #endregion
 
             #region CookieAuth

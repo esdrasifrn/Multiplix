@@ -26,6 +26,7 @@ namespace Multiplix.Infrastructure.Data
         public DbSet<Parceiro> Parceiros { get; set; }
         public DbSet<RamoAtividade> RamoAtividades { get; set; }
         public DbSet<Compra> Compras { get; set; }
+        public DbSet<ParceiroProduto>  parceiroProdutos { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,6 +46,7 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.Entity<Parceiro>().ToTable("Parceiro");
             modelBuilder.Entity<RamoAtividade>().ToTable("RamoDeAtividade");
             modelBuilder.Entity<Compra>().ToTable("Compra");
+            modelBuilder.Entity<ParceiroProduto>().ToTable("ParceiroProduto");
 
             modelBuilder.ApplyConfiguration(new GrupoMap());          
             modelBuilder.ApplyConfiguration(new PermissaoMap());           
@@ -56,6 +58,7 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ParceiroMap());
             modelBuilder.ApplyConfiguration(new RamoAtividadeMap());
             modelBuilder.ApplyConfiguration(new CompraMap());
+            modelBuilder.ApplyConfiguration(new ParceiroProdutoMap());
         }
     }
 }
