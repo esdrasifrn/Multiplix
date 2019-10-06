@@ -33,7 +33,7 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AdicionarParceiro(UsuarioDTO usuarioDTO)
+        public IActionResult AdicionarParceiro(UsuarioDTO usuarioDTO, List<ProdutoDTO> produtos)
         {
             ViewData["Title"] = "Novo Parceiro";
             return SalvarParceiro(usuarioDTO, "Parceiro adicionado com sucesso!");
