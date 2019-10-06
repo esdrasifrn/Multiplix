@@ -8,6 +8,7 @@ using Multiplix.Domain.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Linq;
 
 
 namespace Multiplix.Domain.Services
@@ -17,12 +18,16 @@ namespace Multiplix.Domain.Services
         private readonly ICompraRepository _compraRepository;
         private readonly IParceiroRepository _parceiroRepository;
         private readonly IPatrocinadorRepository  _patrocinadorRepository;
+        private readonly IProdutoRepository _produtoRepository;
 
-        public ServiceCompra(ICompraRepository compraRepository, IParceiroRepository parceiroRepository, IPatrocinadorRepository patrocinadorRepository)
+        public ServiceCompra(ICompraRepository compraRepository, 
+            IParceiroRepository parceiroRepository, 
+            IPatrocinadorRepository patrocinadorRepository, IProdutoRepository produtoRepository)
         {
             _compraRepository = compraRepository;
             _parceiroRepository = parceiroRepository;
             _patrocinadorRepository = patrocinadorRepository;
+            _produtoRepository = produtoRepository;
         }
 
         public Compra Adicionar(Compra entity)
@@ -73,9 +78,9 @@ namespace Multiplix.Domain.Services
             if (compraDTO.CompraId == 0)
             {
                 compra = new Compra(
-                    valor: compraDTO.Valor,
+                    valor: compraDTO.CompraItems.Sum(c => c.Subtotal),
                     data: DateTime.Now,
-                    pontos: (parceiro.PontoPorReal * compraDTO.Valor),
+                    pontos: compraDTO.CompraItems.Sum(c => c.SubtotalPontos),
                     parceiro: parceiro,
                     associado: _patrocinadorRepository.ObterPorId(compraDTO.AssociadoId)
                     );
@@ -91,6 +96,23 @@ namespace Multiplix.Domain.Services
                 compra.Pontos = compraDTO.Pontos;
                 compra.Parceiro = _parceiroRepository.ObterPorId(compraDTO.ParceiroId);
                 compra.Associado = _patrocinadorRepository.ObterPorId(compraDTO.AssociadoId);
+            }
+
+            //Cadastra os itens da compra
+            if (compraDTO.CompraItems.Count > 0)
+            {
+                foreach (var item in compraDTO.CompraItems)
+                {
+                    CompraItem compraItem = new CompraItem();
+                    compraItem.Produto = _produtoRepository.ObterPorId(item.ProdutoId);
+                    compraItem.Qtd = item.Qtd;
+                    compraItem.ValorUnidade = item.ValorUnidade;
+                    compraItem.Subtotal = item.ValorUnidade * item.Qtd;
+                    compraItem.SubtotalPontos = parceiro.ParceiroProdutos.Where(x => x.ProdutoId == item.ProdutoId).FirstOrDefault().PontosPorRealProduto * compraItem.Subtotal;
+
+                    //Adiciona os itens comprados à compra
+                    compra.AddCompraItem(compraItem);
+                }
             }
             
             ValidationResult result = new CompraValidator().Validate(compra);

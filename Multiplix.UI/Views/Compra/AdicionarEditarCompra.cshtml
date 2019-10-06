@@ -50,52 +50,116 @@
                     <div class="card-body">
                         <form method="post" id="form-parceiro" class="form form-horizontal">
                             <div class="form-body">
-                                <h4 class="form-section"><i class="ft-user"></i> Dados da compra</h4>
 
-                                <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Parceiro">Parceiro</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <select id="Parceiro"
-                                                name="Parceiro"
-                                                class="has-select2"
-                                                data-select2-url="/Parceiro/PesquisaParceiro"
-                                                data-js-callback-init-data="iniciar_Parceiro"
-                                                data-mapper-attr-id="ParceiroId"
-                                                data-mapper-attr-text="ParceiroNome">
-                                            <!-- Select2 -->
-                                        </select>
+                                <h4 class="form-section"><i class="ft-user"></i> Dados do associado</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="projectinput1">Parceiro</label>
+                                            <select id="Parceiro"
+                                                    name="Parceiro"
+                                                    class="has-select2"
+                                                    data-select2-url="/Parceiro/PesquisaParceiro"
+                                                    data-js-callback-init-data="iniciar_Parceiro"
+                                                    data-mapper-attr-id="ParceiroId"
+                                                    data-mapper-attr-text="ParceiroNome">
+                                                <!-- Select2 -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="projectinput2">Associado</label>
+                                            <select id="Associado"
+                                                    name="Associado"
+                                                    class="has-select2"
+                                                    data-select2-url="/Usuario/PesquisaAssociado"
+                                                    data-js-callback-init-data="iniciar_Associado"
+                                                    data-mapper-attr-id="AssociadoId"
+                                                    data-mapper-attr-text="AssociadoNome">
+                                                <!-- Select2 -->
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Associado">Associado</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <select id="Associado"
-                                                name="Associado"
-                                                class="has-select2"
-                                                data-select2-url="/Usuario/PesquisaAssociado"
-                                                data-js-callback-init-data="iniciar_Associado"
-                                                data-mapper-attr-id="AssociadoId"
-                                                data-mapper-attr-text="AssociadoNome">
-                                            <!-- Select2 -->
-                                        </select>
+                                <h4 class="form-section"><i class="ft-user"></i> Dados do produto</h4>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="projectinput2">Produto</label>
+                                            <select id="Produto"
+                                                    name="Produto"
+                                                    class="has-select2"
+                                                    data-select2-url="/Produto/PesquisaProduto">
+                                                <!-- Select2 -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="qtd">Quantidade*</label>
+                                            <input type="number" id="qtd" class="form-control" placeholder="QTD" name="qtd">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="ValorUnidade">Valor Unidade*</label>
+                                            <input type="text" id="ValorUnidade" disabled class="form-control money font-size-large round font-weight-bold" placeholder="Valor da unidade" name="ValorUnidade">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="Subtotal">Subtotal*</label>
+                                            <input type="text" id="Subtotal" disabled class="form-control money  font-size-large round font-weight-bold" placeholder="Subtotal" name="Subtotal">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="Pontos">Pontos*</label>
+                                            <input type="text" id="Pontos" disabled class="form-control font-size-large round font-weight-bold" placeholder="Pontos" name="Pontos">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <button type="button" id="add-produto" class="btn btn-sm btn-primary">
+                                                <i class="la la-check-square-o"></i> Inserir produto
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Valor">Valor da compra*</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <input type="text" id="Valor" asp-for="Valor"  autocomplete="off" class="form-control" placeholder="Valor" name="Valor">
+                                <h4 class="form-section"><i class="ft-user"></i> Itens da compra</h4>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table id="data-table-produtos" class="table table-striped table-bordered text-nowrap w-100">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th> <!-- ocultada pelo datatable -->
+                                                        <th>Descrição</th>
+                                                        <th>QTD</th>
+                                                        <th>Valor unidade</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Pontos</th>
+                                                        <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                 </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="la la-check-square-o"></i> Finalizar
+                                        </button>
+                                        <a href="/Compra/IndexCompra" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
                                     </div>
                                 </div>
-
-                                <div class="form-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="la la-check-square-o"></i> Salvar
-                                    </button>
-                                    <a href="/Compra/IndexCompra" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
-                                </div>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -110,6 +174,147 @@
     <partial name="_componente_form_validation_fluent_messages_script" />
 
     <script>
+        $(document).ready(() => {
+            var tabela_produtos = $('#data-table-produtos').DataTable({
+                processing: true,
+                paging: true,
+                ordering: true,
+                responsive: true,
+                language: {
+                    search: "Buscar",
+                    lengthMenu: "Mostrando _MENU_ produtos por página",
+                    zeroRecords: "Nenhum produto",
+                    info: "Mostrando _START_ até _END_ de _TOTAL_ produtos",
+                    infoEmpty: "Nenhum produto",
+                    processing: "Processando ...",
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: "Próximo",
+                        previous: "Anterior"
+                    },
+                },
+                columnDefs: [
+                    {
+                        targets: 0,
+                        visible: false
+                    },
+                    {
+                        targets: -1,
+                        data: 'actions',
+                        render: function (data, type, row, meta) {
+                            var opts = "";
+
+                            //if (pode_alterar_alarme === true) {
+                            //    opts += '<a href="/Alarme/Editar/?alarmeId=' + row[0] + '" class="btn btn-link btn-warning btn-icon btn-sm"><i class="tim-icons icon-pencil"></i></a>';
+                            //}
+                            //if (pode_excluir_alarme === true) {                               
+                                opts += '<a href="javascript:void(0)" class="btn btn-link btn-danger btn-icon btn-sm btn-remove"><i class="la la-trash-o la-lg"></i></a>';
+                    
+                            //}
+
+                            return opts;
+                        },
+                        className: "text-right"
+                    }
+                ]
+            });
+
+            $("#add-produto").click(() => {
+                var produto_select = $("#Produto").find("option:selected");
+
+                if (produto_select.length) {
+                    var produto_id = $(produto_select).attr("value"),
+                        produto_descricao = $(produto_select).text(),
+                        produto_qtd = $("#qtd").val(),
+                        produto_valor_unidade = $("#ValorUnidade").val();
+                    var subtotal = $("#Subtotal").val();
+                    var pontos = $("#Pontos").val();
+
+                    //Não deixa inserir produto duplicado
+                    var temLinhaDuplicada = false;
+                    var temProdutoPonto = true;
+                    var temValorProduto = true;
+
+                    tabela_produtos.rows().every(function () {
+                        var row_data = this.data();
+
+                        if (produto_id === row_data[0]) {
+
+                            swal("Atenção!", "Esse produto já está na lista!", "warning");        
+
+                            temLinhaDuplicada = true;
+                        }
+                    });
+
+                    if (produto_qtd === "") {
+                        swal("Atenção!", "Digite a quantidade do produto!", "warning");
+                        temProdutoPonto = false;
+                    }
+                   
+                    if ($("#ValorProduto").val() === "R$ 00." || $("#ValorProduto").val() === "" || $("#ValorProduto").val() === "R$ ." || $("#ValorProduto").val() === "R$ 0.00")  {
+                        swal("Atenção!", "Digite o valor do produto", "warning");
+                        temValorProduto = false;
+                    }
+
+                    if (temLinhaDuplicada === false && temProdutoPonto === true && temValorProduto === true) {
+   
+                        tabela_produtos.row.add([produto_id, produto_descricao, produto_qtd, produto_valor_unidade, subtotal, pontos, ""]).draw();
+                        $("#Produto").val(null).trigger("change");
+                        $("#qtd").val("");
+                        $("#ValorUnidade").val("");
+                        $("#Subtotal").val(""); 
+                        $("#Pontos").val("");
+                    }                   
+                }
+            }); 
+
+            $("#qtd").keypress(() => {
+                var produto_select = $("#Produto").find("option:selected");
+                var produto_id = $(produto_select).attr("value");
+
+                var parceiro_select = $("#Parceiro").find("option:selected"); //depois substituir para parceiro logado
+                 var parceiro_id = $(parceiro_select).attr("value");
+
+                $.ajax({
+                url: "/Compra/GetInfoProdutoParceiro",
+                type: "get",
+                data: { "produtoId": produto_id, "parceiroId": parceiro_id },
+                dataType: 'json',
+                contentType: 'application/json; charset=UTF-8',
+                    success: function (response) {
+                        $("#ValorUnidade").val(response.valor);
+
+                        var qtd = $("#qtd").val();
+                        var subtotal = parseFloat(response.valor) * parseInt(qtd);
+
+                        $("#Subtotal").val(subtotal);
+                        $("#Pontos").val(response.pontos_produto * subtotal);
+                       // alert(total);
+                        //console.log(response.pontos_produto);                    
+                    }//,
+                    //error: function (response) {
+                    //    console.log(response);
+                    //alert(response);
+                    //}
+                });
+            });
+
+             $(".money").inputmask('decimal', {
+                'alias': 'numeric',
+                'groupSeparator': ',',
+                'autoGroup': true,
+                'digits': 2,
+                'radixPoint': ".",
+                'digitsOptional': false,
+                'allowMinus': false,
+                'prefix': 'R$ ',
+                'placeholder': ''
+            });      
+
+        });
+
+        
 
         function iniciar_Parceiro() {
             var objs = [];
