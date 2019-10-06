@@ -188,6 +188,7 @@
 
                                     <!-- tab 2 -->
                                     <div role="tabpanel" class="tab-pane" id="active2" aria-labelledby="active-tab2" aria-expanded="true">
+
                                         <div class="form-group row">
                                             <div class="table-responsive">
                                                 <table id="data-table-produtos" class="table table-striped table-bordered text-nowrap w-100">
@@ -204,7 +205,7 @@
                                             </div>
                                         </div>
 
-                                        <h4 class="form-section"><i class="ft-shopping-cart"></i>Adicionar Produto à Lista</h4>
+                                        <h4 class="form-section"><i class="ft-shopping-cart"></i>Adicionar Produtos ao parceiro</h4>
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="Produto">Produto</label>
                                             <div class="col-md-9 mx-auto">
@@ -219,13 +220,13 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="PontosPorRealProduto">Pontos</label>
                                             <div class="col-md-9 mx-auto">
-                                                <input type="text" class="form-control" id="PontosPorRealProduto" name="PontosPorRealProduto">
+                                                <input type="number" class="form-control" id="PontosPorRealProduto" name="PontosPorRealProduto">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="ValorProduto">Valor</label>
                                             <div class="col-md-9 mx-auto">
-                                                <input type="text" class="form-control" id="ValorProduto" name="ValorProduto">
+                                                <input style="text-align:left;" type="text" class="form-control money" id="ValorProduto" name="ValorProduto">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -246,7 +247,7 @@
                                 </button>
                                 <a href="/Parceiro/IndexParceiro" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
                             </div>
-                        </form>
+                        </form>                       
                     </div>
                 </div>
             </div>
@@ -263,6 +264,20 @@
         $(document).ready(() => {
             // ativa a tab 1
             $("#active-tab1").trigger("click");
+
+            $('.percentage-inputmask').inputmask("99%");
+
+            $(".money").inputmask('decimal', {
+                'alias': 'numeric',
+                'groupSeparator': ',',
+                'autoGroup': true,
+                'digits': 2,
+                'radixPoint': ".",
+                'digitsOptional': false,
+                'allowMinus': false,
+                'prefix': 'R$ ',
+                'placeholder': ''
+            });          
 
             //Cel mask
             $('.phone-formatter').formatter({
@@ -312,9 +327,9 @@
                             //if (pode_alterar_alarme === true) {
                             //    opts += '<a href="/Alarme/Editar/?alarmeId=' + row[0] + '" class="btn btn-link btn-warning btn-icon btn-sm"><i class="tim-icons icon-pencil"></i></a>';
                             //}
-                            //if (pode_excluir_alarme === true) {
-                            //    var url_remover = '/Alarme/Excluir/?alarmeId=' + row[0];
-                            //    opts += '<a onclick="confirm({title:\'Confirma exclusão?\', text: \'Alarme: ' + row[1] + '\', next_url:\'' + url_remover + '\'})" href="javascript:void(0)" class="btn btn-link btn-danger btn-icon btn-sm"><i class="tim-icons icon-simple-remove"></i></a>';
+                            //if (pode_excluir_alarme === true) {                               
+                                opts += '<a href="javascript:void(0)" class="btn btn-link btn-danger btn-icon btn-sm btn-remove"><i class="la la-trash-o la-lg"></i></a>';
+                    
                             //}
 
                             return opts;
@@ -333,30 +348,112 @@
                         produto_pontos = $("#PontosPorRealProduto").val(),
                         produto_valor = $("#ValorProduto").val();
 
-                    tabela_produtos.row.add([produto_id, produto_descricao, produto_pontos, produto_valor, ""]).draw();
+                    //Não deixa inserir produto duplicado
+                    var temLinhaDuplicada = false;
+                    var temProdutoPonto = true;
+                    var temValorProduto = true;
 
-                    $("#Produto").val(null).trigger("change");
-                    $("#PontosPorRealProduto").val("");
-                    $("#ValorProduto").val("");
+                    tabela_produtos.rows().every(function () {
+                        var row_data = this.data();
+
+                        if (produto_id === row_data[0]) {
+
+                            swal("Atenção!", "Esse produto já está na lista!", "warning");        
+
+                            temLinhaDuplicada = true;
+                        }
+                    });
+
+                    if (produto_pontos === "") {
+                        swal("Atenção!", "Digite quanto vale em pontos cada real desse produto!", "warning");
+                        temProdutoPonto = false;
+                    }
+                   
+                    if ($("#ValorProduto").val() === "R$ 00." || $("#ValorProduto").val() === "" || $("#ValorProduto").val() === "R$ ." || $("#ValorProduto").val() === "R$ 0.00")  {
+                        swal("Atenção!", "Digite o valor do produto", "warning");
+                        temValorProduto = false;
+                    }
+
+                    if (temLinhaDuplicada === false && temProdutoPonto === true && temValorProduto === true) {
+   
+                        tabela_produtos.row.add([produto_id, produto_descricao, produto_pontos, produto_valor, ""]).draw();
+                        $("#Produto").val(null).trigger("change");
+                        $("#PontosPorRealProduto").val("");
+                        $("#ValorProduto").val("");
+                    }                   
                 }
-            });
+            });           
 
             $("#form-parceiro").submit(function() {
                 var form = this;
-                var seq = 0;
-                alert("submit");
+                var seq = 0;                  
 
-                $(tabela_produtos).rows().every(function() {
+                tabela_produtos.rows().every(function() {
                     var row_data = this.data();
-
-                    $(form).append(`<input name="Produtos[${seq}]ProdutoId" value="${row_data[0]}"/>`);
-                    $(form).append(`<input name="Produtos[${seq}]Descricao" value="${row_data[1]}"/>`);
-                    $(form).append(`<input name="Produtos[${seq}]PontosPorRealProduto" value="${row_data[2]}"/>`);
-                    $(form).append(`<input name="Produtos[${seq}]ValorProduto" value="${row_data[3]}"/>`);
+                  
+                    $(form).append('<input type="hidden" name="Produtos['+seq+'].ProdutoId" value="'+row_data[0]+'">');
+                    $(form).append('<input type="hidden" name="Produtos['+seq+'].Descricao" value="'+row_data[1]+'">');
+                    $(form).append('<input type="hidden" name="Produtos['+seq+'].PontosPorRealProduto" value="'+row_data[2].replace(".",",")+'">');
+                    $(form).append('<input type="hidden" name="Produtos['+seq+'].ValorProduto" value="'+row_data[3].replace(",","").replace("R$","").replace(".",",")+'">');                
 
                     seq++;
                 });
             });
+
+            function teste(valor) {
+                alert(valor);
+            }
+
+            $('#data-table-produtos tbody').on('click', '.btn-remove', function () {
+
+                swal({
+                    title: "Remoção",
+                    text: "Deseja remover esse produto da lista?",
+                    icon: "warning",
+                    buttons: {
+                        cancel: {
+                            text: "Não, cancelar!",
+                            value: null,
+                            visible: true,
+                            className: "",
+                            closeModal: false,
+                        },
+                        confirm: {
+                            text: "Sim, remover!",
+                            value: true,
+                            visible: true,
+                            className: "",
+                            closeModal: false
+                        }
+                    }
+                })
+                    .then((isConfirm) => {
+                        if (isConfirm) {
+                            if ($(this).closest("tr").hasClass('selected')) {
+                                $(this).closest("tr").removeClass('selected');
+                            }
+                            else {
+                                tabela_produtos.$('tr.selected').removeClass('selected');
+                                $(this).closest("tr").addClass('selected')
+                            }
+                            tabela_produtos.row('.selected').remove().draw(false);
+                            swal("Removido!", "O produto foi removido da lista", "success");
+                        } else {
+                            swal("Cancelado", "O produto não foi removido", "error");
+                        }
+                    });
+            });
+           
+
+            @*function recuperaListaDeProdutos() {
+                tabela_produto.DataTable();
+                @foreach (var item in Model.Produtos)
+                {
+                    <text>
+                    tabela_produtos.row.add([@item.ProdutoId, @item.Descricao, @item.PontosPorRealProduto, @item.ValorProduto, ""]).draw();
+                    </text>
+                }
+            }*@
         });
 
         function iniciar_RamoAtividade() {
