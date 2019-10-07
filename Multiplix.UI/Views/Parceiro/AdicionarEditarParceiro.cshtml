@@ -188,7 +188,6 @@
 
                                     <!-- tab 2 -->
                                     <div role="tabpanel" class="tab-pane" id="active2" aria-labelledby="active-tab2" aria-expanded="true">
-
                                         <div class="form-group row">
                                             <div class="table-responsive">
                                                 <table id="data-table-produtos" class="table table-striped table-bordered text-nowrap w-100">
@@ -205,7 +204,7 @@
                                             </div>
                                         </div>
 
-                                        <h4 class="form-section"><i class="ft-shopping-cart"></i>Adicionar Produtos ao parceiro</h4>
+                                        <h4 class="form-section form-add-produto"><i class="ft-shopping-cart"></i><span class="add">Adicionar Produtos ao Parceiro</span><span class="edit">Editar Produto do Parceiro</span></h4>
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="Produto">Produto</label>
                                             <div class="col-md-9 mx-auto">
@@ -226,7 +225,7 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="ValorProduto">Valor</label>
                                             <div class="col-md-9 mx-auto">
-                                                <input style="text-align:left;" type="text" class="form-control money" id="ValorProduto" name="ValorProduto">
+                                                <input style="text-align:left;" type="text" class="form-control money text-left" id="ValorProduto" name="ValorProduto">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -234,6 +233,12 @@
                                             <div class="col-md-9 mx-auto">
                                                 <button type="button" id="add-produto" class="btn btn-sm btn-primary">
                                                     <i class="la la-check-square-o"></i> Adicionar
+                                                </button>
+                                                <button type="button" id="edit-produto" class="btn btn-sm btn-primary">
+                                                    <i class="la la-check-square-o"></i> Confirmar Edição
+                                                </button>
+                                                <button type="button" id="cancel-edit-produto" class="btn btn-sm btn-danger">
+                                                    <i class="la la-check-square-o"></i> Cancelar Edição
                                                 </button>
                                             </div>
                                         </div>
@@ -277,7 +282,7 @@
                 'allowMinus': false,
                 'prefix': 'R$ ',
                 'placeholder': ''
-            });          
+            });
 
             //Cel mask
             $('.phone-formatter').formatter({
@@ -324,20 +329,24 @@
                         render: function (data, type, row, meta) {
                             var opts = "";
 
-                            //if (pode_alterar_alarme === true) {
-                            //    opts += '<a href="/Alarme/Editar/?alarmeId=' + row[0] + '" class="btn btn-link btn-warning btn-icon btn-sm"><i class="tim-icons icon-pencil"></i></a>';
-                            //}
-                            //if (pode_excluir_alarme === true) {                               
-                                opts += '<a href="javascript:void(0)" class="btn btn-link btn-danger btn-icon btn-sm btn-remove"><i class="la la-trash-o la-lg"></i></a>';
-                    
-                            //}
+                            opts += '<a href="javascript:void(0)" class="btn btn-link btn-warning btn-icon btn-sm btn-edit  " data-produto-id="'+row[0]+'"><i class="tim-icons icon-pencil"></i></a>&nbsp;&nbsp;';
+                            opts += '<a href="javascript:void(0)" class="btn btn-link btn-danger  btn-icon btn-sm btn-remove"><i class="tim-icons icon-trash"></i></a>';
 
                             return opts;
                         },
-                        className: "text-right"
+                        className: "text-center"
                     }
                 ]
             });
+
+            @foreach (var produto in Model.Produtos)
+            {
+                <Text>add_produto_na_tabela(
+                    "@produto.ProdutoId",
+                    "@produto.Descricao",
+                    parseFloat("@produto.PontosPorRealProduto".replace(",", ".")),
+                    parseFloat("@produto.ValorProduto".replace(",", ".")));</Text>
+            }
 
             $("#add-produto").click(() => {
                 var produto_select = $("#Produto").find("option:selected");
@@ -345,67 +354,156 @@
                 if (produto_select.length) {
                     var produto_id = $(produto_select).attr("value"),
                         produto_descricao = $(produto_select).text(),
-                        produto_pontos = $("#PontosPorRealProduto").val(),
+                        produto_pontos_por_real = $("#PontosPorRealProduto").val(),
                         produto_valor = $("#ValorProduto").val();
 
-                    //Não deixa inserir produto duplicado
                     var temLinhaDuplicada = false;
-                    var temProdutoPonto = true;
-                    var temValorProduto = true;
 
                     tabela_produtos.rows().every(function () {
                         var row_data = this.data();
 
                         if (produto_id === row_data[0]) {
-
-                            swal("Atenção!", "Esse produto já está na lista!", "warning");        
-
+                            swal("Atenção!", "Esse produto já está na lista!", "warning");
                             temLinhaDuplicada = true;
                         }
                     });
 
-                    if (produto_pontos === "") {
+                    var temProdutoPonto = true;
+                    var temValorProduto = true;
+
+                    if (produto_pontos_por_real === "") {
                         swal("Atenção!", "Digite quanto vale em pontos cada real desse produto!", "warning");
                         temProdutoPonto = false;
                     }
-                   
+
                     if ($("#ValorProduto").val() === "R$ 00." || $("#ValorProduto").val() === "" || $("#ValorProduto").val() === "R$ ." || $("#ValorProduto").val() === "R$ 0.00")  {
                         swal("Atenção!", "Digite o valor do produto", "warning");
                         temValorProduto = false;
                     }
 
-                    if (temLinhaDuplicada === false && temProdutoPonto === true && temValorProduto === true) {
-   
-                        tabela_produtos.row.add([produto_id, produto_descricao, produto_pontos, produto_valor, ""]).draw();
-                        $("#Produto").val(null).trigger("change");
-                        $("#PontosPorRealProduto").val("");
-                        $("#ValorProduto").val("");
-                    }                   
+                    if (!temLinhaDuplicada && temProdutoPonto && temValorProduto) {
+                        produto_pontos_por_real = parseFloat(produto_pontos_por_real.replace(",", "").trim());
+                        produto_valor = parseFloat(produto_valor.replace(",", "").replace("R$", "").trim());
+
+                        add_produto_na_tabela(produto_id, produto_descricao, produto_pontos_por_real, produto_valor);
+
+                        produtos_modo_add();
+                    }
                 }
-            });           
+            });
 
-            $("#form-parceiro").submit(function() {
-                var form = this;
-                var seq = 0;                  
+            function add_produto_na_tabela(produto_id, produto_descricao, float_produto_pontos_por_real, float_produto_valor) {
+                var produto_pontos_por_real = float_produto_pontos_por_real.toFixed(2).replace(".", ","),
+                    produto_valor = "R$ " + float_produto_valor.toFixed(2).replace(".", ",");
 
-                tabela_produtos.rows().every(function() {
-                    var row_data = this.data();
-                  
-                    $(form).append('<input type="hidden" name="Produtos['+seq+'].ProdutoId" value="'+row_data[0]+'">');
-                    $(form).append('<input type="hidden" name="Produtos['+seq+'].Descricao" value="'+row_data[1]+'">');
-                    $(form).append('<input type="hidden" name="Produtos['+seq+'].PontosPorRealProduto" value="'+row_data[2].replace(".",",")+'">');
-                    $(form).append('<input type="hidden" name="Produtos['+seq+'].ValorProduto" value="'+row_data[3].replace(",","").replace("R$","").replace(".",",")+'">');                
+                tabela_produtos.row.add([produto_id, produto_descricao, produto_pontos_por_real, produto_valor, ""]).draw();
+            }
 
-                    seq++;
+            $('#data-table-produtos tbody').on('click', '.btn-edit', function () {
+                var produto_id = $(this).attr("data-produto-id"),
+                    produto_select2 = $("#Produto"),
+                    produto_pontos_por_real_input = $("#PontosPorRealProduto"),
+                    produto_valor_input = $("#ValorProduto");
+
+                tabela_produtos.rows().every(function () {
+                    var row = this.data();
+                    if (produto_id === row[0]) {
+                        produtos_modo_add();
+
+                        $(produto_select2).select2("trigger", "select", {
+                            data: {
+                                id: produto_id,
+                                text: row[1]
+                            }
+                        });
+
+                        $(produto_pontos_por_real_input).val(row[2].replace(",", ".").trim());
+                        $(produto_valor_input).val(row[3].replace(",", ".").replace("R$", "").trim());
+
+                        produtos_modo_edit();
+                    }
                 });
             });
 
-            function teste(valor) {
-                alert(valor);
+            function produtos_modo_edit() {
+                $(".form-add-produto").find("span.add").hide();
+                $(".form-add-produto").find("span.edit").show();
+
+                $("#Produto").select2({ disabled: 'readonly' });
+
+                $("#add-produto").hide();
+                $("#edit-produto").show();
+                $("#cancel-edit-produto").show();
+            }
+            
+            function produtos_modo_add() {
+                $(".form-add-produto").find("span.edit").hide();
+                $(".form-add-produto").find("span.add").show();
+
+                $("#Produto").select2({ disabled: '' });
+                aplicar_select2_to_elem($("#Produto"));
+
+                $("#edit-produto").hide();
+                $("#cancel-edit-produto").hide();
+                $("#add-produto").show();
+
+                $("#Produto").val(null).trigger("change");
+                $("#PontosPorRealProduto").val("0");
+                $("#ValorProduto").val("0");
+            }
+            produtos_modo_add();
+
+            $("#edit-produto").click(() => {
+                var produto_select = $("#Produto").find("option:selected"),
+                    produto_id = $(produto_select).attr("value"),
+                    produto_pontos_por_real = $("#PontosPorRealProduto").val(),
+                    produto_valor = $("#ValorProduto").val();
+
+                var temProdutoPonto = true;
+                var temValorProduto = true;
+
+                if (produto_pontos_por_real === "") {
+                    swal("Atenção!", "Digite quanto vale em pontos cada real desse produto!", "warning");
+                    temProdutoPonto = false;
+                }
+
+                if ($("#ValorProduto").val() === "R$ 00." || $("#ValorProduto").val() === "" || $("#ValorProduto").val() === "R$ ." || $("#ValorProduto").val() === "R$ 0.00") {
+                    swal("Atenção!", "Digite o valor do produto", "warning");
+                    temValorProduto = false;
+                }
+
+                if (temProdutoPonto && temValorProduto) {
+                    produto_pontos_por_real = parseFloat(produto_pontos_por_real.replace(",", "").trim());
+                    produto_valor = parseFloat(produto_valor.replace(",", "").replace("R$", "").trim());
+
+                    tabela_produtos.rows().every(function () {
+                        var row = this,
+                            row_data = row.data();
+
+                        if (produto_id === row_data[0]) {
+                            edit_produto_na_tabela(row, produto_pontos_por_real, produto_valor);
+
+                            produtos_modo_add();
+                        }
+                    });
+                }
+            });
+
+            function edit_produto_na_tabela(datatable_row, float_produto_pontos_por_real, float_produto_valor) {
+                var row_data = datatable_row.data(),
+                    produto_id = row_data[0],
+                    produto_descricao = row_data[1],
+                    produto_pontos_por_real = float_produto_pontos_por_real.toFixed(2).replace(".", ","),
+                    produto_valor = "R$ " + float_produto_valor.toFixed(2).replace(".", ",");
+
+                datatable_row.data([produto_id, produto_descricao, produto_pontos_por_real, produto_valor, ""]).draw();
             }
 
-            $('#data-table-produtos tbody').on('click', '.btn-remove', function () {
+            $("#cancel-edit-produto").click(() => {
+                produtos_modo_add();
+            });
 
+            $('#data-table-produtos tbody').on('click', '.btn-remove', function () {
                 swal({
                     title: "Remoção",
                     text: "Deseja remover esse produto da lista?",
@@ -443,17 +541,26 @@
                         }
                     });
             });
-           
 
-            @*function recuperaListaDeProdutos() {
-                tabela_produto.DataTable();
-                @foreach (var item in Model.Produtos)
-                {
-                    <text>
-                    tabela_produtos.row.add([@item.ProdutoId, @item.Descricao, @item.PontosPorRealProduto, @item.ValorProduto, ""]).draw();
-                    </text>
-                }
-            }*@
+            $("#form-parceiro").submit(function () {
+                var form = this;
+                var seq = 0;
+
+                tabela_produtos.rows().every(function () {
+                    var row_data = this.data(),
+                        produto_id = row_data[0],
+                        produto_descricao = row_data[1],
+                        produto_pontos_por_real = row_data[2],
+                        produto_valor = row_data[3].replace("R$", "").trim();
+
+                    $(form).append('<input type="hidden" name="Produtos[' + seq + '].ProdutoId" value="' + produto_id + '"/>');
+                    $(form).append('<input type="hidden" name="Produtos[' + seq + '].Descricao" value="' + produto_descricao + '"/>');
+                    $(form).append('<input type="hidden" name="Produtos[' + seq + '].PontosPorRealProduto" value="' + produto_pontos_por_real + '"/>');
+                    $(form).append('<input type="hidden" name="Produtos[' + seq + '].ValorProduto" value="' + produto_valor + '"/>');
+
+                    seq++;
+                });
+            });
         });
 
         function iniciar_RamoAtividade() {

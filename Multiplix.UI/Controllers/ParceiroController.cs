@@ -33,7 +33,7 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AdicionarParceiro(UsuarioDTO usuarioDTO, List<ProdutoDTO> produtos)
+        public IActionResult AdicionarParceiro(UsuarioDTO usuarioDTO)
         {
             ViewData["Title"] = "Novo Parceiro";
             return SalvarParceiro(usuarioDTO, "Parceiro adicionado com sucesso!");
@@ -60,9 +60,19 @@ namespace Multiplix.UI.Controllers
                 Login = parceiro.Usuario.Login,
                 HorarioFuncionamento = parceiro.HorarioFuncionamento,
                 PontoPorReal = parceiro.PontoPorReal,
-                RamoAtividadeId = parceiro.Ramo.RamoAtividadeId,
-                RamoAtividadeNome = parceiro.Ramo.Nome
+                RamoAtividadeId = parceiro.Ramo != null ? parceiro.Ramo.RamoAtividadeId : 0,
+                RamoAtividadeNome = parceiro.Ramo != null ? parceiro.Ramo.Nome : ""
             };
+
+            foreach (var parceiroProduto in parceiro.ParceiroProdutos)
+            {
+                usuarioDTO.Produtos.Add(new ProdutoDTO() {
+                    ProdutoId = parceiroProduto.Produto.ProdutoId,
+                    Descricao = parceiroProduto.Produto.Descricao,
+                    PontosPorRealProduto = parceiroProduto.PontosPorRealProduto,
+                    ValorProduto = parceiroProduto.ValorProduto
+                });
+            }
 
             return View("AdicionarEditarParceiro", usuarioDTO);
         }
