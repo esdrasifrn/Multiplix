@@ -19,7 +19,11 @@ namespace Multiplix.Infrastructure.EntityConfig
 
             builder
                .HasOne(c => c.Parceiro)
-               .WithMany(p => p.Compras);          
+               .WithMany(p => p.Compras);
+
+            builder
+                .HasMany(c => c.CompraItems)
+                .WithOne(ci => ci.Compra);
         }
            
     }

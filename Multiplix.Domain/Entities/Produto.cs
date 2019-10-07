@@ -11,18 +11,32 @@ namespace Multiplix.Domain.Entities
         /// </summary>
         private IList<ParceiroProduto> _parceiroProdutos = new List<ParceiroProduto>();
 
+        //Um produto pode fazer parte de vários itens de compra
+        private IList<CompraItem> _compraItems = new List<CompraItem>();
+
         public int ProdutoId { get; set; }
         public string Descricao { get; set; }
         public virtual ICollection<ParceiroProduto> ParceiroProdutos { get => _parceiroProdutos; set { } }
+        public virtual ICollection<CompraItem> CompraItems { get => _compraItems; set { } }
 
         public Produto(string descricao)
         {
             Descricao = descricao;
         }
 
+        public Produto()
+        {
+
+        }
+
         public void AddParceiroProduto(ParceiroProduto parceiroProduto)
         {
             _parceiroProdutos.Add(parceiroProduto);
+        }
+
+        public void AddCompraItem(CompraItem compraItem)
+        {
+            _compraItems.Add(compraItem);
         }
 
     }

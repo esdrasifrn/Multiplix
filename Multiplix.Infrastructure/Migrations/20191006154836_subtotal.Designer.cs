@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Multiplix.Infrastructure.Data;
 
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    partial class MultiplixContextModelSnapshot : ModelSnapshot
+    [Migration("20191006154836_subtotal")]
+    partial class subtotal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,8 +140,6 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<float>("Subtotal");
 
-                    b.Property<float>("SubtotalPontos");
-
                     b.Property<float>("ValorUnidade");
 
                     b.HasKey("CompraItemId");
@@ -225,8 +225,7 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<float>("PontosPorRealProduto");
 
-                    b.Property<decimal>("ValorProduto")
-                        .HasColumnType("decimal(15, 2)");
+                    b.Property<float>("ValorProduto");
 
                     b.HasKey("ParceiroId", "ProdutoId");
 

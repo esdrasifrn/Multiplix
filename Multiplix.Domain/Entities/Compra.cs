@@ -9,6 +9,9 @@ namespace Multiplix.Domain.Entities
     /// </summary>
     public class Compra
     {
+        //Uma compra pode ter muitos itens comprados
+        private IList<CompraItem> _compraItems = new List<CompraItem>(); 
+
         public Compra(float valor, DateTime data, float pontos, Parceiro parceiro, Associado associado)
         {
             Valor = valor;
@@ -31,5 +34,11 @@ namespace Multiplix.Domain.Entities
         //A compra é realizada pelo parceiro para o associado
         public virtual Parceiro Parceiro { get; set; }
         public virtual Associado Associado { get; set; }
+        public virtual ICollection<CompraItem> CompraItems { get => _compraItems; set { } }
+
+        public void AddCompraItem(CompraItem compraItem)
+        {
+            _compraItems.Add(compraItem);
+        }
     }
 }

@@ -14,10 +14,12 @@ namespace Multiplix.UI.Controllers
     public class CompraController : Controller
     {
         private readonly IServiceCompra _serviceCompra;
+        private readonly IServiceParceiro _serviceParceiro;
 
-        public CompraController(IServiceCompra serviceCompra)
+        public CompraController(IServiceCompra serviceCompra, IServiceParceiro serviceParceiro)
         {
             _serviceCompra = serviceCompra;
+            _serviceParceiro = serviceParceiro;
         }
 
         public IActionResult IndexCompra()
@@ -50,6 +52,18 @@ namespace Multiplix.UI.Controllers
                 return RedirectToAction("IndexCompra");
             }
             return View("AdicionarEditarCompra", compraDTO);
+        }
+
+        public IActionResult GetInfoProdutoParceiro(int produtoId, int parceiroId)
+        {
+            var parceiro = _serviceParceiro.ObterPorId(parceiroId);
+            var infoProdutoParceiro = parceiro.ParceiroProdutos.Where(x => x.ProdutoId == produtoId).FirstOrDefault();
+            var resultado = new
+            {
+                valor = /*string.Format("{0:#.00}", Convert.ToDecimal(*/infoProdutoParceiro.ValorProduto/*))*/, //passar os campos minusculos para o js
+                pontos_produto = infoProdutoParceiro.PontosPorRealProduto
+            };
+            return Json(resultado);
         }
 
         [HttpPost]

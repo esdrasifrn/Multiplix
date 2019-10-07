@@ -12,6 +12,7 @@ namespace Multiplix.Domain.DTOs
         public DateTime Data { get; set; }
         public float Pontos { get; set; }
         public IList<ValidationFailure> ValidationErrors { get; set; } = new List<ValidationFailure>();
+        public IList<CompraItemDTO> CompraItems { get; set; } = new List<CompraItemDTO>();
 
         //Parceiro
         public int ParceiroId { get; set; }
