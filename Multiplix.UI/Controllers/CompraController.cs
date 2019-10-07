@@ -60,7 +60,7 @@ namespace Multiplix.UI.Controllers
             var infoProdutoParceiro = parceiro.ParceiroProdutos.Where(x => x.ProdutoId == produtoId).FirstOrDefault();
             var resultado = new
             {
-                valor = infoProdutoParceiro.ValorProduto, //passar os campos minusculos para o js
+                valor = /*string.Format("{0:#.00}", Convert.ToDecimal(*/infoProdutoParceiro.ValorProduto/*))*/, //passar os campos minusculos para o js
                 pontos_produto = infoProdutoParceiro.PontosPorRealProduto
             };
             return Json(resultado);

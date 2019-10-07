@@ -171,7 +171,7 @@ namespace Multiplix.UI.Controllers
                     parceiro.CNPJ,
                     parceiro.Usuario.Celular,
                     parceiro.Usuario.Email,
-                    parceiro.PontoPorReal,
+                    parceiro.ParceiroProdutos.Count,
 
                     _serviceParceiro.ObterPorId(id: parceiro.ParceiroId).Usuario.Nome ?? "-"
                 };

@@ -10,7 +10,7 @@ namespace Multiplix.Domain.DTOs
         public int ProdutoId { get; set; }
         public string Descricao { get; set; }
         public float PontosPorRealProduto { get; set; }
-        public float ValorProduto { get; set; }
+        public Decimal ValorProduto { get; set; }
         public IList<ValidationFailure> ValidationErrors { get; set; } = new List<ValidationFailure>();
  
     }

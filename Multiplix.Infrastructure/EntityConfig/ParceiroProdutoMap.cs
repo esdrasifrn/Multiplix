@@ -20,6 +20,10 @@ namespace Multiplix.Infrastructure.EntityConfig
             builder.HasOne(ug => ug.Produto)
                 .WithMany(g => g.ParceiroProdutos)
                 .HasForeignKey(ug => ug.ProdutoId);
+
+            builder
+               .Property(pp=> pp.ValorProduto)
+               .HasColumnType("decimal(15, 2)");
         }
     }
 }

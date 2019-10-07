@@ -11,6 +11,6 @@ namespace Multiplix.Domain.Entities
         public int ParceiroId { get; set; }
         public virtual Parceiro Parceiro { get; set; }
         public float PontosPorRealProduto { get; set; }
-        public float ValorProduto { get; set; }
+        public Decimal ValorProduto { get; set; }
     }
 }

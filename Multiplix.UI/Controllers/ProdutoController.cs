@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Multiplix.Domain.Entities;
@@ -22,7 +23,7 @@ namespace Multiplix.UI.Controllers
             return View();
         }
 
-        public JsonResult PesquisaProduto(string searchTerm, int pageNumber)
+        public JsonResult PesquisaProduto(string searchTerm, int pageNumber, int ParceiroId)
         {
             /*
              * consumido por um Select2 ajax
@@ -33,13 +34,31 @@ namespace Multiplix.UI.Controllers
             int pageSize = 10;
 
             List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
+            Expression<Func<Produto, bool>> searchFor;
 
             IEnumerable<Produto> produtos = new List<Produto>();
-
-            if (!String.IsNullOrEmpty(searchTerm))
-                produtos = _serviceProduto.Buscar(x => x.Descricao.Contains(searchTerm));
+            if (ParceiroId == 0)
+            {
+                if (!String.IsNullOrEmpty(searchTerm))
+                    produtos = _serviceProduto.Buscar(x => x.Descricao.Contains(searchTerm));
+                else
+                    produtos = _serviceProduto.ObterTodos();
+            }
             else
-                produtos = _serviceProduto.ObterTodos();
+            {
+                if (!String.IsNullOrEmpty(searchTerm))
+                {
+                    searchFor = x => x.Descricao.Contains(searchTerm) && (x.ParceiroProdutos.Any(y => y.ParceiroId == ParceiroId));
+                    produtos = _serviceProduto.Buscar(searchFor);
+                }
+                else
+                {
+                    searchFor = x => (x.ParceiroProdutos.Any(y => y.ParceiroId == ParceiroId));
+                    produtos = _serviceProduto.Buscar(searchFor);
+                }
+                   
+            }
+           
 
             int totalResults = produtos.Count();
             produtos = produtos.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();

@@ -48,7 +48,7 @@
                 </div>
                 <div class="card-content collpase show">
                     <div class="card-body">
-                        <form method="post" id="form-parceiro" class="form form-horizontal">
+                        <form method="post" id="form-compra" class="form form-horizontal">
                             <div class="form-body">
 
                                 <h4 class="form-section"><i class="ft-user"></i> Dados do associado</h4>
@@ -91,7 +91,8 @@
                                             <select id="Produto"
                                                     name="Produto"
                                                     class="has-select2"
-                                                    data-select2-url="/Produto/PesquisaProduto">
+                                                    data-select2-url="/Produto/PesquisaProduto"
+                                                    data-js-callback-extra-request-params="produto_extra_filter">
                                                 <!-- Select2 -->
                                             </select>
                                         </div>
@@ -105,19 +106,19 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="ValorUnidade">Valor Unidade*</label>
-                                            <input type="text" id="ValorUnidade" disabled class="form-control money font-size-large round font-weight-bold" placeholder="Valor da unidade" name="ValorUnidade">
+                                            <input type="text" id="ValorUnidade" disabled class="form-control money  round font-weight-bold" placeholder="Valor da unidade" name="ValorUnidade">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="Subtotal">Subtotal*</label>
-                                            <input type="text" id="Subtotal" disabled class="form-control money  font-size-large round font-weight-bold" placeholder="Subtotal" name="Subtotal">
+                                            <input type="text" id="Subtotal" disabled class="form-control money  round font-weight-bold" placeholder="Subtotal" name="Subtotal">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="Pontos">Pontos*</label>
-                                            <input type="text" id="Pontos" disabled class="form-control font-size-large round font-weight-bold" placeholder="Pontos" name="Pontos">
+                                            <input type="text" id="Pontos" disabled class="form-control  round font-weight-bold" placeholder="Pontos" name="Pontos">
                                         </div>
                                     </div>
                                 </div>
@@ -267,9 +268,27 @@
                         $("#Pontos").val("");
                     }                   
                 }
-            }); 
+            });
 
-            $("#qtd").keypress(() => {
+             $("#form-compra").submit(function() {
+                var form = this;
+                var seq = 0;                  
+
+                tabela_produtos.rows().every(function() {
+                    var row_data = this.data();
+                  
+                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].ProdutoId" value="'+row_data[0]+'">');
+                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].Qtd" value="'+row_data[2]+'">');
+                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].ValorUnidade" value="'+row_data[3].replace(",","").replace("R$","").replace(".",",")+'">');
+                    $(form).append('<input type="hidden" name="CompraItems[' + seq + '].Subtotal" value="' + row_data[4].replace(",", "").replace("R$", "").replace(".", ",") + '">');
+                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].SubtotalPontos" value="'+row_data[5].replace(".",",")+'">');  
+                    
+                    seq++;
+                });
+            });
+
+
+            $("#qtd").keydown(() => {
                 var produto_select = $("#Produto").find("option:selected");
                 var produto_id = $(produto_select).attr("value");
 
@@ -289,7 +308,7 @@
                         var subtotal = parseFloat(response.valor) * parseInt(qtd);
 
                         $("#Subtotal").val(subtotal);
-                        $("#Pontos").val(response.pontos_produto * subtotal);
+                        $("#Pontos").val(parseFloat(response.pontos_produto * subtotal).toFixed(2));
                        // alert(total);
                         //console.log(response.pontos_produto);                    
                     }//,
@@ -299,8 +318,50 @@
                     //}
                 });
             });
+            
+            $('#data-table-produtos tbody').on('click', '.btn-remove', function () {
 
-             $(".money").inputmask('decimal', {
+                swal({
+                    title: "Remoção",
+                    text: "Deseja remover esse produto da lista?",
+                    icon: "warning",
+                    buttons: {
+                        cancel: {
+                            text: "Não, cancelar!",
+                            value: null,
+                            visible: true,
+                            className: "",
+                            closeModal: false,
+                        },
+                        confirm: {
+                            text: "Sim, remover!",
+                            value: true,
+                            visible: true,
+                            className: "",
+                            closeModal: false
+                        }
+                    }
+                })
+                    .then((isConfirm) => {
+                        if (isConfirm) {
+                            if ($(this).closest("tr").hasClass('selected')) {
+                                $(this).closest("tr").removeClass('selected');
+                            }
+                            else {
+                                tabela_produtos.$('tr.selected').removeClass('selected');
+                                $(this).closest("tr").addClass('selected')
+                            }
+                            tabela_produtos.row('.selected').remove().draw(false);
+                            swal("Removido!", "O produto foi removido da lista", "success");
+                        } else {
+                            swal("Cancelado", "O produto não foi removido", "error");
+                        }
+                    });
+            });
+
+
+
+            $(".money").inputmask('decimal', {
                 'alias': 'numeric',
                 'groupSeparator': ',',
                 'autoGroup': true,
@@ -310,11 +371,16 @@
                 'allowMinus': false,
                 'prefix': 'R$ ',
                 'placeholder': ''
-            });      
+             });  
 
         });
 
-        
+         function produto_extra_filter(elem_select) {
+           var select = $("select[name=Parceiro]");
+           return {
+               ParceiroId: $(select).val()
+           }
+        }        
 
         function iniciar_Parceiro() {
             var objs = [];
