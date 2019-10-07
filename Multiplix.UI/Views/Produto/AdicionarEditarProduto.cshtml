@@ -1,0 +1,123 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Multiplix.UI.Utils
+@using Multiplix.Domain.Enums
+@model Multiplix.Domain.DTOs.ProdutoDTO
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">@ViewData["Title"]</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Usuario/Index">Listagem de Produtos</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Cadastro de produto
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<partial name="_componente_form_validation_fluent_messages_container" />
+
+<section id="horizontal-form-layouts">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    @*<h4 class="card-title" id="horz-layout-basic">Dados do parceiro</h4>*@
+                    @*<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>*@
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            @*<li><a data-action="collapse"><i class="ft-minus"></i></a></li>*@
+                            @*<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>*@
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            @*<li><a data-action="close"><i class="ft-x"></i></a></li>*@
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-content collpase show">
+                    <div class="card-body">
+                        <form method="post" id="form-parceiro" class="form form-horizontal">
+                            <div class="form-body">
+                               
+
+                                        <h4 class="form-section"><i class="ft-user"></i> Dados gerais</h4>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 label-control" for="Nome">Descrição</label>
+                                            <div class="col-md-9 mx-auto">
+                                                <input type="text" id="Descricao" asp-for="Descricao" class="form-control" placeholder="Descrição" name="Descricao">
+                                            </div>
+                                        </div>                                   
+                                </div>
+                          
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="la la-check-square-o"></i> Salvar
+                                </button>
+                                <a href="/Produto/IndexProduto" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts
+{
+    <partial name="_componente_form_validation_fluent_messages_script" />
+
+    <script>
+        $(document).ready(() => {
+            // ativa a tab 1
+            $("#active-tab1").trigger("click");
+
+            $('.percentage-inputmask').inputmask("99%");
+
+            $(".money").inputmask('decimal', {
+                'alias': 'numeric',
+                'groupSeparator': ',',
+                'autoGroup': true,
+                'digits': 2,
+                'radixPoint': ".",
+                'digitsOptional': false,
+                'allowMinus': false,
+                'prefix': 'R$ ',
+                'placeholder': ''
+            });
+
+            //Cel mask
+            $('.phone-formatter').formatter({
+                'pattern': "({{99}}) {{99999}}-{{9999}}"
+            });
+
+            //Cel mask
+            $('.cnpj-formatter').formatter({
+                'pattern': "{{99}}.{{999}}.{{999}}/{{9999}}-{{99}}"
+            });
+
+            //Cel mask
+            $('.cep-formatter').formatter({
+                'pattern': "{{99}}.{{999}}-{{999}}"
+            });
+
+           
+        });
+
+     
+    </script>
+
+}
