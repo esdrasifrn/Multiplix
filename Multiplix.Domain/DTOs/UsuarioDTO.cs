@@ -11,6 +11,7 @@ namespace Multiplix.Domain.DTOs
         public string IdCateira { get; set; }
         public int PatrocinadorId { get; set; }
         public int AssociadoId { get; set; }
+        public int Nivel { get; set; }
         public string Nome { get; set; }
         public string Celular { get; set; }
         public string Email { get; set; }

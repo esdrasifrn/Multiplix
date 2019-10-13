@@ -129,7 +129,8 @@ namespace Multiplix.Domain.Services
                     banco: _bancoRepository.ObterPorId(usuarioDTO.BancoId),
                     tipoConta: usuarioDTO.TipoConta,
                     agengia: usuarioDTO.Agencia,
-                    conta: usuarioDTO.Conta
+                    conta: usuarioDTO.Conta,
+                    nivel: 1 // multiplys é o nível zero e seus convidados serão 0 + 1, e assim sucessivamente
 
                     ) ; 
 

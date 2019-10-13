@@ -63,7 +63,38 @@ namespace Multiplix.Domain.Services
 
         public ValidationResult Salvar(RamoAtividadeDTO ramoAtividadeDTO)
         {
-            throw new NotImplementedException();
+            // ramo de atividade
+            RamoAtividade ramoAtividade;
+
+            if (ramoAtividadeDTO.RamoAtividadeId == 0)
+            {
+                ramoAtividade = new RamoAtividade(
+                   nome: ramoAtividadeDTO.RamoAtividadeNome
+                );
+
+                ramoAtividade.RamoAtividadeId = 0;
+            }
+            else
+            {
+                ramoAtividade = _ramoAtividadeRepository.ObterPorId(ramoAtividadeDTO.RamoAtividadeId);
+                ramoAtividade.Nome = ramoAtividadeDTO.RamoAtividadeNome;
+            }
+
+            ValidationResult result = new RamoAtividadeValidator().Validate(ramoAtividade);
+
+            if (result.IsValid)
+            {
+                if (ramoAtividade.RamoAtividadeId == 0)
+                    _ramoAtividadeRepository.Adicionar(ramoAtividade);
+                else
+                    _ramoAtividadeRepository.Atualizar(ramoAtividade);
+            }
+            else
+            {
+                ramoAtividadeDTO.ValidationErrors = result.Errors;
+            }
+
+            return result;
         }
     }
 }

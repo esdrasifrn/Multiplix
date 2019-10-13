@@ -32,7 +32,7 @@ namespace Multiplix.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Usuario>().HasData(
-                new Usuario() {UsuarioId = 1, Login = "admin", Senha = "123", Nome = "Admin", Celular = "98776655", Email = "admin@hotmail.com", IsSuperUser = true }
+                new Usuario() {UsuarioId = 1, Login = "admin", Senha = "123", Nome = "Multiplys", Celular = "98776655", Email = "admin@hotmail.com", IsSuperUser = true }
              );        
 
           
