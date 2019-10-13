@@ -7,6 +7,7 @@ using Multiplix.Domain.Validations;
 using Multiplix.Domain.ValueObject;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -60,6 +61,23 @@ namespace Multiplix.Domain.Services
         public IEnumerable<Associado> ObterTodosPaginado(int skip, int take)
         {
             return _patrocinadorRepository.ObterTodosPaginado(skip, take);
+        }
+
+        public List<Associado> GetRedeAssociado(int associadoId)
+        {
+            var associadosPatrocinados = new List<Associado>();
+            var associados_patrocinados_diretos = _patrocinadorRepository.ObterPorId(associadoId).Patrocinados.ToList();
+            foreach (var item in associados_patrocinados_diretos)
+            {
+                associadosPatrocinados.Add(item);
+               // if (item.Id != 1)
+               // {
+                    associadosPatrocinados = associadosPatrocinados.Union(GetRedeAssociado(item.Id)).ToList();
+                //}
+
+            }
+            var ids = associadosPatrocinados;
+            return associadosPatrocinados;
         }
 
         public void Remover(Associado entity)

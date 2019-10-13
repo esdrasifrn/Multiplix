@@ -59,6 +59,70 @@
     });
 }
 
+
+function generateDataTableGet(selector, model, listUrl, podeEditar = false, urlEditar = "", podeApagar = false, urlApagar = "", extrabuttons = [], defaultsearch = "") {
+    $(selector).DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: listUrl,
+            method: "GET"
+        },
+        responsive: false,
+        paging: true,
+        ordering: true,
+        pagingType: "full_numbers",
+        "oSearch": { "sSearch": defaultsearch },
+        language: {
+            search: "Buscar",
+            lengthMenu: "Mostrando _MENU_ " + model + "s por página",
+            zeroRecords: "Nenhum " + model + " encontrado",
+            info: "Mostrando _START_ até _END_ de _TOTAL_ " + model + "s",
+            infoEmpty: "Nenhum " + model + " a exibir",
+            processing: "Processando ...",
+            paginate: {
+                first: "Primeiro",
+                last: "Último",
+                next: "Próximo",
+                previous: "Anterior"
+            },
+        },
+        columnDefs: [
+            {
+                targets: 0,
+                visible: false
+            },
+            {
+                targets: -1,
+                data: 'actions',
+                render: function (data, type, row, meta) {
+                    var opts = "";
+                    extrabuttons.forEach(function (button, index, array) {
+                        if (button["permission"] === true || typeof button["permission"] === "undefined") {
+                            var color = "success";
+                            if (typeof button["style"] !== "undefined") {
+                                color = button["style"];
+                            }
+                            opts += '<a title="' + button["title"] + '" class="btn btn-sm btn-' + color + '  white-text" href="' + button["url"] + row[0] + '"><i class="fas fa-shield-alt"></i> ' + button["title"] + '</a>';
+                        }
+                    });
+                    if (podeEditar === true) {
+                        opts += '<a title="Editar" class="btn btn-sm btn-primary white-text" href="' + urlEditar + row[0] + '"> <i class="la la-edit la-lg"></i></a>';
+                    }
+
+                    if (podeApagar === true) {
+                        opts += '<a title="Excluir" class="btn btn-sm btn-danger white-text confirmar-exclusao" href="#' + urlApagar + row[0] + '" onclick="return confirmarExclusao(\'' + model + '\',\'' + urlApagar + '\',\'' + row[0] + '\',\'' + row[1] + '\');"><i class="la la-trash-o la-lg"></i></a>';
+                    }
+                    return opts;
+                },
+                className: "text-right"
+            }
+        ]
+    });
+}
+
+
+
 function jsUcfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }

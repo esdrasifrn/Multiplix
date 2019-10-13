@@ -1,0 +1,154 @@
+﻿@using Multiplix.UI.Utils
+@{
+    ViewData["Title"] = "Listagem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using System.Globalization
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">Associados diretos</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Listagem
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Resumo</div>
+            </div>
+            <div class="card-body">
+                <h1 class="text-bold-600">Associado: @ViewBag.NomeAssociado</h1>
+                <h5 class="text-bold-600">Período: Outubro</h5>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="media align-items-stretch">
+                                    <div class="p-2 bg-gradient-x-warning text-white media-body text-left rounded-left">
+                                        <h5 class="text-white">Associados diretos</h5>
+                                        <h5 class="text-white text-bold-400 mb-0">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QTDDiretos)</h5>
+                                    </div>
+                                    <div class="p-2 text-center bg-warning bg-darken-2 rounded-right">
+                                        <i class="icon-user-following font-large-2 text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="media align-items-stretch">
+                                    <div class="p-2 bg-gradient-x-success text-white media-body text-left rounded-left">
+                                        <h5 class="text-white">Associados da rede</h5>
+                                        <h5 class="text-white text-bold-400 mb-0">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QTDRede)</h5>
+                                    </div>
+                                    <div class="p-2 text-center bg-success bg-darken-2 rounded-right">
+                                        <i class="icon-share font-large-2 text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="media align-items-stretch">
+                                    <div class="p-2 bg-gradient-x-danger text-white media-body text-left rounded-left">
+                                        <h5 class="text-white">Pontos da rede</h5>
+                                        <h5 class="text-white text-bold-400 mb-0">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.PontosRede)</h5>
+                                    </div>
+                                    <div class="p-2 text-center bg-danger bg-darken-2 rounded-right">
+                                        <i class="icon-basket-loaded font-large-2 text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="media align-items-stretch">
+                                    <div class="p-2 bg-gradient-x-info text-white media-body text-left rounded-left">
+                                        <h5 class="text-white">Porcentagem %</h5>
+                                        <h5 class="text-white text-bold-400 mb-0">5.6 M</h5>
+                                    </div>
+                                    <div class="p-2 text-center bg-info bg-darken-2 rounded-right">
+                                        <i class="icon-wallet font-large-2 text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">@ViewData["Title"]</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="table-responsive">
+                            <table style="font-size:13px" id="data-table-usuarios" class="table table-striped table-bordered text-nowrap w-100">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th> <!-- ocultada pelo datatable -->
+                                        <th>Identificador</th>
+                                        <th>Nome</th>
+                                        <th>Celular</th>
+                                        <th>Qtd (Diretos)</th>
+                                        <th>Qtd (Rede)</th>
+                                        <th>Pontos diretos</th>
+                                        <th>Pontos da rede</th>
+                                        <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/js/datatable-generator.js"></script>
+    <script>
+        $(document).ready(function() {
+            var podeAlterarUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_usuario").ToString().ToLower();
+            var podeExcluirUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_usuario").ToString().ToLower();
+            var podeVisualizarAssociado = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_usuario").ToString().ToLower();
+            var botoes = [{ title: "Ver diretos", url: "/Usuario/IndexRedeDireta/?idAssociado=", permission: podeVisualizarAssociado }];
+            generateDataTableGet("#data-table-usuarios",
+                "Associado direto",
+                "/Usuario/ListaRedeDiretaAssociados?idAssociado=@ViewBag.idAssociado",
+                false,
+                "/Usuario/EditarAssociado/?associadoId=",
+                false,
+                "/Usuario/Excluir/?usuarioId=", botoes);
+        });
+    </script>
+}
+

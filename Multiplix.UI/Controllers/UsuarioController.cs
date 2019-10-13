@@ -153,6 +153,141 @@ namespace Multiplix.UI.Controllers
             return View("AdicionarEditarPatrocinador", usuarioDTO);
         }
 
+        public List<Associado> Recursive(int associadoId)
+        {
+            var childIds = new List<Associado>();
+            var childList = _servicePatrocinador.ObterPorId(associadoId).Patrocinados.ToList();
+            foreach (var item in childList)
+            {
+                childIds.Add(item);
+                if (item.Id != 1)
+                {
+                    childIds = childIds.Union(Recursive(item.Id)).ToList();
+                }
+                
+            }
+            var ids = childIds;
+            return childIds;
+
+        }
+
+        public IActionResult IndexRedeDireta(int idAssociado)
+        {
+            var associado = _servicePatrocinador.ObterPorId(idAssociado);
+            var associadoRede = _servicePatrocinador.GetRedeAssociado(idAssociado);
+
+            ViewBag.idAssociado = idAssociado;
+            ViewBag.NomeAssociado = associado.Usuario.Nome;
+            ViewBag.QTDDiretos = associado.Patrocinados.Count(); //qtd de patrocinados diretos
+            ViewBag.QTDRede = associadoRede.Count();//qtd de patrocinados da rede geral do associado
+            ViewBag.PontosDiretos = associado.Compras.Sum(x => x.Pontos); //pontos diretos                                                                                            
+            ViewBag.PontosRede = associadoRede.SelectMany(x => x.Compras).Sum(x => x.Pontos); //pontos da rede
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult ListaRedeDiretaAssociados(int draw, int start, int length, int idAssociado)
+        {
+            string search = Request.Query["search[value]"];
+           // DataTableAjaxPostModel dataTableModel = new DataTableAjaxPostModel();
+
+           // dataTableModel.search.value = search;
+
+            //float teste = _servicePatrocinador.GetRedeAssociado(4).Select(a => a.Compras.Sum(x => x.Pontos)).FirstOrDefault();
+
+            string searchTerm = search;
+            string firstOrderColumnIdx = length > 0 ? Request.Query["order[0][column]"].ToString() : "";
+            string firstOrderDirection = length > 0 ? Request.Query["order[0][dir]"].ToString() : "";
+
+            IEnumerable<Associado> patrocinadores = new List<Associado>();
+
+            if (!String.IsNullOrEmpty(searchTerm))
+            {
+                patrocinadores = _servicePatrocinador.Buscar(
+                    x => x.IdCarteira.Contains(searchTerm) ||
+                         x.Usuario.Nome.Contains(searchTerm) ||
+                         x.Usuario.Celular.Contains(searchTerm) ||
+                         x.Usuario.Email.Contains(searchTerm) ||
+                         x.Usuario.Login.Contains(searchTerm)
+                );
+            }
+            else
+                // patrocinadores = _servicePatrocinador.ObterTodos();
+                patrocinadores = _servicePatrocinador.ObterPorId(idAssociado).Patrocinados;
+
+            if (firstOrderColumnIdx.Length > 0)
+            {
+                Func<Associado, Object> orderByExpr = null;
+
+                switch (firstOrderColumnIdx)
+                {
+                    case "1":
+                        orderByExpr = x => x.IdCarteira;
+                        break;
+                    case "2":
+                        orderByExpr = x => x.Usuario.Nome;
+                        break;
+                    case "3":
+                        orderByExpr = x => x.Usuario.Celular;
+                        break;
+                    case "4":
+                        orderByExpr = x => x.Usuario.Email;
+                        break;
+                    case "5":
+                        orderByExpr = x => x.Usuario.Login;
+                        break;
+                }
+
+                if (orderByExpr != null)
+                {
+                    if (firstOrderDirection.Length > 0 && firstOrderDirection.Equals("desc"))
+                        patrocinadores = patrocinadores.OrderByDescending(orderByExpr);
+                    else
+                        patrocinadores = patrocinadores.OrderBy(orderByExpr);
+                }
+                else
+                {
+                    patrocinadores = patrocinadores.OrderBy(x => x.Usuario.Nome);
+                }
+            }
+            else
+            {
+                patrocinadores = patrocinadores.OrderBy(x => x.Usuario.Nome);
+            }
+
+            // pagina a lista
+            int totalResultados = patrocinadores.Count();
+            patrocinadores = patrocinadores.Skip(start).Take(length);
+
+            // monta o resultado final
+            List<object> result_data = new List<object>();
+            foreach (var patrocinador in patrocinadores)
+            {
+                List<object> result_item = new List<object> {
+                    patrocinador.Id,
+                    patrocinador.IdCarteira,
+                    patrocinador.Usuario.Nome,
+                    patrocinador.Usuario.Celular,
+                    _servicePatrocinador.ObterPorId(patrocinador.Id).Patrocinados.Count, //qtd de patrocinados diretos
+                    _servicePatrocinador.GetRedeAssociado(patrocinador.Id).Count,//qtd de patrocinados da rede geral do associado
+                    _servicePatrocinador.ObterPorId(patrocinador.Id).Compras.Sum(x => x.Pontos), //pontos diretos
+                    //_servicePatrocinador.ObterPorId(patrocinador.Id).Patrocinados.Select(x => x.Compras.Sum(c => c.Pontos)).FirstOrDefault(), //pontos diretos
+                    _servicePatrocinador.GetRedeAssociado(patrocinador.Id).SelectMany(x => x.Compras).Sum(x => x.Pontos), //pontos da rede
+                    
+                };
+                result_data.Add(result_item);
+            }
+
+            var t = Json(new
+            {
+                recordsTotal = totalResultados,
+                recordsFiltered = totalResultados,
+                data = result_data
+            });
+
+            return t;
+        }
+
         [HttpPost]
         public JsonResult ListaPatrocinadores(DataTableAjaxPostModel dataTableModel)
         {
@@ -161,6 +296,7 @@ namespace Multiplix.UI.Controllers
              * 
              * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
              */
+            float teste = _servicePatrocinador.GetRedeAssociado(4).Select(a => a.Compras.Sum(x => x.Pontos)).FirstOrDefault();
 
             string searchTerm = dataTableModel.search.value;
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
@@ -234,19 +370,22 @@ namespace Multiplix.UI.Controllers
                     patrocinador.IdCarteira,
                     patrocinador.Usuario.Nome,
                     patrocinador.Usuario.Celular,
-                    patrocinador.Usuario.Email,
+                    patrocinador.Usuario.Email,                   
+                   // patrocinador.Patrocinados,
                    
-                    _servicePatrocinador.ObterPorId(id: patrocinador.PatrocinadorId.Value).Usuario.Nome ?? "-"
+                    //_servicePatrocinador.ObterPorId(id: patrocinador.PatrocinadorId.Value).Usuario.Nome ?? "-"
                 };
                 result_data.Add(result_item);
             }
 
-            return Json(new
+            var t = Json(new
             {
                 recordsTotal = totalResultados,
                 recordsFiltered = totalResultados,
                 data = result_data
             });
+
+            return t;
         }
 
         public JsonResult PesquisaAssociado(string searchTerm, int pageNumber)

@@ -110,7 +110,7 @@ namespace Multiplix.Domain.Services
                     compraItem.Qtd = item.Qtd;
                     compraItem.ValorUnidade = (float)produto_parceiro.ValorProduto;
                     compraItem.Subtotal = (float)Math.Round(produto_parceiro.ValorProduto * item.Qtd,2);
-                    compraItem.SubtotalPontos = (float)Math.Round(parceiro.ParceiroProdutos.Where(x => x.ProdutoId == item.ProdutoId).FirstOrDefault().PontosPorRealProduto * compraItem.Subtotal,2);
+                    compraItem.SubtotalPontos = (float) Math.Round(parceiro.ParceiroProdutos.Where(x => x.ProdutoId == item.ProdutoId).FirstOrDefault().PontosPorRealProduto * compraItem.Subtotal,2);
 
                     //Adiciona os itens comprados à compra
                     compra.AddCompraItem(compraItem);
