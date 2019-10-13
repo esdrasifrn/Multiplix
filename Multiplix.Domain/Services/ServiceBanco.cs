@@ -63,7 +63,40 @@ namespace Multiplix.Domain.Services
 
         public ValidationResult Salvar(BancoDTO bancoDTO)
         {
-            throw new NotImplementedException();
+            // banco
+            Banco banco;
+
+            if (bancoDTO.BancoId == 0)
+            {
+                banco = new Banco(
+                   nome: bancoDTO.Nome,
+                   codigo: bancoDTO.Codigo
+                );
+
+                banco.BancoId = 0;
+            }
+            else
+            {
+                banco = _bancoRepository.ObterPorId(bancoDTO.BancoId);
+                banco.Nome = bancoDTO.Nome;
+                banco.Codigo = bancoDTO.Codigo;
+            }
+
+            ValidationResult result = new BancoValidator().Validate(banco);
+
+            if (result.IsValid)
+            {
+                if (banco.BancoId == 0)
+                    _bancoRepository.Adicionar(banco);
+                else
+                    _bancoRepository.Atualizar(banco);
+            }
+            else
+            {
+                bancoDTO.ValidationErrors = result.Errors;
+            }
+
+            return result;
         }
     }
 }

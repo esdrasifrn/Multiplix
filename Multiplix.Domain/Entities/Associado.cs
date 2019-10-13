@@ -53,6 +53,7 @@ namespace Multiplix.Domain.Entities
         public int Nivel { get; set; }
         public string IdCarteira { get; set; }
         public virtual Usuario Usuario { get; set; }
+        public virtual PlanoAssinatura PlanoAssinatura { get; set; }
         public int? PatrocinadorId { get; set; }       
         public string Sexo { get; set; }
         public string CPF { get; set; }

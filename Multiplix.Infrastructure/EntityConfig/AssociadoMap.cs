@@ -19,6 +19,10 @@ namespace Multiplix.Infrastructure.EntityConfig
             builder
                .HasOne(pa => pa.Banco);
 
+            builder
+                .HasOne(planoAssinatura => planoAssinatura.PlanoAssinatura)
+                .WithMany(a => a.Associados);
+
             builder.HasMany(pa => pa.Patrocinados)
                 .WithOne()//opcional ou anulável
                 .HasForeignKey(pa => pa.PatrocinadorId);                
