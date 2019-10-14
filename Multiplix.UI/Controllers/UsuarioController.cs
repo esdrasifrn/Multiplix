@@ -175,34 +175,33 @@ namespace Multiplix.UI.Controllers
         {
             var associado = _servicePatrocinador.ObterPorId(idAssociado);
             var associadoRede = _servicePatrocinador.GetRedeAssociado(idAssociado);
+            var pontosIndividual = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
+            var pontosRede = associadoRede.SelectMany(x => x.Compras).Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
 
             ViewBag.Nivel = associado.Nivel;
             ViewBag.idAssociado = idAssociado;
             ViewBag.NomeAssociado = associado.Usuario.Nome;
             ViewBag.QTDDiretos = associado.Patrocinados.Count(); //qtd de patrocinados diretos
             ViewBag.QTDRede = associadoRede.Count();//qtd de patrocinados da rede geral do associado
-            ViewBag.PontosDiretos = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos); //pontos diretos do mês corrente                                                                                           
-            ViewBag.PontosRede = associadoRede.SelectMany(x => x.Compras).Where(x => x .Data.Month == DateTime.Now.Month).Sum(x => x.Pontos); //retorna todas as compras da rede do associado do mês corrente e soma os pontos - pontos da rede
+            ViewBag.PontosDiretos = pontosIndividual; //pontos diretos do mês corrente                                                                                           
+            ViewBag.PontosRede = pontosRede; //retorna todas as compras da rede do associado do mês corrente e soma os pontos - pontos da rede
+            ViewBag.Percentagem = _servicePatrocinador.GetPercentagem(pontosIndividual + pontosRede);
+
             return View();
         }
 
-        [HttpGet]
-        public JsonResult ListaRedeDiretaAssociados(int draw, int start, int length, int idAssociado)
+        [HttpPost]
+        public JsonResult ListaRedeDiretaAssociados(DataTableAjaxPostModel dataTableModel, int draw, int start, int length, int idAssociado)
         {
-            string search = Request.Query["search[value]"];
-           // DataTableAjaxPostModel dataTableModel = new DataTableAjaxPostModel();
-
-           // dataTableModel.search.value = search;
-
-            //float teste = _servicePatrocinador.GetRedeAssociado(4).Select(a => a.Compras.Sum(x => x.Pontos)).FirstOrDefault();
-
-            string searchTerm = search;
-            string firstOrderColumnIdx = length > 0 ? Request.Query["order[0][column]"].ToString() : "";
-            string firstOrderDirection = length > 0 ? Request.Query["order[0][dir]"].ToString() : "";
+            
+          
+            string searchTerm = dataTableModel.search.value;
+            string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
+            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
 
             IEnumerable<Associado> patrocinadores = new List<Associado>();
 
-            if (!String.IsNullOrEmpty(searchTerm))
+            if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
                 patrocinadores = _servicePatrocinador.Buscar(
                     x => x.IdCarteira.Contains(searchTerm) ||
@@ -264,6 +263,11 @@ namespace Multiplix.UI.Controllers
             List<object> result_data = new List<object>();
             foreach (var patrocinador in patrocinadores)
             {
+                var pontosIndividual = _servicePatrocinador.ObterPorId(patrocinador.Id).Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
+                var pontosRede = _servicePatrocinador.GetRedeAssociado(patrocinador.Id).SelectMany(x => x.Compras).Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
+                var pontosTotais = pontosIndividual + pontosRede;
+                var percentagem = _servicePatrocinador.GetPercentagem(pontosTotais);
+
                 List<object> result_item = new List<object> {
                     patrocinador.Id,
                     patrocinador.IdCarteira,
@@ -271,10 +275,11 @@ namespace Multiplix.UI.Controllers
                     patrocinador.Usuario.Celular,
                     _servicePatrocinador.ObterPorId(patrocinador.Id).Patrocinados.Count, //qtd de patrocinados diretos
                     _servicePatrocinador.GetRedeAssociado(patrocinador.Id).Count,//qtd de patrocinados da rede geral do associado
-                    _servicePatrocinador.ObterPorId(patrocinador.Id).Compras.Where(x => x .Data.Month == DateTime.Now.Month).Sum(x => x.Pontos), //pontos diretos
-                    //_servicePatrocinador.ObterPorId(patrocinador.Id).Patrocinados.Select(x => x.Compras.Sum(c => c.Pontos)).FirstOrDefault(), //pontos diretos
-                    _servicePatrocinador.GetRedeAssociado(patrocinador.Id).SelectMany(x => x.Compras).Where(x => x .Data.Month == DateTime.Now.Month).Sum(x => x.Pontos), //pontos da rede
-                    
+                    pontosIndividual, //pontos diretos                    
+                    pontosRede, //pontos da rede
+                    pontosTotais,
+                    percentagem,
+
                 };
                 result_data.Add(result_item);
             }

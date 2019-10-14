@@ -210,5 +210,45 @@ namespace Multiplix.Domain.Services
 
             return result;
         }
+
+        public int GetPercentagem(float totalGeralPontos)
+        {
+            int percentagemAtual = 0;
+
+            if (totalGeralPontos <= 599.99)
+            {
+                percentagemAtual = 0;
+            }
+            else if (totalGeralPontos >= 600 && totalGeralPontos <= 3099.9)
+            {
+                percentagemAtual = 3;
+            }
+            else if (totalGeralPontos >= 3100 && totalGeralPontos <= 15599.9)
+            {
+                percentagemAtual = 6;
+            }
+            else if (totalGeralPontos >= 15600 && totalGeralPontos <= 78099.9)
+            {
+                percentagemAtual = 9;
+            }
+            else if (totalGeralPontos >= 78100 && totalGeralPontos <= 390599.9)
+            {
+                percentagemAtual = 12;
+            }
+            else if (totalGeralPontos >= 390600 && totalGeralPontos <= 1953009)
+            {
+                percentagemAtual = 15;
+            }
+            else if (totalGeralPontos >= 1953010 && totalGeralPontos <= 9765059)
+            {
+                percentagemAtual = 18;
+            }
+            else if (totalGeralPontos >= 9765060)
+            {
+                percentagemAtual = 21;
+            }
+
+            return percentagemAtual;
+        }
     }
 }

@@ -85,7 +85,7 @@
                                 <div class="media align-items-stretch">
                                     <div class="p-2 bg-gradient-x-info text-white media-body text-left rounded-left">
                                         <h5 class="text-white">Porcentagem % (mês)</h5>
-                                        <h5 class="text-white text-bold-400 mb-0">-</h5>
+                                        <h5 class="text-white text-bold-400 mb-0">@ViewBag.Percentagem</h5>
                                     </div>
                                     <div class="p-2 text-center bg-info bg-darken-2 rounded-right">
                                         <i class="icon-wallet font-large-2 text-white"></i>
@@ -117,10 +117,12 @@
                                         <th>Identificador</th>
                                         <th>Nome</th>
                                         <th>Celular</th>
-                                        <th>Qtd (Diretos)</th>
-                                        <th>Qtd (Rede)</th>
-                                        <th>Pontos diretos</th>
-                                        <th>Pontos da rede</th>
+                                        <th title="Qtd. de associados diretos">Qtd (Dir.)</th>
+                                        <th title="Qtd. de associados da rede">Qtd (Rede)</th>
+                                        <th title="Pontos individuais">Pts. (indiv.)</th>
+                                        <th title="Pontos da rede">Pts. (rede)</th>
+                                        <th title="Pontos totais">Pts. totais</th>
+                                        <th title="Percentagem atual do mês">%</th>
                                         <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
                                     </tr>
                                 </thead>
@@ -142,7 +144,7 @@
             var podeExcluirUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_usuario").ToString().ToLower();
             var podeVisualizarAssociado = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_usuario").ToString().ToLower();
             var botoes = [{ title: "Ver diretos", url: "/Usuario/IndexRedeDireta/?idAssociado=", permission: podeVisualizarAssociado }];
-            generateDataTableGet("#data-table-usuarios",
+            generateDataTable("#data-table-usuarios",
                 "Associado direto",
                 "/Usuario/ListaRedeDiretaAssociados?idAssociado=@ViewBag.idAssociado",
                 false,

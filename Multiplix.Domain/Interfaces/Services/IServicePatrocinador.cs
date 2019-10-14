@@ -17,6 +17,13 @@ namespace Multiplix.Domain.Interfaces.Services
         /// <returns>rede de associados que são patrocinados</returns>
         List<Associado> GetRedeAssociado(int associadoId);
 
+        /// <summary>
+        /// Método responsável em retornara percentagem atual do associado baseado no total de pontos atual dele
+        /// </summary>
+        /// <param name="totalGeralPontos">Soma dos pontos individuais mais pontos da rede do usuário</param>
+        /// <returns></returns>
+        int GetPercentagem(float totalGeralPontos);
+
 
     }
 }
