@@ -55,6 +55,10 @@ namespace Multiplix.Domain.DTOs
         public string RamoAtividadeNome { get; set; }
         public int RamoAtividadeId { get; set; }
 
+        //Plano de assinatura
+        public int PlanoAssinaturaId { get; set; }
+        public string PlanoAssinaturaNome { get; set; }
+
 
         public IList<GrupoDTO> Grupos { get; set; } = new List<GrupoDTO>();
         

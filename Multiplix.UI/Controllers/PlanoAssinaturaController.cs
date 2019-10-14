@@ -99,7 +99,7 @@ namespace Multiplix.UI.Controllers
             {
                 Dictionary<string, string> result_item = new Dictionary<string, string>();
                 result_item.Add("id", planoAssinatura.PlanoAssinaturaId + "");
-                result_item.Add("text", planoAssinatura.Descricao);
+                result_item.Add("text", planoAssinatura.ToString());
                 results.Add(result_item);
             }
 
@@ -169,12 +169,12 @@ namespace Multiplix.UI.Controllers
 
             // monta o resultado final
             List<object> result_data = new List<object>();
-            foreach (var banco in planoAssinaturas)
+            foreach (var planoAssinatura in planoAssinaturas)
             {
                 List<object> result_item = new List<object> {
-                    banco.PlanoAssinaturaId,
-                    banco.Descricao,
-                    banco.Valor
+                    planoAssinatura.PlanoAssinaturaId,
+                    planoAssinatura.Descricao,
+                    planoAssinatura.Valor
                 };
                 result_data.Add(result_item);
             }

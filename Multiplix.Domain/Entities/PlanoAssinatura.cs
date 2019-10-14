@@ -19,9 +19,19 @@ namespace Multiplix.Domain.Entities
             Descricao = descricao;
         }
 
+        public PlanoAssinatura()
+        {
+
+        }
+
         public void AddAssociado(Associado associado)
         {
             _associados.Add(associado);
+        }
+
+        public override string ToString()
+        {
+            return $"{Descricao} - R$ {Valor}";
         }
     }
 }

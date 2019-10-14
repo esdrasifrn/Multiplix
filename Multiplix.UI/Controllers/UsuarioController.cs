@@ -127,7 +127,9 @@ namespace Multiplix.UI.Controllers
                 TipoConta = associado.TipoConta,
                 Agencia = associado.Agencia,
                 Conta = associado.Conta,
-                Login = associado.Usuario.Login
+                Login = associado.Usuario.Login,
+                PlanoAssinaturaNome = associado.PlanoAssinatura.ToString(),
+                PlanoAssinaturaId = associado.PlanoAssinatura.PlanoAssinaturaId
 
             };
 
@@ -302,8 +304,7 @@ namespace Multiplix.UI.Controllers
              * 
              * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
              */
-            float teste = _servicePatrocinador.GetRedeAssociado(4).Select(a => a.Compras.Sum(x => x.Pontos)).FirstOrDefault();
-
+            
             string searchTerm = dataTableModel.search.value;
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
             string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";

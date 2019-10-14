@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Multiplix.Domain.Entities;
 using Multiplix.Infrastructure.EntityConfig;
+using System;
 
 namespace Multiplix.Infrastructure.Data
 {
@@ -33,10 +34,21 @@ namespace Multiplix.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Usuario>().HasData(
-                new Usuario() {UsuarioId = 1, Login = "admin", Senha = "123", Nome = "Multiplys", Celular = "98776655", Email = "admin@hotmail.com", IsSuperUser = true }
-             );        
+                new Usuario() {UsuarioId = 1, Login = "admin", Senha = "123", Nome = "Multiplys", Celular = "98776655", Email = "admin@hotmail.com", IsSuperUser = true }        
+                );
 
-          
+            modelBuilder.Entity<Banco>().HasData(
+                new Banco() { BancoId = 1, Codigo = "101", Nome = "Brasil" }
+                );
+
+            modelBuilder.Entity<PlanoAssinatura>().HasData(
+                new PlanoAssinatura() { PlanoAssinaturaId = 1, Descricao = "Adesão I", Valor = 50 }
+                );
+
+            modelBuilder.Entity<Associado>().HasData(
+                new Associado() { Id = 1, UsuarioId = 1, Nascimento = DateTime.Now, BancoId = 1, PlanoAssinaturaId = 1, TipoConta = 1, Estado = "RN", IdCarteira = "201900000001" }
+                );
+
             modelBuilder.Entity<Grupo>().ToTable("Grupo");          
             modelBuilder.Entity<Permissao>().ToTable("Permissao");
             modelBuilder.Entity<PermissaoGrupo>().ToTable("PermissaoGrupo");

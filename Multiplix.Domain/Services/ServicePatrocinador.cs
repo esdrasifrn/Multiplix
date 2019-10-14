@@ -19,13 +19,16 @@ namespace Multiplix.Domain.Services
         private readonly IPatrocinadorRepository _patrocinadorRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IBancoRepository _bancoRepository;
+        private readonly IPlanoAssinaturaRepository _planoAssinatura;
 
         public ServicePatrocinador(IPatrocinadorRepository patrocinadorRepository, 
-            IUsuarioRepository usuarioRepository, IBancoRepository bancoRepository)
+            IUsuarioRepository usuarioRepository, IBancoRepository bancoRepository, 
+            IPlanoAssinaturaRepository planoAssinatura)
         {
             _patrocinadorRepository = patrocinadorRepository;
             _usuarioRepository = usuarioRepository;
             _bancoRepository = bancoRepository;
+            _planoAssinatura = planoAssinatura;
         }
 
         public Associado Adicionar(Associado entity)
@@ -130,7 +133,8 @@ namespace Multiplix.Domain.Services
                     tipoConta: usuarioDTO.TipoConta,
                     agengia: usuarioDTO.Agencia,
                     conta: usuarioDTO.Conta,
-                    nivel: 1 // multiplys é o nível zero e seus convidados serão 0 + 1, e assim sucessivamente
+                    nivel: 1, // multiplys é o nível zero e seus convidados serão 0 + 1, e assim sucessivamente
+                    planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId)
 
                     ) ; 
 
@@ -162,6 +166,7 @@ namespace Multiplix.Domain.Services
                 associado.TipoConta = usuarioDTO.TipoConta;
                 associado.Agencia = usuarioDTO.Agencia;
                 associado.Conta = usuarioDTO.Conta;
+                associado.PlanoAssinatura = _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId);
             }
 
             // grupos do usuário do patrocinador

@@ -20,7 +20,8 @@ namespace Multiplix.Domain.Entities
 
         public Associado(Usuario usuario, int? patrocinadorId, string rua, string numero, string cep,  string cidade, 
             string bairro, string complemento, string estado, DateTime nascimento,
-            string sexo, string cpf, string emailAlternativo, Banco banco, int tipoConta, string agengia, string conta, int nivel)
+            string sexo, string cpf, string emailAlternativo, Banco banco, int tipoConta, string agengia, string conta, int nivel,
+            PlanoAssinatura planoAssinatura)
         {
             Usuario = usuario;
             PatrocinadorId = patrocinadorId;
@@ -42,6 +43,7 @@ namespace Multiplix.Domain.Entities
             Agencia = agengia;
             Conta = conta;
             Nivel = nivel;
+            PlanoAssinatura = planoAssinatura;
         }
 
         public Associado()
@@ -53,7 +55,9 @@ namespace Multiplix.Domain.Entities
         public int Nivel { get; set; }
         public string IdCarteira { get; set; }
         public virtual Usuario Usuario { get; set; }
+        public int UsuarioId { get; set; }
         public virtual PlanoAssinatura PlanoAssinatura { get; set; }
+        public int PlanoAssinaturaId { get; set; }
         public int? PatrocinadorId { get; set; }       
         public string Sexo { get; set; }
         public string CPF { get; set; }
@@ -62,6 +66,7 @@ namespace Multiplix.Domain.Entities
         public string EmailAlternativo { get; set; }
 
         public virtual Banco Banco { get; set; }
+        public int BancoId { get; set; }
         public int TipoConta { get; set; }
         public string Agencia { get; set; }
         public string Conta { get; set; }
