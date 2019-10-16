@@ -24,6 +24,30 @@ namespace Multiplix.Domain.Interfaces.Services
         /// <returns></returns>
         int GetPercentagem(float totalGeralPontos);
 
+        /// <summary>
+        /// Método responsável em retornar os pontos individuais do associado no mes, ou seja, todos os pontos conquistados 
+        /// com suas compras diretas
+        /// </summary>
+        /// <param name="mes">mês das compras realizadas</param>
+        /// <returns></returns>
+        float GetPontosIndividuaisPorMes(int mes, int associadoId);
+
+        /// <summary>
+        /// Método responsável em retornar todos os pontos da rede do associado no mês
+        /// </summary>
+        /// <param name="mes">mês escolhido</param>
+        /// <param name="associadoId">id do associado</param>
+        /// <returns></returns>
+        float GetPontosRedePorMes(int mes, int associadoId);
+
+        /// <summary>
+        /// Método responsável em gerar os ganhos individuais do associado, baseado na soma de pontos individual dele
+        /// </summary>
+        /// <param name="mes">mes</param>
+        /// <param name="percentagem">Valor da percentagem calculado pelo método GetPercentagem </param>
+        /// <returns></returns>
+        float GetGanhosIndividual(int mes, int associadoId);
+
 
     }
 }

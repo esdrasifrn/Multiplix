@@ -1,6 +1,7 @@
 ﻿using Multiplix.Domain.ValueObject;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Multiplix.Domain.Entities
@@ -101,6 +102,6 @@ namespace Multiplix.Domain.Entities
         public string GenerateCarteiraPatrocinador()
         {
             return $"{DateTime.Now.Year.ToString()}{Id:00000000}";
-        }
+        }        
     }
 }

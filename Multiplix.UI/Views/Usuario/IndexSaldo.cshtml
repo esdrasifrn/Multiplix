@@ -1,0 +1,220 @@
+﻿@using Multiplix.UI.Utils
+@{
+    ViewData["Title"] = "Listagem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using System.Globalization
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">Saldo associados</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Listagem
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Resumo</div>
+            </div>
+            <div class="card-body">
+                <h1 class="text-bold-600">Associado: @ViewBag.NomeAssociado</h1>
+                <h5 class="text-bold-600">Nível: @ViewBag.Nivel</h5>
+                <h5 class="text-bold-600">Mês: @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month))</h5>
+                
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card bg-gradient-directional-blue-grey">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-white text-left">
+                                            <h3 class="text-white">278</h3>
+                                            <span>Pontos individuais</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="icon-user text-white font-large-2 float-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card bg-gradient-directional-blue-grey">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-white text-left">
+                                            <h3 class="text-white">156</h3>
+                                            <span>Pontos da rede</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="icon-basket-loaded text-white font-large-2 float-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card bg-gradient-directional-blue-grey">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-white text-left">
+                                            <h3 class="text-white">1.234</h3>
+                                            <span>Pontos totais</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="icon-size-actual text-white font-large-2 float-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card bg-gradient-directional-blue-grey">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-white text-left">
+                                            <h3 class="text-white">12%</h3>
+                                            <span>Percentual atingido</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="icon-trophy text-white font-large-2 float-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card bg-gradient-directional-info">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-white text-left">
+                                            <h3 class="text-white">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalIndividual)</h3>
+                                            <span>Saldo individual</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="icon-wallet text-white font-large-2 float-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card bg-gradient-directional-info">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-white text-left">
+                                            <h3 class="text-white">R$ 423,00</h3>
+                                            <span>Saldo da rede</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="icon-wallet text-white font-large-2 float-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card bg-gradient-directional-cyan">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-white text-left">
+                                            <h3 class="text-white">R$ 423,00</h3>
+                                            <span>Saldo total a receber</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="icon-wallet text-white font-large-2 float-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">@ViewData["Title"]</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="table-responsive">
+                            <table style="font-size:13px" id="data-table-saldo" class="table table-striped table-bordered text-nowrap w-100">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th> <!-- ocultada pelo datatable -->
+                                        <th>Identificador</th>
+                                        <th>Nome</th>
+                                        <th>Celular</th>                                     
+                                        <th title="Pontos individuais">Pts. (indiv.)</th>
+                                        <th title="Pontos da rede">Pts. (rede)</th>
+                                        <th title="Pontos totais">Pts. totais</th>
+                                        <th title="Percentagem atual do mês">%</th>
+                                        <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/js/datatable-generator.js"></script>
+    <script>
+        $(document).ready(function() {
+            var podeAlterarUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_usuario").ToString().ToLower();
+            var podeExcluirUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_usuario").ToString().ToLower();
+            var podeVisualizarAssociado = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_usuario").ToString().ToLower();
+            var botoes = [{ title: "Ver saldo", url: "/Usuario/IndexSaldo/?idAssociado=", permission: podeVisualizarAssociado }];
+            generateDataTable("#data-table-saldo",
+                "Associado saldo",
+                "/Usuario/ListaSaldoAssociados?idAssociado=@ViewBag.idAssociado",
+                false,
+                "/Usuario/EditarAssociado/?associadoId=",
+                false,
+                "/Usuario/Excluir/?usuarioId=", botoes);
+        });
+    </script>
+}
+

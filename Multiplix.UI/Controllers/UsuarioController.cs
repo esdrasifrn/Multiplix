@@ -153,32 +153,15 @@ namespace Multiplix.UI.Controllers
                 return RedirectToAction("Index");
             }
             return View("AdicionarEditarPatrocinador", usuarioDTO);
-        }
-
-        public List<Associado> Recursive(int associadoId)
-        {
-            var childIds = new List<Associado>();
-            var childList = _servicePatrocinador.ObterPorId(associadoId).Patrocinados.ToList();
-            foreach (var item in childList)
-            {
-                childIds.Add(item);
-                if (item.Id != 1)
-                {
-                    childIds = childIds.Union(Recursive(item.Id)).ToList();
-                }
-                
-            }
-            var ids = childIds;
-            return childIds;
-
-        }
+        }       
 
         public IActionResult IndexRedeDireta(int idAssociado)
         {
             var associado = _servicePatrocinador.ObterPorId(idAssociado);
-            var associadoRede = _servicePatrocinador.GetRedeAssociado(idAssociado);
-            var pontosIndividual = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
-            var pontosRede = associadoRede.SelectMany(x => x.Compras).Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
+            var associadoRede = _servicePatrocinador.GetRedeAssociado(idAssociado);            
+
+            var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, idAssociado);
+            var pontosRede = _servicePatrocinador.GetPontosRedePorMes(DateTime.Now.Month, idAssociado);
 
             ViewBag.Nivel = associado.Nivel;
             ViewBag.idAssociado = idAssociado;
@@ -189,6 +172,25 @@ namespace Multiplix.UI.Controllers
             ViewBag.PontosRede = pontosRede; //retorna todas as compras da rede do associado do mês corrente e soma os pontos - pontos da rede
             ViewBag.Percentagem = _servicePatrocinador.GetPercentagem(pontosIndividual + pontosRede);
 
+            return View();
+        }
+
+
+        public IActionResult IndexSaldo(int idAssociado)
+        {
+            var associado = _servicePatrocinador.ObterPorId(idAssociado);
+            var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, idAssociado);            
+
+            var pontosRede = _servicePatrocinador.GetPontosRedePorMes(DateTime.Now.Month, associado.Id);
+            var pontosTotais = pontosIndividual + pontosRede;
+
+            ViewBag.NomeAssociado = associado.Usuario.Nome;
+            ViewBag.Nivel = associado.Nivel;
+            ViewBag.idAssociado = idAssociado;
+            ViewBag.PontosDiretos = pontosIndividual; //pontos diretos do mês corrente                                                                                           
+            ViewBag.PontosRede = pontosRede; //retorna todas as compras da rede do associado do mês corrente e soma os pontos - pontos da rede
+            ViewBag.PontosTotais = pontosTotais;
+            ViewBag.TotalIndividual = _servicePatrocinador.GetGanhosIndividual(DateTime.Now.Month, idAssociado);
             return View();
         }
 
@@ -265,8 +267,10 @@ namespace Multiplix.UI.Controllers
             List<object> result_data = new List<object>();
             foreach (var patrocinador in patrocinadores)
             {
-                var pontosIndividual = _servicePatrocinador.ObterPorId(patrocinador.Id).Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
-                var pontosRede = _servicePatrocinador.GetRedeAssociado(patrocinador.Id).SelectMany(x => x.Compras).Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Pontos);
+                var associado = _servicePatrocinador.ObterPorId(patrocinador.Id);
+
+                var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, associado.Id);
+                var pontosRede = _servicePatrocinador.GetPontosRedePorMes(DateTime.Now.Month, associado.Id);
                 var pontosTotais = pontosIndividual + pontosRede;
                 var percentagem = _servicePatrocinador.GetPercentagem(pontosTotais);
 
@@ -295,6 +299,111 @@ namespace Multiplix.UI.Controllers
 
             return t;
         }
+
+
+        [HttpPost]
+        public JsonResult ListaSaldoAssociados(DataTableAjaxPostModel dataTableModel, int draw, int start, int length, int idAssociado)
+        {
+            string searchTerm = dataTableModel.search.value;
+            string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
+            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
+
+            IEnumerable<Associado> patrocinadores = new List<Associado>();
+
+            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+            {
+                patrocinadores = _servicePatrocinador.Buscar(
+                    x => x.IdCarteira.Contains(searchTerm) ||
+                         x.Usuario.Nome.Contains(searchTerm) ||
+                         x.Usuario.Celular.Contains(searchTerm) ||
+                         x.Usuario.Email.Contains(searchTerm) ||
+                         x.Usuario.Login.Contains(searchTerm)
+                );
+            }
+            else
+                patrocinadores = _servicePatrocinador.ObterTodos();
+                //patrocinadores = _servicePatrocinador.ObterPorId(idAssociado).Patrocinados;
+
+            if (firstOrderColumnIdx.Length > 0)
+            {
+                Func<Associado, Object> orderByExpr = null;
+
+                switch (firstOrderColumnIdx)
+                {
+                    case "1":
+                        orderByExpr = x => x.IdCarteira;
+                        break;
+                    case "2":
+                        orderByExpr = x => x.Usuario.Nome;
+                        break;
+                    case "3":
+                        orderByExpr = x => x.Usuario.Celular;
+                        break;
+                    case "4":
+                        orderByExpr = x => x.Usuario.Email;
+                        break;
+                    case "5":
+                        orderByExpr = x => x.Usuario.Login;
+                        break;
+                }
+
+                if (orderByExpr != null)
+                {
+                    if (firstOrderDirection.Length > 0 && firstOrderDirection.Equals("desc"))
+                        patrocinadores = patrocinadores.OrderByDescending(orderByExpr);
+                    else
+                        patrocinadores = patrocinadores.OrderBy(orderByExpr);
+                }
+                else
+                {
+                    patrocinadores = patrocinadores.OrderBy(x => x.Usuario.Nome);
+                }
+            }
+            else
+            {
+                patrocinadores = patrocinadores.OrderBy(x => x.Usuario.Nome);
+            }
+
+            // pagina a lista
+            int totalResultados = patrocinadores.Count();
+            patrocinadores = patrocinadores.Skip(start).Take(length);
+
+            // monta o resultado final
+            List<object> result_data = new List<object>();
+            foreach (var patrocinador in patrocinadores)
+            {
+                var associado = _servicePatrocinador.ObterPorId(patrocinador.Id);
+
+                var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, associado.Id);
+                var pontosRede = _servicePatrocinador.GetPontosRedePorMes(DateTime.Now.Month, associado.Id);
+
+                var pontosTotais = pontosIndividual + pontosRede;
+                var percentagem = _servicePatrocinador.GetPercentagem(pontosTotais);
+
+                List<object> result_item = new List<object> {
+                    patrocinador.Id,
+                    patrocinador.IdCarteira,
+                    patrocinador.Usuario.Nome,
+                    patrocinador.Usuario.Celular,
+                    pontosIndividual, //pontos diretos                    
+                    pontosRede, //pontos da rede
+                    pontosTotais,
+                    percentagem,
+
+                };
+                result_data.Add(result_item);
+            }
+
+            var t = Json(new
+            {
+                recordsTotal = totalResultados,
+                recordsFiltered = totalResultados,
+                data = result_data
+            });
+
+            return t;
+        }
+        
 
         [HttpPost]
         public JsonResult ListaPatrocinadores(DataTableAjaxPostModel dataTableModel)

@@ -255,5 +255,33 @@ namespace Multiplix.Domain.Services
 
             return percentagemAtual;
         }
+
+        public float GetPontosIndividuaisPorMes(int mes, int associadoId)
+        {
+           var associado =  _patrocinadorRepository.ObterPorId(associadoId);
+
+            return associado.Compras.Where(x => x.Data.Month == mes).Sum(x => x.Pontos);
+        }
+
+        public float GetPontosRedePorMes(int mes, int associadoId)
+        {
+           var redeAssociado = GetRedeAssociado(associadoId);
+           var pontosRede = redeAssociado.SelectMany(x => x.Compras).Where(x => x.Data.Month == mes).Sum(x => x.Pontos);
+
+            return pontosRede;
+        }
+
+        public float GetGanhosIndividual(int mes, int associadoId)
+        {
+            float pontosIndividual = GetPontosIndividuaisPorMes(mes, associadoId);
+            float pontosRede = GetPontosRedePorMes(mes, associadoId);
+            float pontosTotal = pontosIndividual + pontosRede;
+            float perncentualAssociado = GetPercentagem(pontosTotal);
+
+            float valor_a_receber_individualmente = (pontosIndividual * perncentualAssociado)/100;
+
+            return valor_a_receber_individualmente;
+
+        }
     }
 }
