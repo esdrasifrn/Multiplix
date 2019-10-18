@@ -41,7 +41,7 @@
                                 <div class="card-body">
                                     <div class="media d-flex">
                                         <div class="media-body text-white text-left">
-                                            <h3 class="text-white">278</h3>
+                                            <h3 class="text-white">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.PontosDiretos)</h3>
                                             <span>Pontos individuais</span>
                                         </div>
                                         <div class="align-self-center">
@@ -58,7 +58,7 @@
                                 <div class="card-body">
                                     <div class="media d-flex">
                                         <div class="media-body text-white text-left">
-                                            <h3 class="text-white">156</h3>
+                                            <h3 class="text-white">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.PontosRede)</h3>
                                             <span>Pontos da rede</span>
                                         </div>
                                         <div class="align-self-center">
@@ -76,7 +76,7 @@
                                 <div class="card-body">
                                     <div class="media d-flex">
                                         <div class="media-body text-white text-left">
-                                            <h3 class="text-white">1.234</h3>
+                                            <h3 class="text-white">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.PontosTotais)</h3>
                                             <span>Pontos totais</span>
                                         </div>
                                         <div class="align-self-center">
@@ -94,7 +94,7 @@
                                 <div class="card-body">
                                     <div class="media d-flex">
                                         <div class="media-body text-white text-left">
-                                            <h3 class="text-white">12%</h3>
+                                            <h3 class="text-white">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.Percentagem)</h3>
                                             <span>Percentual atingido</span>
                                         </div>
                                         <div class="align-self-center">
@@ -129,7 +129,7 @@
                                 <div class="card-body">
                                     <div class="media d-flex">
                                         <div class="media-body text-white text-left">
-                                            <h3 class="text-white">R$ 423,00</h3>
+                                            <h3 class="text-white">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalRede)</h3>
                                             <span>Saldo da rede</span>
                                         </div>
                                         <div class="align-self-center">
@@ -142,13 +142,13 @@
                     </div>
 
                     <div class="col-xl-3 col-md-6 col-12">
-                        <div class="card bg-gradient-directional-cyan">
+                        <div class="card bg-gradient-directional-warning">
                             <div class="card-content">
                                 <div class="card-body">
                                     <div class="media d-flex">
                                         <div class="media-body text-white text-left">
-                                            <h3 class="text-white">R$ 423,00</h3>
-                                            <span>Saldo total a receber</span>
+                                            <h3 class="text-white">@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalARecebeber)</h3>
+                                            <span>Saldo total a receber (mês)</span>
                                         </div>
                                         <div class="align-self-center">
                                             <i class="icon-wallet text-white font-large-2 float-right"></i>

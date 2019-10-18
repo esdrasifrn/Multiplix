@@ -48,6 +48,22 @@ namespace Multiplix.Domain.Interfaces.Services
         /// <returns></returns>
         float GetGanhosIndividual(int mes, int associadoId);
 
+        /// <summary>
+        /// Método responsável em gerar os ganhos da rede do associado, beseado nos associados diretos.
+        /// </summary>
+        /// <param name="mes"></param>
+        /// <param name="associadoId"></param>
+        /// <returns></returns>
+        float GetGanhosRede(int mes, int associadoId);
+
+        /// <summary>
+        /// Retornar os pontos individuais mais os pontos totais
+        /// </summary>
+        /// <param name="mes"></param>
+        /// <param name="associadoId"></param>
+        /// <returns></returns>
+        float GetPontosTotal(int mes, int associadoId);
+
 
     }
 }

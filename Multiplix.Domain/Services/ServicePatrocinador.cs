@@ -283,5 +283,36 @@ namespace Multiplix.Domain.Services
             return valor_a_receber_individualmente;
 
         }
+
+        public float GetGanhosRede(int mes, int associadoId)
+        {
+            float totalGeralRede = 0;
+            float totalParcialRede = 0;
+
+            var pontosTotais = GetPontosTotal(mes, associadoId);
+
+            var percentagemAssociadoPatrocinador = GetPercentagem(pontosTotais);
+            var percentagemAssociadoPatrocinado = 0;
+
+            var associado = ObterPorId(associadoId);
+
+            //itera sobre todos os associados diretos (patrocinados)
+            foreach (var patrocinado in associado.Patrocinados)
+            {
+                percentagemAssociadoPatrocinado = GetPercentagem(GetPontosTotal(mes, patrocinado.Id));
+                totalParcialRede = ((percentagemAssociadoPatrocinador - percentagemAssociadoPatrocinado) * (GetPontosTotal(mes, patrocinado.Id)))/100;
+                totalGeralRede += totalParcialRede;
+            }
+
+            return totalGeralRede;
+        }
+
+        public float GetPontosTotal(int mes, int associadoId)
+        {
+            float pontosIndividual = GetPontosIndividuaisPorMes(mes, associadoId);
+            float pontosRede = GetPontosRedePorMes(mes, associadoId);
+            float pontosTotal = pontosIndividual + pontosRede;
+            return pontosTotal;
+        }
     }
 }

@@ -102,6 +102,8 @@ namespace Multiplix.Domain.Entities
         public string GenerateCarteiraPatrocinador()
         {
             return $"{DateTime.Now.Year.ToString()}{Id:00000000}";
-        }        
+        }
+
+        public string GenerateCodeInvite => Convert.ToBase64String(Encoding.UTF8.GetBytes(IdCarteira));
     }
 }

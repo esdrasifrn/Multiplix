@@ -11,6 +11,7 @@ using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
+using Multiplix.UI.Utils;
 using Newtonsoft.Json;
 
 namespace Multiplix.UI.Controllers
@@ -31,6 +32,7 @@ namespace Multiplix.UI.Controllers
             _servicePatrocinador = servicePatrocinador;
         }
 
+        #region Usuario
         public IActionResult Index()
         {
             return View();
@@ -59,8 +61,8 @@ namespace Multiplix.UI.Controllers
                 {
                     new Claim("UsuarioId", usuario.UsuarioId + ""),
                     new Claim("UsuarioLogin", usuario.Login),
-                    new Claim("UsuarioNome", usuario.Nome),                    
-                    new Claim("UsuarioIsSuperUser", usuario.IsSuperUser ? "true" : "false"),                   
+                    new Claim("UsuarioNome", usuario.Nome),
+                    new Claim("UsuarioIsSuperUser", usuario.IsSuperUser ? "true" : "false"),
                     new Claim(ClaimTypes.Name, usuario.Nome)
                 };
 
@@ -83,6 +85,16 @@ namespace Multiplix.UI.Controllers
             await HttpContext.SignOutAsync();
             HttpContext.Session.Clear();
             return Redirect("/Usuario/LogOn");
+        } 
+        #endregion
+
+        public IActionResult IndexInvite()
+        {
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            ViewBag.LinkConvite = associado.GenerateCodeInvite;
+            return View();
         }
 
         [HttpGet]
@@ -184,13 +196,20 @@ namespace Multiplix.UI.Controllers
             var pontosRede = _servicePatrocinador.GetPontosRedePorMes(DateTime.Now.Month, associado.Id);
             var pontosTotais = pontosIndividual + pontosRede;
 
+            var totalIndividual = _servicePatrocinador.GetGanhosIndividual(DateTime.Now.Month, idAssociado);
+            var totalRede = _servicePatrocinador.GetGanhosRede(DateTime.Now.Month, idAssociado);
+
             ViewBag.NomeAssociado = associado.Usuario.Nome;
             ViewBag.Nivel = associado.Nivel;
             ViewBag.idAssociado = idAssociado;
             ViewBag.PontosDiretos = pontosIndividual; //pontos diretos do mês corrente                                                                                           
             ViewBag.PontosRede = pontosRede; //retorna todas as compras da rede do associado do mês corrente e soma os pontos - pontos da rede
             ViewBag.PontosTotais = pontosTotais;
-            ViewBag.TotalIndividual = _servicePatrocinador.GetGanhosIndividual(DateTime.Now.Month, idAssociado);
+            ViewBag.TotalIndividual = totalIndividual;
+            ViewBag.TotalRede = totalRede;
+            ViewBag.Percentagem = _servicePatrocinador.GetPercentagem(pontosTotais);
+            ViewBag.TotalARecebeber = totalIndividual + totalRede;
+
             return View();
         }
 

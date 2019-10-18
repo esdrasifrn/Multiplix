@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewData["Title"] = "IndexInvite";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">Link de indicação (convite)</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Link de indicação
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>    
+    }
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Compartilhe esse link com os seus amigos para fazerem parte da sua rede</div>
+            </div>
+            <div class="card-body">
+                <form method="post" id="form-parceiro" class="form form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section"><i class="ft-user"></i> Seu link</h4>
+                        <div class="form-group row">
+                            <label class="col-md-3 label-control" for="Nome">Link de indicação</label>
+                            <div class="col-md-9 mx-auto">
+                                <input type="text" id="Nome"  class="form-control" value="http://www.multiplyx.com.br/@ViewBag.LinkConvite" placeholder="Descrição" name="RamoAtividadeNome">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="la la-check-square-o"></i> Copiar
+                        </button>
+                        <a href="/RamoAtividade/IndexRamoAtividade" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
