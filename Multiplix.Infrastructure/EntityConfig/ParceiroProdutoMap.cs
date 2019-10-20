@@ -24,6 +24,10 @@ namespace Multiplix.Infrastructure.EntityConfig
             builder
                .Property(pp=> pp.ValorProduto)
                .HasColumnType("decimal(15, 2)");
+
+            builder
+              .Property(pp => pp.PontosPorRealProduto)
+              .HasColumnType("decimal(15, 2)");
         }
     }
 }

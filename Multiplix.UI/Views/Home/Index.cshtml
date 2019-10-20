@@ -1,12 +1,18 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model MercadoPago.Core.MPIPN
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <form action="/Home/SalvarTeste/">
-        <button type="submit">Salvar</button>
-    </form>
-    
-</div>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+        <form action="Home/ProcessarPagamento" method="POST">
+            <script src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
+                    data-preference-id="19846703-cf034522-0c02-4332-a64e-d04f63969dd2">
+            </script>
+        </form>
+       
+
+
+    </div>

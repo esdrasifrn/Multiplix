@@ -563,5 +563,10 @@ namespace Multiplix.UI.Controllers
                 totalResults
             });
         }
+
+        public IActionResult teste()
+        {
+            return View();
+        }
     }
 }

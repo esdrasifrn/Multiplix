@@ -7,11 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
+using MercadoPago;
+using MercadoPago.Resources;
+using MercadoPago.DataStructures.Preference;
+using MercadoPago.Common;
 
 namespace Multiplix.UI.Controllers
 {
     public class HomeController : Controller
-    {
+    {       
         private IServicePatrocinador _servicePatrocinador;
 
         public HomeController(IServicePatrocinador servicePatrocinador)
@@ -24,9 +28,33 @@ namespace Multiplix.UI.Controllers
             return View();
         }
 
-        public IActionResult Dashboard()
+        public IActionResult ProcessarPagamento()
         {
+            // Configura credenciais
+            MercadoPago.SDK.AccessToken = "TEST-874307809966259-101820-90e98a29692cbee8f176ed57f076e283-19846703";
+
+            // Cria um objeto de preferência
+            Preference preference = new Preference();
+          
+            // Cria um item na preferência
+            preference.Items.Add(
+              new Item()
+              {
+                  Title = "Meu produto",
+                  Quantity = 1,
+                  CurrencyId = CurrencyId.BRL,
+                  UnitPrice = (decimal)75.56                  
+              }
+            );
+            preference.Save();
+
             return View();
+
+        }
+
+        public IActionResult Dashboard()
+        {            
+            return View();           
         }
 
 
