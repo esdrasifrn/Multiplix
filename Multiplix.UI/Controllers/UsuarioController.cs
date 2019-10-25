@@ -165,7 +165,19 @@ namespace Multiplix.UI.Controllers
                 return RedirectToAction("Index");
             }
             return View("AdicionarEditarPatrocinador", usuarioDTO);
-        }       
+        }
+
+        private IActionResult SalvarAssociadoComConvite(UsuarioDTO usuarioDTO, string mensagemRetorno)
+        {
+            var result = _servicePatrocinador.SalvarAssociadoComConvite(usuarioDTO);
+
+            if (result.IsValid)
+            {
+                TempData["success"] = mensagemRetorno;
+                return RedirectToAction("Invite");
+            }
+            return View("Invite", usuarioDTO);
+        }
 
         public IActionResult IndexRedeDireta(int idAssociado)
         {
@@ -568,5 +580,49 @@ namespace Multiplix.UI.Controllers
         {
             return View();
         }
+
+
+
+        [AllowAnonymous]
+        public IActionResult Invite(string id)
+        {
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
+            if (AssociadoUtil.IsBase64(id))
+            {
+
+                var idCarteiraUser = AssociadoUtil.Base64Decode(id);
+                Associado userValido = _servicePatrocinador.Buscar(x => x.IdCarteira == idCarteiraUser).FirstOrDefault();
+
+                if (!String.IsNullOrEmpty(userValido.IdCarteira))
+                {
+                    ViewBag.UserValido = "s";
+                    ViewBag.PatrocinadorId = userValido.Id; //o patrocinador é o id do usuário que está convidando
+                    ViewBag.Nivel = userValido.Nivel;
+                    ViewBag.NomePatrocinador = userValido.Usuario.Nome;                   
+                }
+                else
+                {
+                    ViewBag.UserValido = "n";
+                }
+            }
+            else
+            {
+                ViewBag.UserValido = "n";
+            }
+           
+
+            return View(usuarioDTO);
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult Invite(UsuarioDTO usuarioDTO)
+        {
+            ViewData["Title"] = "Novo Associado";
+            ViewBag.UserValido = "s";
+            return SalvarAssociadoComConvite(usuarioDTO, "Associado adicionado com sucesso!");
+        }
+
     }
 }

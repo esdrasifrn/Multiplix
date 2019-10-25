@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
@@ -72,7 +73,7 @@ namespace Multiplix.UI.Controllers
             return View("AdicionarEditarPlanoAssinatura", planoAssinaturaDTO);
         }
 
-
+        [AllowAnonymous]
         public JsonResult PesquisaPlanoAssinatura(string searchTerm, int pageNumber)
         {
             /*

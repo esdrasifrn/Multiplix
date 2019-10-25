@@ -10,6 +10,8 @@ namespace Multiplix.Domain.Interfaces.Services
        
         ValidationResult SalvarAssociadoSemConvite(UsuarioDTO usuarioDTO);
 
+        ValidationResult SalvarAssociadoComConvite(UsuarioDTO usuarioDTO);
+
         /// <summary>
         /// Método responsável em retornar toda a rede do associado, ou seja, todos os seus filhos diretos e indiretos
         /// </summary>

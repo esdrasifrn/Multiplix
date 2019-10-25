@@ -1,0 +1,295 @@
+﻿
+@{
+    ViewData["Title"] = "Invite";
+    Layout = "~/Views/Shared/_LayoutSemMenu.cshtml";
+}
+
+@using Multiplix.UI.Utils
+@using Multiplix.Domain.Enums
+@model Multiplix.Domain.DTOs.UsuarioDTO
+
+
+@if (ViewBag.UserValido == "s")
+{
+    <h1>Você foi convidado a entrar na rede de  @ViewBag.NomePatrocinador</h1>
+
+    <partial name="_componente_form_validation_fluent_messages_container" />
+
+    <section id="horizontal-form-layouts">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title" id="horz-layout-basic">Dados para cadastro</h4>
+                        <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                <li><a data-action="close"><i class="ft-x"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-content collpase show">
+                        <div class="card-body">
+                            <form method="post" id="form-patrocinador" class="form form-horizontal">
+                                <input type="hidden" name="PatrocinadorId" value="@ViewBag.PatrocinadorId" />
+                                <input type="hidden" name="Nivel" value="@ViewBag.Nivel" />
+                                <div class="form-body">
+                                    <h4 class="form-section"><i class="ft-user"></i> Dados pessoais</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Nome">Nome completo*</label>
+                                                <input type="text" id="Nome" asp-for="Nome" class="form-control" placeholder="Nome" name="Nome">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Celular">Nascimento</label>
+                                                <input type="date" id="Nascimento" asp-for="Nascimento" class="form-control" placeholder="Nascimento" name="Nascimento">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="sexo">Sexo</label>
+                                                <select asp-for="Sexo" asp-items="@BooleanUtil.SexoSelect()" class="form-control"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="CPF">CPF</label>
+                                                <input type="text" id="CPF" asp-for="CPF" class="form-control cpf-formatter" placeholder="CPF" name="CPF">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    @*<div class="form-group row">
+                <label class="col-md-3 label-control" for="Liberado">Liberado</label>
+                <div class="col-md-9 mx-auto">
+                    <select asp-for="Liberado" asp-items="@BooleanUtil.SimNaoSelect()" class="form-control"></select>
+                </div>
+            </div>*@
+
+                                    <h4 class="form-section"><i class="ft-navigation"></i> Endereço</h4>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="Nome">Rua</label>
+                                                <input type="text" id="Rua" asp-for="Rua" class="form-control" placeholder="Rua" name="Rua">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="Numero">Número</label>
+                                                <input type="text" id="Numero" asp-for="Numero" class="form-control" placeholder="Numero" name="Numero">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="CEP">CEP</label>
+                                                <input type="text" id="CEP" asp-for="CEP" class="form-control cep-formatter" placeholder="CEP" name="CEP">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Complemento">Complemento</label>
+                                                <input type="text" id="Complemento" asp-for="Complemento" class="form-control" placeholder="Complemento" name="Complemento">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Bairro">Bairro</label>
+                                                <input type="text" id="Bairro" asp-for="Bairro" class="form-control" placeholder="Bairro" name="Bairro">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Cidade">Cidade</label>
+                                                <input type="text" id="Cidade" asp-for="Cidade" class="form-control" placeholder="Cidade" name="Cidade">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Estado">Estado</label>
+                                                <select asp-for="Estado" name="Estado" asp-items="@BooleanUtil.UFSelect()" class="form-control"></select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <h4 class="form-section"><i class="ft-edit-3"></i> informações para contato</h4>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Email">E-mail*</label>
+                                                <input type="text" id="Email" asp-for="Email" class="form-control" placeholder="Email" name="Email">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="EmailAlternativo">E-mail alternativo</label>
+                                                <input type="text" id="EmailAlternativo" asp-for="EmailAlternativo" class="form-control" placeholder="EmailAlternativo" name="EmailAlternativo">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Celular">Celular</label>
+                                                <input type="text" id="Celular" autocomplete="off" asp-for="Celular" class="form-control phone-formatter" placeholder="Celular" name="Celular">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <h4 class="form-section"><i class="ft-check-square"></i> Informações para recebimento</h4>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Banco">Banco</label>
+                                                <select id="Banco"
+                                                        name="Banco"
+                                                        class="has-select2"
+                                                        data-select2-url="/Banco/PesquisaBanco"
+                                                        data-js-callback-init-data="iniciar_Banco"
+                                                        data-mapper-attr-id="BancoId"
+                                                        data-mapper-attr-text="BancoNome">
+                                                    <!-- Select2 -->
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="TipoConta">Tipo de Conta</label>
+                                                <select class="form-control" id="TipoConta" name="TipoConta">
+                                                    @foreach (var tipoConta in ETipoContaChoices.Choices)
+                                                    {
+                                                        <option value="@tipoConta.ValueInt">@tipoConta.Name</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Agencia">Agência</label>
+                                                <input type="text" id="Agencia" asp-for="Agencia" class="form-control" placeholder="Agencia" name="Agencia">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Conta">Conta</label>
+                                                <input type="text" id="Conta" asp-for="Conta" class="form-control" placeholder="Conta" name="Conta">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <h4 class="form-section"><i class="ft-check-square"></i> Plano de Assinatura</h4>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="PlanoAssinatura">Plano</label>
+                                                <select id="PlanoAssinatura"
+                                                        name="PlanoAssinatura"
+                                                        class="has-select2"
+                                                        data-select2-url="/PlanoAssinatura/PesquisaPlanoAssinatura"
+                                                        data-js-callback-init-data="iniciar_PlanoAssinatura"
+                                                        data-mapper-attr-id="PlanoAssinaturaId"
+                                                        data-mapper-attr-text="PlanoAssinaturaNome">
+                                                    <!-- Select2 -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <h4 class="form-section"><i class="ft-clipboard"></i> Dados de acesso</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Login">Login*</label>
+                                                <input type="text" id="Login" asp-for="Login" autocomplete="off" class="form-control" placeholder="Login" name="Login">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Senha">Senha*</label>
+                                                <input type="password" id="Senha" class="form-control" placeholder="Senha" name="Senha">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="la la-check-square-o"></i> Salvar
+                                    </button>
+                                    <a href="/Usuario/Index" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+}
+else
+{
+    <h1>Convite inválido</h1>
+}
+
+@section Scripts
+{
+    <partial name="_componente_form_validation_fluent_messages_script" />
+
+    <script>
+
+    function iniciar_Banco() {
+        var objs = [];
+        objs.push({ id: "@Model.BancoId", text: "@Model.BancoNome" });
+        return objs;
+    }
+
+    function iniciar_PlanoAssinatura() {
+        var objs = [];
+        objs.push({ id: "@Model.PlanoAssinaturaId", text: "@Model.PlanoAssinaturaNome" });
+        return objs;
+    }
+
+    //Cel mask
+	$('.phone-formatter').formatter({
+		'pattern': "({{99}}) {{99999}}-{{9999}}"
+    });
+
+    //Cel mask
+	$('.cpf-formatter').formatter({
+		'pattern': "{{999}}.{{999}}.{{999}}-{{99}}"
+    });
+
+     //Cel mask
+	$('.cep-formatter').formatter({
+		'pattern': "{{99}}.{{999}}-{{999}}"
+	});
+    </script>
+
+}
+
+

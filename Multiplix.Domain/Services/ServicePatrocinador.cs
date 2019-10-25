@@ -314,5 +314,76 @@ namespace Multiplix.Domain.Services
             float pontosTotal = pontosIndividual + pontosRede;
             return pontosTotal;
         }
+
+        public ValidationResult SalvarAssociadoComConvite(UsuarioDTO usuarioDTO)
+        {
+            // usuário
+            Usuario usuario;
+            Associado associado;
+
+           
+                //cria o usuário do patrocinador
+                usuario = new Usuario(
+                    login: usuarioDTO.Login,
+                    senha: usuarioDTO.Senha,
+                    nome: usuarioDTO.Nome,
+                    celular: usuarioDTO.Celular,
+                    email: usuarioDTO.Email,
+                    liberado: usuarioDTO.Liberado
+                );
+
+
+                //associa o associado ao patrocinador
+                associado = new Associado(
+                    usuario: usuario,
+                    patrocinadorId: usuarioDTO.PatrocinadorId, // patrocinador raiz multiplix
+                    rua: usuarioDTO.Rua,
+                    numero: usuarioDTO.Numero,
+                    cep: usuarioDTO.CEP,
+                    cidade: usuarioDTO.Cidade,
+                    bairro: usuarioDTO.Bairro,
+                    complemento: usuarioDTO.Complemento,
+                    estado: usuarioDTO.Estado,
+                    nascimento: usuarioDTO.Nascimento,
+                    sexo: usuarioDTO.Sexo,
+                    cpf: usuarioDTO.CPF,
+                    emailAlternativo: usuarioDTO.EmailAlternativo,
+                    banco: _bancoRepository.ObterPorId(usuarioDTO.BancoId),
+                    tipoConta: usuarioDTO.TipoConta,
+                    agengia: usuarioDTO.Agencia,
+                    conta: usuarioDTO.Conta,
+                    nivel: usuarioDTO.Nivel + 1, // convidado é o nível do patrocinador mais 1
+                    planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId)
+
+                    );
+
+                associado.Id = 0;       
+
+           
+
+            ValidationResult result = new UsuarioValidator().Validate(associado.Usuario);
+
+            if (associado.Banco == null)
+            {
+                result.Errors.Add(new ValidationFailure("Banco", "Campo obrigatório."));
+            }
+
+            if (result.IsValid)
+            {
+                if (associado.Id == 0)
+                {
+                    _patrocinadorRepository.Adicionar(associado);
+                    associado.IdCarteira = associado.GenerateCarteiraPatrocinador();
+                    _patrocinadorRepository.Atualizar(associado);
+                }
+
+            }
+            else
+            {
+                usuarioDTO.ValidationErrors = result.Errors;
+            }
+
+            return result;
+        }
     }
 }

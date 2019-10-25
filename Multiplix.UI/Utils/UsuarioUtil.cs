@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.SignalR;
 namespace Multiplix.UI.Utils
 {
     public class UsuarioUtils
-    {
+    {     
+
         public static Usuario GetUsuarioLogado(HttpContext httpContext, IServiceUsuario serviceUsuario)
         {
             int usuarioId = 0;
@@ -35,6 +36,7 @@ namespace Multiplix.UI.Utils
             {
                 return null;
             }
+
         }
     }
 }
