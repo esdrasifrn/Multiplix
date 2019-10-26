@@ -118,7 +118,7 @@ namespace Multiplix.Domain.Services
                 //associa o associado ao patrocinador
                 associado = new Associado(
                     usuario: usuario,
-                    patrocinadorId: PatrocinadorRaiz, // patrocinador raiz multiplix
+                    patrocinadorId: usuarioDTO.PatrocinadorId, // patrocinador raiz multiplix
                     rua: usuarioDTO.Rua,
                     numero: usuarioDTO.Numero,
                     cep: usuarioDTO.CEP,
@@ -134,7 +134,7 @@ namespace Multiplix.Domain.Services
                     tipoConta: usuarioDTO.TipoConta,
                     agengia: usuarioDTO.Agencia,
                     conta: usuarioDTO.Conta,
-                    nivel: 1, // multiplys é o nível zero e seus convidados serão 0 + 1, e assim sucessivamente
+                    nivel: usuarioDTO.Nivel + 1, // multiplys é o nível zero e seus convidados serão 0 + 1, e assim sucessivamente
                     planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId)
 
                     ) ; 
@@ -172,7 +172,7 @@ namespace Multiplix.Domain.Services
             }
 
             // grupos do usuário do patrocinador
-            if (usuarioDTO.PatrocinadorId > 0)
+            if (usuarioDTO.Grupos.Count > 0)
                 _usuarioRepository.DeleteUsuarioGrupos(associado.Usuario.UsuarioId);
 
             if (usuarioDTO.Grupos.Count > 0)
@@ -198,6 +198,11 @@ namespace Multiplix.Domain.Services
             if (associado.PlanoAssinatura == null)
             {
                 result.Errors.Add(new ValidationFailure("PlanoAssinatura", "Campo obrigatório."));
+            }
+
+            if (associado.PatrocinadorId == 0)
+            {
+                result.Errors.Add(new ValidationFailure("Associado", "O patrocinador é obrigatório."));
             }
 
             if (_patrocinadorRepository.CPFJaExiste(associado.CPF) && !atualizando)

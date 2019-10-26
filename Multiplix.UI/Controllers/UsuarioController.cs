@@ -109,6 +109,14 @@ namespace Multiplix.UI.Controllers
         public IActionResult AdicionarAssociado(UsuarioDTO usuarioDTO)
         {
             ViewData["Title"] = "Novo Associado";
+
+            if (usuarioDTO.PatrocinadorId > 0)
+            {
+                Associado userValido = _servicePatrocinador.ObterPorId(usuarioDTO.PatrocinadorId);
+                usuarioDTO.Nivel = userValido.Nivel;
+            }
+          
+
             return SalvarAssociado(usuarioDTO, "Associado adicionado com sucesso!");
         }
 

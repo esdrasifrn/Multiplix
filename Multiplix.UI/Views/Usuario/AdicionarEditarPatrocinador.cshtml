@@ -50,6 +50,21 @@
                     <div class="card-body">
                         <form method="post" id="form-patrocinador" class="form form-horizontal">
                             <div class="form-body">
+                                <h4 class="form-section"><i class="ft-user"></i> Patrocinador</h4>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="projectinput2">Patrocinador do associado</label>
+                                        <select id="Associado"
+                                                name="Associado"
+                                                class="has-select2"
+                                                data-select2-url="/Usuario/PesquisaAssociado"
+                                                data-js-callback-init-data="iniciar_Associado"
+                                                data-mapper-attr-id="PatrocinadorId"
+                                                data-mapper-attr-text="PatrocinadorNome">
+                                            <!-- Select2 -->
+                                        </select>
+                                    </div>
+                                </div>
                                 <h4 class="form-section"><i class="ft-user"></i> Dados pessoais</h4>
                                 <div class="form-group row">
                                     <label class="col-md-3 label-control" for="Nome">Nome completo*</label>
@@ -255,6 +270,12 @@
         objs.push({ id: "@Model.PlanoAssinaturaId", text: "@Model.PlanoAssinaturaNome" });
         return objs;
     }
+
+     function iniciar_Associado() {
+            var objs = [];
+            objs.push({ id: "@Model.PatrocinadorId", text: "@Model.PatrocinadorNome" });
+            return objs;
+        }
 
     //Cel mask
 	$('.phone-formatter').formatter({

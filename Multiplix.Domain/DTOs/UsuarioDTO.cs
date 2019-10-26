@@ -9,8 +9,15 @@ namespace Multiplix.Domain.DTOs
     {
         public int UsuarioId { get; set; }
         public string IdCateira { get; set; }
+
+        //Patrocinador
         public int PatrocinadorId { get; set; }
+        public string PatrocinadorNome { get; set; }
+
+        //Associado
         public int AssociadoId { get; set; }
+       
+
         public int Nivel { get; set; }
         public string Nome { get; set; }
         public string Celular { get; set; }
@@ -50,6 +57,8 @@ namespace Multiplix.Domain.DTOs
         public int ParceiroId { get; set; }
         public string CNPJ { get; set; }
         public IList<ProdutoDTO> Produtos { get; set; } = new List<ProdutoDTO>();
+
+       
 
         //Ramo de Atividade
         public string RamoAtividadeNome { get; set; }
