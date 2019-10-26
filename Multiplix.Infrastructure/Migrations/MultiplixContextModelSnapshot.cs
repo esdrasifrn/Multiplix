@@ -96,7 +96,7 @@ namespace Multiplix.Infrastructure.Migrations
                             BancoId = 1,
                             Estado = "RN",
                             IdCarteira = "201900000001",
-                            Nascimento = new DateTime(2019, 10, 20, 15, 16, 2, 642, DateTimeKind.Local).AddTicks(718),
+                            Nascimento = new DateTime(2019, 10, 25, 16, 50, 16, 50, DateTimeKind.Local).AddTicks(7611),
                             Nivel = 0,
                             PlanoAssinaturaId = 1,
                             TipoConta = 1,

@@ -174,7 +174,7 @@ namespace Multiplix.UI.Controllers
             if (result.IsValid)
             {
                 TempData["success"] = mensagemRetorno;
-                return RedirectToAction("Invite");
+                return RedirectToAction("InviteSucesso");
             }
             return View("Invite", usuarioDTO);
         }
@@ -594,7 +594,7 @@ namespace Multiplix.UI.Controllers
                 Associado userValido = _servicePatrocinador.Buscar(x => x.IdCarteira == idCarteiraUser).FirstOrDefault();
 
                 if (!String.IsNullOrEmpty(userValido.IdCarteira))
-                {
+                {                   
                     ViewBag.UserValido = "s";
                     ViewBag.PatrocinadorId = userValido.Id; //o patrocinador é o id do usuário que está convidando
                     ViewBag.Nivel = userValido.Nivel;
@@ -617,11 +617,24 @@ namespace Multiplix.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Invite(UsuarioDTO usuarioDTO)
+        public IActionResult Invite(UsuarioDTO usuarioDTO, string id)
         {
             ViewData["Title"] = "Novo Associado";
             ViewBag.UserValido = "s";
+
+            var idCarteiraUser = AssociadoUtil.Base64Decode(id);
+            Associado userValido = _servicePatrocinador.Buscar(x => x.IdCarteira == idCarteiraUser).FirstOrDefault();
+            usuarioDTO.PatrocinadorId = userValido.Id;
+            usuarioDTO.Nivel = userValido.Nivel;
+            ViewBag.NomePatrocinador = userValido.Usuario.Nome;
+
             return SalvarAssociadoComConvite(usuarioDTO, "Associado adicionado com sucesso!");
+        }
+
+        [AllowAnonymous]
+        public IActionResult InviteSucesso()
+        {
+            return View();
         }
 
     }

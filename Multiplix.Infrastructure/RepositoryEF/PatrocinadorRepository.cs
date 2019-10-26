@@ -11,6 +11,13 @@ namespace Multiplix.Infrastructure.RepositoryEF
         public PatrocinadorRepository(MultiplixContext multiplixContext, IConfiguration configuration) : base(multiplixContext, configuration)
         {
               
-        }      
+        }
+
+        public bool CPFJaExiste(string cpf)
+        {
+            var cpfExiste = _dbContext.Patrocinadores.Where(x => x.CPF == cpf);
+
+            return cpfExiste.Count() > 0;
+        }
     }
 }

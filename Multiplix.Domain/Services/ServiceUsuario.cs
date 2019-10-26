@@ -80,6 +80,7 @@ namespace QuizCorp.Domain.Services
         {
             // usuário
             Usuario usuario;
+            var atualizando = false;
 
             if (usuarioDTO.UsuarioId == 0)
             {
@@ -96,6 +97,7 @@ namespace QuizCorp.Domain.Services
             }
             else
             {
+                atualizando = true;
                 usuario = _usuarioRepository.ObterPorId(usuarioDTO.UsuarioId);
 
                 usuario.Login = usuarioDTO.Login;
@@ -123,7 +125,7 @@ namespace QuizCorp.Domain.Services
                 }
             }
 
-            ValidationResult result = new UsuarioValidator().Validate(usuario);
+            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(usuario);
 
             if (result.IsValid)
             {
@@ -192,7 +194,7 @@ namespace QuizCorp.Domain.Services
                 #endregion
             }
 
-            ValidationResult result = new UsuarioValidator().Validate(usuario);
+            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando:true).Validate(usuario);
 
             if (result.IsValid)
             {

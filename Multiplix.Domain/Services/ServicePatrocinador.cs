@@ -99,6 +99,7 @@ namespace Multiplix.Domain.Services
             // usuário
             Usuario usuario;
             Associado associado;
+            var atualizando = false;
            
             if (usuarioDTO.AssociadoId == 0)
             { 
@@ -142,6 +143,7 @@ namespace Multiplix.Domain.Services
             }
             else
             {
+                atualizando = true;
                 associado = _patrocinadorRepository.ObterPorId(usuarioDTO.AssociadoId);
 
                 associado.Usuario.Login = usuarioDTO.Login;
@@ -186,11 +188,26 @@ namespace Multiplix.Domain.Services
                 }
             }
 
-            ValidationResult result = new UsuarioValidator().Validate(associado.Usuario);
+            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(associado.Usuario);
 
             if (associado.Banco == null)
             {
                 result.Errors.Add(new ValidationFailure("Banco", "Campo obrigatório."));
+            }
+
+            if (associado.PlanoAssinatura == null)
+            {
+                result.Errors.Add(new ValidationFailure("PlanoAssinatura", "Campo obrigatório."));
+            }
+
+            if (_patrocinadorRepository.CPFJaExiste(associado.CPF) && !atualizando)
+            {
+                result.Errors.Add(new ValidationFailure("CPF", "CPF já existe"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.CPF)))
+            {
+                result.Errors.Add(new ValidationFailure("CPF", "CPF é obrigatório"));
             }
 
             if (result.IsValid)
@@ -361,11 +378,26 @@ namespace Multiplix.Domain.Services
 
            
 
-            ValidationResult result = new UsuarioValidator().Validate(associado.Usuario);
+            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando:false).Validate(associado.Usuario);
 
             if (associado.Banco == null)
             {
                 result.Errors.Add(new ValidationFailure("Banco", "Campo obrigatório."));
+            }
+
+            if (associado.PlanoAssinatura == null)
+            {
+                result.Errors.Add(new ValidationFailure("PlanoAssinatura", "Campo obrigatório."));
+            }
+
+            if (_patrocinadorRepository.CPFJaExiste(associado.CPF))
+            {
+                result.Errors.Add(new ValidationFailure("CPF", "CPF já existe"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.CPF)))
+            {
+                result.Errors.Add(new ValidationFailure("CPF", "CPF é obrigatório"));
             }
 
             if (result.IsValid)
@@ -384,6 +416,11 @@ namespace Multiplix.Domain.Services
             }
 
             return result;
+        }
+
+        public bool CPFJaExiste(string cpf)
+        {
+            throw new NotImplementedException();
         }
     }
 }

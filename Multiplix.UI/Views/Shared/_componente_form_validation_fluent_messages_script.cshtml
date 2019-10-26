@@ -48,11 +48,11 @@
                         error_message +
                         '</div></div>');
                 } else {
-                    $("#form-errors").find(".list-errors-gerais").append('<li class="error list-group-item list-group-item-danger">' + error_message + '</li>');
+                    $("#form-errors").find(".list-errors-gerais").append('<li class="error list-group-item list-group-item-danger">' + error_message + '</li>').css("border-color", "red");
                     console.log(element, 222222);
                 }
             } else {
-                $("#form-errors").find(".list-errors-gerais").append('<li class="error list-group-item list-group-item-danger">' + error_message + '</li>');
+                $("#form-errors").find(".list-errors-gerais").append('<li class="error list-group-item list-group-item-danger">' + error_message + '</li>').css("border-color", "red");
                 console.log(element, 3333333);
             }
         });

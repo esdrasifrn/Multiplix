@@ -10,8 +10,8 @@ using Multiplix.Infrastructure.Data;
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    [Migration("20191014122027_carteira")]
-    partial class carteira
+    [Migration("20191025195016_inicial")]
+    partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -98,7 +98,7 @@ namespace Multiplix.Infrastructure.Migrations
                             BancoId = 1,
                             Estado = "RN",
                             IdCarteira = "201900000001",
-                            Nascimento = new DateTime(2019, 10, 14, 9, 20, 26, 770, DateTimeKind.Local).AddTicks(5106),
+                            Nascimento = new DateTime(2019, 10, 25, 16, 50, 16, 50, DateTimeKind.Local).AddTicks(7611),
                             Nivel = 0,
                             PlanoAssinaturaId = 1,
                             TipoConta = 1,
@@ -253,7 +253,9 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<int>("ProdutoId");
 
-                    b.Property<float>("PontosPorRealProduto");
+                    b.Property<decimal>("PontosPorRealProduto")
+                        .HasConversion(new ValueConverter<decimal, decimal>(v => default(decimal), v => default(decimal), new ConverterMappingHints(precision: 38, scale: 17)))
+                        .HasColumnType("decimal(15, 2)");
 
                     b.Property<decimal>("ValorProduto")
                         .HasColumnType("decimal(15, 2)");

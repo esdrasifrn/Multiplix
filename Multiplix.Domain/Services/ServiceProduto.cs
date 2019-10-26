@@ -15,6 +15,7 @@ namespace QuizCorp.Domain.Services
     {
         private readonly IProdutoRepository  _produtoRepository;
         private readonly IParceiroRepository _parceiroRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
         public ServiceProduto(IProdutoRepository produtoRepository, IParceiroRepository parceiroRepository)
         {
@@ -121,7 +122,7 @@ namespace QuizCorp.Domain.Services
                 }
             }
 
-            ValidationResult result = new UsuarioValidator().Validate(parceiro.Usuario);
+            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando:false).Validate(parceiro.Usuario);
 
             if (result.IsValid)
             {

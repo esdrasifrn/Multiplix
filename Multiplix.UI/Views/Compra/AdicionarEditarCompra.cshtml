@@ -221,6 +221,22 @@
                 ]
             });
 
+            $("#Parceiro").change(() => {
+                $("#Produto").val(null).trigger("change");
+                $("#qtd").val("");
+                $("#ValorUnidade").val("");
+                $("#Subtotal").val(""); 
+                $("#Pontos").val("");
+            });
+
+            $("#Produto").change(() => {
+                
+                $("#qtd").val("");
+                $("#ValorUnidade").val("");
+                $("#Subtotal").val(""); 
+                $("#Pontos").val("");
+            });
+
             $("#add-produto").click(() => {
                 var produto_select = $("#Produto").find("option:selected");
 
@@ -250,6 +266,11 @@
 
                     if (produto_qtd === "") {
                         swal("Atenção!", "Digite a quantidade do produto!", "warning");
+                        temProdutoPonto = false;
+                    }
+
+                    if (produto_qtd < 1) {
+                        swal("Atenção!", "Digite uma quantidade válida!", "warning");
                         temProdutoPonto = false;
                     }
                    
@@ -382,7 +403,7 @@
            }
         }        
 
-        function iniciar_Parceiro() {
+         function iniciar_Parceiro() {
             var objs = [];
             objs.push({ id: "@Model.ParceiroId", text: "@Model.ParceiroNome" });
             return objs;

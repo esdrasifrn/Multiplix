@@ -66,6 +66,8 @@ namespace Multiplix.Domain.Interfaces.Services
         /// <returns></returns>
         float GetPontosTotal(int mes, int associadoId);
 
+        bool CPFJaExiste(string cpf);
+
 
     }
 }

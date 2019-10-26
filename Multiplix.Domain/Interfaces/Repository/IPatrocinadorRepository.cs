@@ -7,6 +7,6 @@ namespace Multiplix.Domain.Interfaces.Repository
 {
     public interface IPatrocinadorRepository : IRepositoryBase<Associado>
     {
-      
+        bool CPFJaExiste(string cpf);
     }
 }

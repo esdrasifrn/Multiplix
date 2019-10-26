@@ -77,11 +77,12 @@ namespace Multiplix.Domain.Services
         {
             // usuário
             Usuario usuario;
-            Parceiro parceiro;           
+            Parceiro parceiro;
+            var atualizando = false;
            
             if (usuarioDTO.ParceiroId == 0)
-            { 
-
+            {
+                atualizando = false;
                 //cria o usuário do patrocinador
                 usuario = new Usuario(
                     login: usuarioDTO.Login,
@@ -113,6 +114,8 @@ namespace Multiplix.Domain.Services
             }
             else
             {
+                atualizando = true;
+
                 parceiro = _parceiroRepository.ObterPorId(usuarioDTO.ParceiroId);
 
                 parceiro.Usuario.Login = usuarioDTO.Login;
@@ -175,7 +178,7 @@ namespace Multiplix.Domain.Services
 
             #endregion
 
-            ValidationResult result = new UsuarioValidator().Validate(parceiro.Usuario);           
+            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(parceiro.Usuario);           
 
             if (result.IsValid)
             {

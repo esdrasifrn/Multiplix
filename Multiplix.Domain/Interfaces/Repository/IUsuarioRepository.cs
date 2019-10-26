@@ -9,5 +9,8 @@ namespace Multiplix.Domain.Interfaces.Repository
     {
         void DeleteUsuarioGrupos(int usuarioId);
         void DeleteUsuarioPermissoes(int usuarioId);
+
+        //bool CPFJaExiste(string cpf);
+        bool LoginJaExiste(string login);
     }
 }

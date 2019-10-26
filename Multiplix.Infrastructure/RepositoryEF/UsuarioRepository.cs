@@ -40,5 +40,19 @@ namespace Multiplix.Infrastructure.RepositoryEF
 
             _dbContext.SaveChanges();
         }
+
+        //public bool CPFJaExiste(string cpf)
+        //{
+        //    var cpfExiste = _dbContext.Usuarios.Where(x => x.CPF == cpf);
+
+        //    return cpfExiste.Count() > 0;
+        //}
+
+        public bool LoginJaExiste(string login)
+        {
+            var loginExiste = _dbContext.Usuarios.Where(x => x.Login == login);
+
+            return loginExiste.Count() > 0;
+        }
     }
 }
