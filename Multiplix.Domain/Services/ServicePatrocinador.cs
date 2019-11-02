@@ -101,7 +101,7 @@ namespace Multiplix.Domain.Services
             Associado associado;
             var atualizando = false;
            
-            if (usuarioDTO.AssociadoId == 0)
+            if (usuarioDTO.UsuarioId == 0)
             { 
 
                 //cria o usuário do patrocinador
@@ -144,7 +144,7 @@ namespace Multiplix.Domain.Services
             else
             {
                 atualizando = true;
-                associado = _patrocinadorRepository.ObterPorId(usuarioDTO.AssociadoId);
+                associado = _patrocinadorRepository.Buscar(x => x.UsuarioId == usuarioDTO.UsuarioId).FirstOrDefault();
 
                 associado.Usuario.Login = usuarioDTO.Login;
                 associado.Usuario.Senha = usuarioDTO.Senha;

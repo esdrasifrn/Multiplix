@@ -13,10 +13,12 @@ namespace Multiplix.UI.Controllers
     public class ParceiroController : Controller
     {
         private IServiceParceiro _serviceParceiro { get; set; }
+        private IServiceUsuario _serviceUsuario;
 
-        public ParceiroController(IServiceParceiro serviceParceiro)
+        public ParceiroController(IServiceParceiro serviceParceiro, IServiceUsuario serviceUsuario)
         {
             _serviceParceiro = serviceParceiro;
+            _serviceUsuario = serviceUsuario;
         }
 
         public IActionResult IndexParceiro()
@@ -40,10 +42,13 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditarParceiro(int parceiroId)
+        public IActionResult EditarParceiro(int usuarioId)
         {
             ViewData["Title"] = "Editar Parceiro";
-            Parceiro parceiro = _serviceParceiro.ObterPorId(parceiroId);
+            Usuario usuario = _serviceUsuario.ObterPorId(usuarioId);
+
+            Parceiro parceiro = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuario.UsuarioId).FirstOrDefault();
+
             UsuarioDTO usuarioDTO = new UsuarioDTO()
             {
                 Nome = parceiro.Usuario.Nome,               
@@ -176,7 +181,7 @@ namespace Multiplix.UI.Controllers
             foreach (var parceiro in parceiros)
             {
                 List<object> result_item = new List<object> {
-                    parceiro.ParceiroId,                   
+                    parceiro.Usuario.UsuarioId,                   
                     parceiro.Usuario.Nome,
                     parceiro.CNPJ,
                     parceiro.Usuario.Celular,

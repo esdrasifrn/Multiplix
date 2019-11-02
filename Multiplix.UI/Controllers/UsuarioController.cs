@@ -110,7 +110,7 @@ namespace Multiplix.UI.Controllers
         {
             ViewData["Title"] = "Novo Associado";
 
-            if (usuarioDTO.PatrocinadorId > 0)
+            if (usuarioDTO.UsuarioId > 0)
             {
                 Associado userValido = _servicePatrocinador.ObterPorId(usuarioDTO.PatrocinadorId);
                 usuarioDTO.Nivel = userValido.Nivel;
@@ -121,10 +121,12 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditarAssociado(int associadoId)
+        public IActionResult EditarAssociado(int usuarioId)
         {
             ViewData["Title"] = "Editar Associado";
-            Associado associado = _servicePatrocinador.ObterPorId(associadoId);
+            Usuario usuario = _serviceUsuario.ObterPorId(usuarioId);
+            Associado associado = _servicePatrocinador.Buscar(x => x.UsuarioId == usuarioId).FirstOrDefault();
+
             UsuarioDTO usuarioDTO = new UsuarioDTO()
             {
                 Nome = associado.Usuario.Nome,
@@ -525,7 +527,7 @@ namespace Multiplix.UI.Controllers
                 if (_servicePatrocinador.ObterPorId(id: PatrocinadorId).Usuario.Nome == null) { }
 
                 List<object> result_item = new List<object> {
-                    patrocinador.Id,
+                    patrocinador.Usuario.UsuarioId,
                     patrocinador.IdCarteira,
                     patrocinador.Usuario.Nome,
                     patrocinador.Usuario.Celular,

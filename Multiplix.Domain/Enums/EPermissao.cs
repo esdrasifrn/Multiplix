@@ -11,19 +11,58 @@ namespace Multiplix.Domain.Enums
         {
             return new List<PermissaoDTO>()
             {               
-                _("pode_visualizar_usuario", "Pode visualizar usuário"),
-                _("pode_cadastrar_usuario", "Pode cadastrar usuário"),
-                _("pode_alterar_usuario", "Pode alterar usuário"),
-                _("pode_excluir_usuario", "Pode excluir usuário"),
+               #region Associado
+
+		        _("pode_visualizar_associado", "Pode visualizar associado"),
+                _("pode_cadastrar_associado", "Pode cadastrar associado"),
+                _("pode_alterar_associado", "Pode alterar associado"),
+                _("pode_visualizar_link_convite", "Pode visualizar link de convite"),
+                _("pode_visualizar_compras_por_associado", "Pode visualizar compras por associado"),
+                _("pode_visualizar_minha_rede", "Pode visualizar minha rede"),
+                _("pode_visualizar_saldo", "Pode visualizar saldo"),
+                _("pode_visualizar_relatorio", "Pode visualizar relatório"), 
+
+	            #endregion
+
+               #region Administração
+		
+                _("pode_visualizar_administracao", "Pode visualizar administração"),
+                _("pode_visualizar_ramo_atividade", "Pode visualizar ramo de atividade"),
+                _("pode_cadastrar_ramo_atividade", "Pode cadastrar ramo de atividade"),
+                _("pode_alterar_ramo_atividade", "Pode alterar ramo de atividade"),
+
+                _("pode_visualizar_banco", "Pode visualizar banco"),
+                _("pode_cadastrar_banco", "Pode cadastrar banco"),
+                _("pode_alterar_banco", "Pode alterar banco"),
+
+                _("pode_visualizar_produto", "Pode visualizar produto"),
+                _("pode_cadastrar_produto", "Pode cadastrar produto"),
+                _("pode_alterar_produto", "Pode alterar produto"),
+
+                _("pode_visualizar_plano_assinatura", "Pode visualizar plano de assinatura"),
+                _("pode_cadastrar_plano_assinatura", "Pode cadastrar plano de assinatura"),
+                _("pode_alterar_plano_assinatura", "Pode alterar plano de assinatura"),
+
+                _("pode_visualizar_unidade", "Pode visualizar unidade"),
+                _("pode_cadastrar_unidade", "Pode cadastrar unidade"),
+                _("pode_alterar_unidade", "Pode alterar unidade"), 
+
+	            #endregion
+
+                _("pode_visualizar_parceiro", "Pode visualizar parceiro"),
+                _("pode_cadastrar_parceiro", "Pode cadastrar parceiro"),
+                _("pode_alterar_parceiro", "Pode alterar parceiro"),
+                _("pode_cadastrar_compras", "Pode cadastrar compras"),
+
 
                 _("pode_visualizar_grupo", "Pode visualizar grupo"),
                 _("pode_cadastrar_grupo", "Pode cadastrar grupo"),
                 _("pode_alterar_grupo", "Pode alterar grupo"),
                 _("pode_excluir_grupo", "Pode excluir grupo"),
 
-                _("pode_visualizar_permissao_usuario", "Pode visualizar permissões do usuário"),
-                _("pode_cadastrar_permissao_usuario", "Pode cadastrar permissões do usuário"),
-                _("pode_alterar_permissao_usuario", "Pode alterar permissões do usuário"),
+                _("pode_visualizar_permissao", "Pode visualizar permissões"),
+                _("pode_cadastrar_permissao", "Pode cadastrar permissões"),
+                _("pode_alterar_permissao", "Pode alterar permissões"),
             };
         }
 

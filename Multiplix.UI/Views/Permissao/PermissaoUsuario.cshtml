@@ -1,0 +1,171 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section head {
+
+    <style type="text/css">
+        div#grupos {
+            padding: 3px;
+            /*border: 1px solid #e3e3e3;*/
+            border-radius: 2px;
+            -webkit-border-radius: 2px;
+            padding: 10px;
+        }
+
+        div#permissoes {
+            padding: 3px;
+            /*border: 1px solid #e3e3e3;*/
+            border-radius: 2px;
+            -webkit-border-radius: 2px;
+            padding: 10px;
+        }
+
+        li.item_selectable {
+            margin: 6px;
+            padding: 10px;
+            border-radius: 6px;
+            -webkit-border-radius: 6px;
+            border-width: 0.4px;
+            border-color: #2B4EAC;
+            border-style: solid;
+            width: 95%;
+            cursor: pointer;
+            list-style-type: none;
+        }
+
+        li.item_unselected {
+            margin: 6px;
+            padding: 10px;
+            border-radius: 6px;
+            -webkit-border-radius: 6px;
+            border-width: 0.4px;
+            border-color: #2B4EAC;
+            border-style: solid;
+            width: 95%;
+            cursor: pointer;
+            list-style-type: none;
+        }
+
+        li.item_selectable.ui-selecting {
+            background: #2B4EAC;
+            color: #fff;
+        }
+
+        li.item_selectable.ui-selected {
+            background: #2B4EAC;
+            color: #fff;
+        }
+
+        li.item_unselectable.ui-selecting {
+            background: #2B4EAC;
+            color: #fff;
+        }
+
+        li.item_unselectable.ui-selected {
+            background: #2B4EAC;
+            color: #fff;
+        }
+
+        span.token-input-delete-token {
+            float: right;
+        }
+    </style>
+}
+
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">Listagem de permissões</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Lista de permissões disponíveis
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>  
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title mb-0">Adicione as permissões de <strong>@ViewBag.Usuario.Nome</strong> abaixo</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <form class="col-12" method="post" id="form-usuario" action="/Permissao/SalvarPermissaoUsuario">
+                <div class="form-group">
+                    <input name="UsuarioId" value="@ViewBag.Usuario.UsuarioId" type="hidden" />
+                    @if (ViewBag.ListaPermissaoTodas.Count > 0)
+                    {
+                        <div id="permissoes">
+                            <ul id="usuario_permissoes">
+                                <!-- cria a lista com todas as permissões cadastrados -->
+                                @foreach (var permissao in ViewBag.ListaPermissaoTodas)
+                                {
+                                    var selecionada = false;
+                                    foreach (var permissaoSelecionada in ViewBag.ListaPermissaoUsuario)
+                                    {
+                                        var idP = permissao.Id;
+                                        var idPS = permissaoSelecionada.Id;
+
+                                        if (idPS == idP)
+                                        {
+                                            selecionada = true;
+                                            break;
+                                        }
+                                    }
+                                    if (selecionada == true)
+                                    {
+                                        <li class="item_selectable ui-selected token-input-token" id="@permissao.Id">@permissao.Descricao<span class="token-input-delete-token">×</span></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="item_unselected" id="@permissao.Id">@permissao.Descricao</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="text" value="Nenhuma permissão foi cadastrada. Contate o administrador do sistema." class="campoPadrao" disabled />
+                    }
+                    <input type="hidden" name="PermissoesIDs" />
+                </div>
+                <div class="col-auto mb-3">
+                    <button type="submit" class="btn btn-small btn-primary mr-1"><i class="fa fa-save"></i> Salvar</button>
+                    <a href="/Usuario/Index" class="btn btn-danger"><i class="fa fa-backward"></i> Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script charset="utf-8" type="text/javascript" src="~/lib/selectable/jquery.plugin.selectable.config.js"></script>
+    <script type="text/javascript">
+
+        // jquery selectable - permissões do usuário
+        jquerySelectableConfig({
+            appendTo: "div#permissoes",
+            listSelector: "#usuario_permissoes",
+            listItemSelectedClass: "item_selectable ui-selected token-input-token",
+            listItemSelectedAppendContent: "<span class='token-input-delete-token'>×</span>",
+            listItemUnSelectedClass: "item_unselected",
+            listItemUnSelectedAppendContent: "",
+            valuesSelector: "[name=PermissoesIDs]",
+            totalInfoSelector: "#labelPermissoes",
+            totalInfoSelectorProp: "textContent",
+            totalInfoSelectorTextBase: "Permissões adicionais do usuário"
+        });
+    </script>
+
+}

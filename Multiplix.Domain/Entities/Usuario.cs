@@ -6,8 +6,8 @@ namespace Multiplix.Domain.Entities
 {
     public class Usuario
     {       
-        private IList<UsuarioGrupo> _usuarioGrupos;
-        private IList<PermissaoUsuario> _permissaoUsuarios;
+        private IList<UsuarioGrupo> _usuarioGrupos = new List<UsuarioGrupo>();
+        private IList<PermissaoUsuario> _permissaoUsuarios = new List<PermissaoUsuario>();
 
         public Usuario(string login, string senha, string nome, string celular, string email, bool liberado)
         {
@@ -16,15 +16,12 @@ namespace Multiplix.Domain.Entities
             Nome = nome;
             Celular = celular;
             Email = email;
-            Liberado = liberado;
-            _usuarioGrupos = new List<UsuarioGrupo>();           
-            _permissaoUsuarios = new List<PermissaoUsuario>();           
+            Liberado = liberado;                 
         }
 
         public Usuario()
         {
-            _usuarioGrupos = new List<UsuarioGrupo>();
-            _permissaoUsuarios = new List<PermissaoUsuario>();           
+               
         }
 
         public int UsuarioId { get; set; }

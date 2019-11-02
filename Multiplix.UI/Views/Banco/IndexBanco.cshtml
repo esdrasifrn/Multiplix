@@ -1,6 +1,6 @@
 ﻿@using Multiplix.UI.Utils
 @{
-    ViewData["Title"] = "Produtos";
+    ViewData["Title"] = "Bancos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -65,7 +65,7 @@
             var podeVisualizarBanco = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_banco").ToString().ToLower();
             var botoes = [{ title: "Visualizar", url: "#", permission: podeVisualizarBanco }];
             generateDataTable("#data-table-banco",
-                "Bancos",
+                "Banco",
                 "/Banco/ListaBancos",
                 true,
                 "/Banco/EditarBanco/?bancoId=",

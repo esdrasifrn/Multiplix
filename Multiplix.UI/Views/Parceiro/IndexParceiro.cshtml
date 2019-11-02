@@ -66,12 +66,12 @@
             var podeAlterarParceiro = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_parceiro").ToString().ToLower();
             var podeExcluirParceiro = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_parceiro").ToString().ToLower();
             var podeVisualizarPermissaoParceiro = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_parceiro").ToString().ToLower();
-            var botoes = [{ title: "Permissões", url: "/Permissao/PermissaoUsuario/?parceiroId=", permission: podeVisualizarPermissaoParceiro }];
+            var botoes = [{ title: "Permissões", url: "/Permissao/PermissaoUsuario/?usuarioId=", permission: podeVisualizarPermissaoParceiro }];
             generateDataTable("#data-table-parceiros",
                 "Parceiro",
                 "/Parceiro/ListaParceiros",
                 podeAlterarParceiro,
-                "/Parceiro/EditarParceiro/?parceiroId=",
+                "/Parceiro/EditarParceiro/?usuarioId=",
                 podeExcluirParceiro,
                 "/Parceiro/Excluir/?parceiroId=", botoes);
         });

@@ -7,6 +7,7 @@ using Multiplix.Domain.Validations;
 using Multiplix.Domain.ValueObject;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -80,7 +81,7 @@ namespace Multiplix.Domain.Services
             Parceiro parceiro;
             var atualizando = false;
            
-            if (usuarioDTO.ParceiroId == 0)
+            if (usuarioDTO.UsuarioId == 0)
             {
                 atualizando = false;
                 //cria o usuário do patrocinador
@@ -116,7 +117,7 @@ namespace Multiplix.Domain.Services
             {
                 atualizando = true;
 
-                parceiro = _parceiroRepository.ObterPorId(usuarioDTO.ParceiroId);
+                parceiro = _parceiroRepository.Buscar(x => x.Usuario.UsuarioId == usuarioDTO.UsuarioId).FirstOrDefault();
 
                 parceiro.Usuario.Login = usuarioDTO.Login;
                 parceiro.Usuario.Senha = usuarioDTO.Senha;
@@ -158,7 +159,7 @@ namespace Multiplix.Domain.Services
             #endregion
                         
             #region produtos do parceiro
-            if (usuarioDTO.ParceiroId > 0)
+            if (usuarioDTO.UsuarioId > 0)
                 _parceiroRepository.DeleteProdutosParceiro(parceiro.ParceiroId);
 
             if (usuarioDTO.Produtos.Count > 0)
