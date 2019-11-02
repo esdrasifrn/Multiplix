@@ -8,6 +8,7 @@ using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
+using Multiplix.UI.Utils;
 
 namespace Multiplix.UI.Controllers
 {
@@ -21,9 +22,14 @@ namespace Multiplix.UI.Controllers
             _serviceCompra = serviceCompra;
             _serviceParceiro = serviceParceiro;
         }
-
+                      
         public IActionResult IndexCompra()
         {
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_compras_parceiro"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
             return View();
         }
         ///Só compra do usuário logado
@@ -31,9 +37,14 @@ namespace Multiplix.UI.Controllers
         {
             return View();
         }
-
+        
         public IActionResult ComprasPorAssociado()
         {
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_compras_por_associado"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
             CompraDTO compraDTO = new CompraDTO();
             DateTime date = DateTime.Now;
 

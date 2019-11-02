@@ -32,9 +32,14 @@ namespace Multiplix.UI.Controllers
             _servicePatrocinador = servicePatrocinador;
         }
 
-        #region Usuario
+        #region Usuario      
         public IActionResult Index()
         {
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_associado"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
             return View();
         }
 
@@ -55,16 +60,22 @@ namespace Multiplix.UI.Controllers
                 HttpContext.Session.SetString("usuario", f["usuario"]);
                 HttpContext.Session.SetString("permissoes", JsonConvert.SerializeObject(_servicePermissao.UsuarioObterTodasPermissoes(usuario)));
                 HttpContext.Session.SetString("superUsuario", usuario.IsSuperUser ? "true" : "false");
+
+                var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuario.UsuarioId).FirstOrDefault();
+
                 // criar uma identificação com 3 chaves personalizadas (ID do usuário, login e nome)
                 // e 1 chave padrão
                 var claims = new List<Claim>()
                 {
                     new Claim("UsuarioId", usuario.UsuarioId + ""),
+                    new Claim("idAssociado", associado.Id + ""),
                     new Claim("UsuarioLogin", usuario.Login),
                     new Claim("UsuarioNome", usuario.Nome),
                     new Claim("UsuarioIsSuperUser", usuario.IsSuperUser ? "true" : "false"),
                     new Claim(ClaimTypes.Name, usuario.Nome)
                 };
+
+               
 
                 var userIdentity = new ClaimsIdentity(claims, "UsuarioLogin");
 
@@ -85,11 +96,16 @@ namespace Multiplix.UI.Controllers
             await HttpContext.SignOutAsync();
             HttpContext.Session.Clear();
             return Redirect("/Usuario/LogOn");
-        } 
+        }
         #endregion
-
+              
         public IActionResult IndexInvite()
         {
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_link_convite"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
             var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
 
@@ -188,19 +204,38 @@ namespace Multiplix.UI.Controllers
             }
             return View("Invite", usuarioDTO);
         }
-
+        
         public IActionResult IndexRedeDireta(int idAssociado)
         {
-            var associado = _servicePatrocinador.ObterPorId(idAssociado);
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_minha_rede"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+            var associadoPassadoURL = _servicePatrocinador.ObterPorId(idAssociado);
+
+            //Garante que o associado logado vai ver somente os associados da rede dele
+            if (associadoPassadoURL != associadoLogado)
+            {
+                var associadoPertenceARede = _servicePatrocinador.GetRedeAssociado(associadoLogado.Id).Contains(associadoPassadoURL);
+               
+                if (!associadoPertenceARede)
+                {
+                    return RedirectToAction("UnauthorizedResult", "Permissao");
+                }
+            }
+           
             var associadoRede = _servicePatrocinador.GetRedeAssociado(idAssociado);            
 
             var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, idAssociado);
             var pontosRede = _servicePatrocinador.GetPontosRedePorMes(DateTime.Now.Month, idAssociado);
 
-            ViewBag.Nivel = associado.Nivel;
+            ViewBag.Nivel = associadoPassadoURL.Nivel;
             ViewBag.idAssociado = idAssociado;
-            ViewBag.NomeAssociado = associado.Usuario.Nome;
-            ViewBag.QTDDiretos = associado.Patrocinados.Count(); //qtd de patrocinados diretos
+            ViewBag.NomeAssociado = associadoPassadoURL.Usuario.Nome;
+            ViewBag.QTDDiretos = associadoPassadoURL.Patrocinados.Count(); //qtd de patrocinados diretos
             ViewBag.QTDRede = associadoRede.Count();//qtd de patrocinados da rede geral do associado
             ViewBag.PontosDiretos = pontosIndividual; //pontos diretos do mês corrente                                                                                           
             ViewBag.PontosRede = pontosRede; //retorna todas as compras da rede do associado do mês corrente e soma os pontos - pontos da rede
@@ -208,10 +243,16 @@ namespace Multiplix.UI.Controllers
 
             return View();
         }
-
-
+        
+       
         public IActionResult IndexSaldo(int idAssociado)
         {
+
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_saldo"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
             var associado = _servicePatrocinador.ObterPorId(idAssociado);
             var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, idAssociado);            
 
@@ -247,14 +288,11 @@ namespace Multiplix.UI.Controllers
             IEnumerable<Associado> patrocinadores = new List<Associado>();
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
-            {
-                patrocinadores = _servicePatrocinador.Buscar(
-                    x => x.IdCarteira.Contains(searchTerm) ||
-                         x.Usuario.Nome.Contains(searchTerm) ||
-                         x.Usuario.Celular.Contains(searchTerm) ||
-                         x.Usuario.Email.Contains(searchTerm) ||
-                         x.Usuario.Login.Contains(searchTerm)
-                );
+            {        
+                patrocinadores = _servicePatrocinador.GetRedeAssociado(idAssociado).Where(x => x.Usuario.Nome.Contains(searchTerm)              
+                || x.Usuario.Email.Contains(searchTerm) 
+                || x.IdCarteira.Contains(searchTerm));
+                
             }
             else
                 // patrocinadores = _servicePatrocinador.ObterTodos();

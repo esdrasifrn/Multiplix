@@ -8,6 +8,7 @@ using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
+using Multiplix.UI.Utils;
 
 namespace Multiplix.UI.Controllers
 {
@@ -19,9 +20,14 @@ namespace Multiplix.UI.Controllers
         {
             _serviceBanco = serviceBanco;
         }
-
+       
         public IActionResult IndexBanco()
         {
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_banco"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
             return View();
         }
 

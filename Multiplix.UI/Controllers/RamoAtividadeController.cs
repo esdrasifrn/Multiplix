@@ -7,6 +7,7 @@ using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
+using Multiplix.UI.Utils;
 
 namespace Multiplix.UI.Controllers
 {
@@ -18,9 +19,14 @@ namespace Multiplix.UI.Controllers
         {
             _serviceRamoAtividade = serviceRamoAtividade;
         }
-
+        
         public IActionResult IndexRamoAtividade()
-        {
+        {           
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_ramo_atividade"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
             return View();
         }
 

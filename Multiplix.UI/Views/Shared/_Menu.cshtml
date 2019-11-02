@@ -1,4 +1,6 @@
-﻿<div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
+﻿@using Multiplix.UI.Utils
+
+<div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class=" nav-item">
@@ -15,67 +17,130 @@
                 </li>
             </ul>*@
             </li>
+            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_administracao"))
+            {
+                <li class=" navigation-header">
+                    <span data-i18n="nav.category.admin-panels">Administração</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Administração"></i>
+                </li>
 
-            <li class=" navigation-header">
-                <span data-i18n="nav.category.admin-panels">Administração</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Administração"></i>
-            </li>           
-            <li class=" nav-item">
-                <a href="#"><i class="la la-pencil-square"></i><span class="menu-title" data-i18n="">Cadastros</span></a>
-                <ul class="menu-content">
-                    <li><a class="menu-item" href="/RamoAtividade/IndexRamoAtividade"><i></i><span data-i18n="">Ramo de atividade</span></a>
-                    <li><a class="menu-item" href="/Banco/IndexBanco"><i></i><span data-i18n="">Bancos</span></a>
-                    <li><a class="menu-item" href="/Produto/IndexProduto"><i></i><span data-i18n="">Produtos</span></a>
-                    <li><a class="menu-item" href="/PlanoAssinatura/IndexPlanoAssinatura"><i></i><span data-i18n="">Plano de assinatura</span></a>
-                </ul>
-            </li>            
+                <li class=" nav-item">
+                    <a href="#"><i class="la la-pencil-square"></i><span class="menu-title" data-i18n="">Cadastros</span></a>
+                    <ul class="menu-content">
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_ramo_atividade"))
+                        {
+                            <li><a class="menu-item" href="/RamoAtividade/IndexRamoAtividade"><i></i><span data-i18n="">Ramo de atividade</span></a></li>
+                        }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_banco"))
+                        {
+                            <li><a class="menu-item" href="/Banco/IndexBanco"><i></i><span data-i18n="">Bancos</span></a></li>
+                        }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_produto"))
+                        {
+                            <li><a class="menu-item" href="/Produto/IndexProduto"><i></i><span data-i18n="">Produtos</span></a></li>
+                        }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_plano_assinatura"))
+                        {
+                            <li><a class="menu-item" href="/PlanoAssinatura/IndexPlanoAssinatura"><i></i><span data-i18n="">Plano de assinatura</span></a></li>
+                        }
+                    </ul>
+                </li>
+            }
+
+
 
             <li class=" navigation-header">
                 <span data-i18n="nav.category.admin-panels">Usuários</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Usuários"></i>
             </li>
             <li class=" nav-item">
-                <a href="#"><i class="la la-user"></i><span class="menu-title" data-i18n="">Associado</span></a>
-                <ul class="menu-content">
-                    <li><a class="menu-item" href="/Usuario/Index"><i></i><span data-i18n="">Incluir diretos</span></a>
-                    <li><a class="menu-item" href="/Usuario/IndexInvite"><i></i><span data-i18n="">Link de convite</span></a>
-                    <li><a class="menu-item" href="/Compra/ComprasPorAssociado"><i></i><span data-i18n="">Compras por associado</span></a>
-                </ul>
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_associado"))
+                {
+                    <a href="#"><i class="la la-user"></i><span class="menu-title" data-i18n="">Associado</span></a>
+                    <ul class="menu-content">
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_associado"))
+                        {
+                            <li><a class="menu-item" href="/Usuario/Index"><i></i><span data-i18n="">Incluir diretos</span></a></li>
+                        }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_link_convite"))
+                        {
+                            <li><a class="menu-item" href="/Usuario/IndexInvite"><i></i><span data-i18n="">Link de convite</span></a></li>
+                        }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compras_por_associado"))
+                        {
+                            <li><a class="menu-item" href="/Compra/ComprasPorAssociado"><i></i><span data-i18n="">Compras por associado</span></a></li>
+                        }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_minhas_compras"))
+                        {
+                            <li><a class="menu-item" href="/Compra/ComprasPorAssociado"><i></i><span data-i18n="">Minhas compras</span></a></li>
+                        }
+                    </ul>
+                }
             </li>
             <li class=" nav-item">
-                <a href="#"><i class="la la-pencil-square"></i><span class="menu-title" data-i18n="">Parceiro</span></a>
-                <ul class="menu-content">
-                    <li><a class="menu-item" href="/Parceiro/IndexParceiro"><i></i><span data-i18n="">Cadastro</span></a>
-                    <li><a class="menu-item" href="/Compra/IndexCompra"><i></i><span data-i18n="">Compras</span></a>                    
-                </ul>
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_parceiro"))
+                {
+                    <a href="#"><i class="la la-pencil-square"></i><span class="menu-title" data-i18n="">Parceiro</span></a>
+                    <ul class="menu-content">
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_parceiro"))
+                        {
+                            <li><a class="menu-item" href="/Parceiro/IndexParceiro"><i></i><span data-i18n="">Cadastro</span></a></li>
+                        }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compras_parceiro"))
+                        {
+                            <li><a class="menu-item" href="/Compra/IndexCompra"><i></i><span data-i18n="">Compras</span></a></li>
+                        }
+                    </ul>
+                }
             </li>
-            <li class=" nav-item">
-                <a href="#"><i class="la la-key"></i><span class="menu-title" data-i18n="">Grupo de permissões</span></a>
-            </li>
+            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_grupo"))
+            {
+                <li class=" nav-item">
+                    <a href="#"><i class="la la-key"></i><span class="menu-title" data-i18n="">Grupo de permissões</span></a>
+                </li>
+            }
 
 
-            <li class=" navigation-header">
-                <span data-i18n="nav.category.apps">Rede</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Rede"></i>
-            </li>
-            <li class=" nav-item">
-                <a href="/Usuario/IndexRedeDireta?idAssociado=1"><i class="la la-sitemap"></i><span class="menu-title" data-i18n="">Minha rede</span></a>
-            </li>
+            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_rede"))
+            {
+                <li class=" navigation-header">
+                    <span data-i18n="nav.category.apps">Rede</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Rede"></i>
+                </li>
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_minha_rede"))
+                {
+                    <li class=" nav-item">
+                        <a href="/Usuario/IndexRedeDireta?idAssociado=@(User.FindFirst("idAssociado").Value)"><i class="la la-sitemap"></i><span class="menu-title" data-i18n="">Minha rede</span></a>
+                    </li>
+                }
+            }
 
-            <li class=" navigation-header">
-                <span data-i18n="nav.category.pages">Financeiro</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Financeiro"></i>
-            </li>
-            <li class=" nav-item">
-                <a href="news-feed.html"><i class="la la-money"></i><span class="menu-title" data-i18n="">Extrato</span></a>
-                <ul class="menu-content">
-                    <li><a class="menu-item" href="/Usuario/IndexSaldo?idAssociado=1"><i></i><span data-i18n="">Saldo</span></a>
-                </ul>
-            </li>
+            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_financeiro"))
+            {
+                <li class=" navigation-header">
+                    <span data-i18n="nav.category.pages">Financeiro</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Financeiro"></i>
+                </li>
+                <li class=" nav-item">
+                    <a href="news-feed.html"><i class="la la-money"></i><span class="menu-title" data-i18n="">Extrato</span></a>
+                    @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_saldo"))
+                    {
+                        <ul class="menu-content">
+                            <li><a class="menu-item" href="/Usuario/IndexSaldo?idAssociado=1"><i></i><span data-i18n="">Saldo</span></a>
+                        </ul>
+                    }
+                </li>
+            }
 
-
-            <li class=" navigation-header">
-                <span data-i18n="nav.category.support">Relatórios</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Relatórios"></i>
-            </li>
-            <li class=" nav-item">
-                <a href="#"><i class="la la-file-pdf-o"></i><span class="menu-title" data-i18n="nav.support_raise_support.main">Bônus</span></a>
-            </li>
-        </ul>
+            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_relatorio"))
+            {
+                <li class=" navigation-header">
+                    <span data-i18n="nav.category.support">Relatórios</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Relatórios"></i>
+                </li>
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_relatorio"))
+                {
+                    <li class=" nav-item">
+                        <a href="#"><i class="la la-file-pdf-o"></i><span class="menu-title" data-i18n="nav.support_raise_support.main">Bônus</span></a>
+                    </li>
+                }
+             }
+            </ul>
+            
     </div>
 </div>

@@ -19,8 +19,9 @@ namespace Multiplix.Domain.Enums
                 _("pode_visualizar_link_convite", "Pode visualizar link de convite"),
                 _("pode_visualizar_compras_por_associado", "Pode visualizar compras por associado"),
                 _("pode_visualizar_minha_rede", "Pode visualizar minha rede"),
-                _("pode_visualizar_saldo", "Pode visualizar saldo"),
-                _("pode_visualizar_relatorio", "Pode visualizar relatório"), 
+                _("pode_visualizar_menu_rede", "Pode visualizar menu rede"),              
+                _("pode_visualizar_menu_associado", "Pode visualizar menu do associado"),
+                _("pode_visualizar_minhas_compras", "Pode visualizar minhas compras"),                
 
 	            #endregion
 
@@ -53,6 +54,8 @@ namespace Multiplix.Domain.Enums
                 _("pode_cadastrar_parceiro", "Pode cadastrar parceiro"),
                 _("pode_alterar_parceiro", "Pode alterar parceiro"),
                 _("pode_cadastrar_compras", "Pode cadastrar compras"),
+                _("pode_visualizar_compras_parceiro", "Pode visualizar compras parceiro"),
+                _("pode_visualizar_menu_parceiro", "Pode visualizar menu do parceiro"),                
 
 
                 _("pode_visualizar_grupo", "Pode visualizar grupo"),
@@ -63,6 +66,13 @@ namespace Multiplix.Domain.Enums
                 _("pode_visualizar_permissao", "Pode visualizar permissões"),
                 _("pode_cadastrar_permissao", "Pode cadastrar permissões"),
                 _("pode_alterar_permissao", "Pode alterar permissões"),
+
+
+                _("pode_visualizar_menu_financeiro", "Pode visualizar menu financeiro"),
+                _("pode_visualizar_saldo", "Pode visualizar saldo"),
+
+                _("pode_visualizar_menu_relatorio", "Pode visualizar menu relatório"),
+
             };
         }
 

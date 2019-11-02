@@ -143,5 +143,10 @@ namespace Multiplix.UI.Controllers
                 message = "Permissões sincronizadas."
             });
         }
+
+        public IActionResult UnauthorizedResult()
+        {
+            return View();
+        }
     }
 }

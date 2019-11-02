@@ -156,6 +156,6 @@ namespace Multiplix.UI.Utils
             }
 
             return UsuarioIsSuperUser;
-        }
+        }      
     }
 }
