@@ -11,16 +11,19 @@ using MercadoPago;
 using MercadoPago.Resources;
 using MercadoPago.DataStructures.Preference;
 using MercadoPago.Common;
+using Multiplix.UI.Utils;
 
 namespace Multiplix.UI.Controllers
 {
     public class HomeController : Controller
     {       
         private IServicePatrocinador _servicePatrocinador;
+        private IServiceUsuario _serviceUsuario;
 
-        public HomeController(IServicePatrocinador servicePatrocinador)
+        public HomeController(IServicePatrocinador servicePatrocinador, IServiceUsuario serviceUsuario)
         {
             _servicePatrocinador = servicePatrocinador;
+            _serviceUsuario = serviceUsuario;
         }
 
         public IActionResult Index()
@@ -53,7 +56,16 @@ namespace Multiplix.UI.Controllers
         }
 
         public IActionResult Dashboard()
-        {            
+        {
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            var totalIndividual = _servicePatrocinador.GetGanhosIndividual(DateTime.Now.Month, associado.Id);
+            var totalRede = _servicePatrocinador.GetGanhosRede(DateTime.Now.Month, associado.Id);
+
+            var associadoRede = _servicePatrocinador.GetRedeAssociado(associado.Id);
+            ViewBag.QTDRede = associadoRede.Count();
+            ViewBag.TotalARecebeber = totalIndividual + totalRede;
             return View();           
         }
 

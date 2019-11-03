@@ -253,6 +253,21 @@ namespace Multiplix.UI.Controllers
                 return RedirectToAction("UnauthorizedResult", "Permissao");
             }
 
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+            var associadoPassadoURL = _servicePatrocinador.ObterPorId(idAssociado);
+
+            //Garante que o associado logado vai ver somente os associados da rede dele
+            if (associadoPassadoURL != associadoLogado)
+            {
+                var associadoPertenceARede = _servicePatrocinador.GetRedeAssociado(associadoLogado.Id).Contains(associadoPassadoURL);
+
+                if (!associadoPertenceARede)
+                {
+                    return RedirectToAction("UnauthorizedResult", "Permissao");
+                }
+            }
+
             var associado = _servicePatrocinador.ObterPorId(idAssociado);
             var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, idAssociado);            
 
@@ -391,17 +406,12 @@ namespace Multiplix.UI.Controllers
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
-                patrocinadores = _servicePatrocinador.Buscar(
-                    x => x.IdCarteira.Contains(searchTerm) ||
-                         x.Usuario.Nome.Contains(searchTerm) ||
-                         x.Usuario.Celular.Contains(searchTerm) ||
-                         x.Usuario.Email.Contains(searchTerm) ||
-                         x.Usuario.Login.Contains(searchTerm)
-                );
+                patrocinadores = _servicePatrocinador.GetRedeAssociado(idAssociado).Where(x => x.Usuario.Nome.Contains(searchTerm)
+                || x.Usuario.Email.Contains(searchTerm)
+                || x.IdCarteira.Contains(searchTerm));
             }
             else
-                patrocinadores = _servicePatrocinador.ObterTodos();
-                //patrocinadores = _servicePatrocinador.ObterPorId(idAssociado).Patrocinados;
+                patrocinadores = _servicePatrocinador.ObterPorId(idAssociado).Patrocinados;           
 
             if (firstOrderColumnIdx.Length > 0)
             {

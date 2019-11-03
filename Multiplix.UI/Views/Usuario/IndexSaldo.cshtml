@@ -206,7 +206,7 @@
             var podeAlterarUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_usuario").ToString().ToLower();
             var podeExcluirUsuario = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_usuario").ToString().ToLower();
             var podeVisualizarAssociado = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_usuario").ToString().ToLower();
-            var botoes = [{ title: "Ver saldo", url: "/Usuario/IndexSaldo/?idAssociado=", permission: podeVisualizarAssociado }];
+            var botoes = [{ title: "Ver saldo", url: "/Usuario/IndexSaldo/?idAssociado="/*, permission: podeVisualizarAssociado*/ }];
             generateDataTable("#data-table-saldo",
                 "Associado saldo",
                 "/Usuario/ListaSaldoAssociados?idAssociado=@ViewBag.idAssociado",
