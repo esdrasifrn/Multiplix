@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model Multiplix.Domain.DTOs.CompraDTO
+
 @section breadcrumbs{
     <div class="content-header-left col-md-6 col-12 mb-2">
         <h3 class="content-header-title mb-0">Listagem de Compras</h3>
@@ -14,18 +16,54 @@
                         <a href="/Home/Dashboard">Home</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        Listagem
+                        Compras por associado
                     </li>
                 </ol>
             </div>
         </div>
     </div>
-    <div class="content-header-right text-md-right col-md-6 col-12">
-        <div class="btn-group">
-            <a id="btn_add_parceiro" href="/Compra/AdicionarCompra" class="btn btn-round btn-info"><i class="icon-cog3"></i> Adicionar compra</a>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Escolha o associado</div>
+            </div>
+            <div class="card-body">
+                <form method="post" id="form-compra" class="form form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+                           
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="issueinput3">Data início</label>
+                                    <input type="date" id="DataInicio" asp-for="DataInicio" class="form-control" name="DataInicio" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Date Opened" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="issueinput4">Data fim</label>
+                                    <input type="date" id="DataFim" asp-for="DataFim" class="form-control" name="DataFim" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Date Fixed" required>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="la la-check-square-o"></i> Localizar compras
+                        </button>
+
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-}
+</div>
 
 <div class="row">
     <div class="col-12">
@@ -41,12 +79,10 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th> <!-- ocultada pelo datatable -->
-                                        <th>Associado</th>
                                         <th>Parceiro
                                         <th>Data da compra</th>
-                                        <th>Pontos Obtidos</th>
-                                        <th>Valor unidade</th>
-                                        <th>Produto</th>
+                                        <th>Valor Total da compra</th>
+                                        <th>Pontos Conquistados</th>
                                         <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
                                     </tr>
                                 </thead>
@@ -67,15 +103,18 @@
             var podeAlterarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_compra").ToString().ToLower();
             var podeExcluirCompra = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_compra").ToString().ToLower();
             var podeVisualizarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compra").ToString().ToLower();
-            var botoes = [{ title: "Visualizar", url: "#", permission: podeVisualizarCompra }];
+            var botoes = [{ title: "Ver itens comprados", url: "/Compra/ItensComprados/?compraId="/*, permission: podeVisualizarCompra*/ }];
             generateDataTable("#data-table-compras-associado",
                 "Compras",
-                "/Compra/ListaComprasPorAssociado",
+                "/Compra/ListaMinhasCompras?DataInicio=@ViewBag.Di&DataFim=@ViewBag.Df",
                 false,
                 "/Compra/EditarCompra/?compraId=",
                 false,
                 "/Compra/Excluir/?compraId=", botoes);
         });
+
+
+
     </script>
 }
 

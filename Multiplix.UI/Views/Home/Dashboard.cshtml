@@ -29,8 +29,10 @@
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
-                            <h1 class="display-4 text-white"><i class="icon-basket-loaded font-large-2"></i> 61%</h1>
-                            <span class="text-white">Total de compras</span>
+                            <a href="/Compra/MinhasCompras">
+                                <h1 class="display-4 text-white"><i class="icon-basket-loaded font-large-2"></i>@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QtdCompras)</h1>
+                                <span class="text-white">Total de compras</span>
+                            </a>
                         </div>
                     </div>
                    

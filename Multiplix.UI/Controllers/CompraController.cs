@@ -16,11 +16,15 @@ namespace Multiplix.UI.Controllers
     {
         private readonly IServiceCompra _serviceCompra;
         private readonly IServiceParceiro _serviceParceiro;
+        private readonly IServicePatrocinador _servicePatrocinador;
+        private readonly IServiceUsuario _serviceUsuario;
 
-        public CompraController(IServiceCompra serviceCompra, IServiceParceiro serviceParceiro)
+        public CompraController(IServiceCompra serviceCompra, IServiceParceiro serviceParceiro, IServicePatrocinador servicePatrocinador, IServiceUsuario serviceUsuario)
         {
             _serviceCompra = serviceCompra;
             _serviceParceiro = serviceParceiro;
+            _servicePatrocinador = servicePatrocinador;
+            _serviceUsuario = serviceUsuario;
         }
                       
         public IActionResult IndexCompra()
@@ -35,9 +39,36 @@ namespace Multiplix.UI.Controllers
         ///Só compra do usuário logado
         public IActionResult MinhasCompras()
         {
-            return View();
+
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_minhas_compras"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
+            CompraDTO compraDTO = new CompraDTO();
+            DateTime date = DateTime.Now;
+
+            compraDTO.DataInicio = DateTime.Now;
+            compraDTO.DataFim = DateTime.Now;
+
+            ViewBag.Di = new DateTime(date.Year, date.Month, 1).ToString("dd-MM-yyyy");
+            ViewBag.Df = DateTime.Now.ToString("dd-MM-yyyy");
+
+            return View(compraDTO);           
         }
-        
+
+        [HttpPost]
+        public IActionResult MinhasCompras(CompraDTO compraDTO)
+        {
+            DateTime date = DateTime.Now;
+            ViewBag.Di = compraDTO.DataInicio.ToString("dd-MM-yyyy");
+            ViewBag.Df = compraDTO.DataFim.ToString("dd-MM-yyyy");
+
+            return View(compraDTO);
+        }
+
+
+
         public IActionResult ComprasPorAssociado()
         {
             if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_compras_por_associado"))
@@ -365,6 +396,101 @@ namespace Multiplix.UI.Controllers
                 String.Format(new CultureInfo("pt-BR"), "{0:C}", compraItem.Subtotal),
                 pontosPorReal.ToString("0.0"),
                 String.Format(new CultureInfo("pt-BR"), "{0:0,0.0}", compraItem.SubtotalPontos)
+                };
+                result_data.Add(result_item);
+
+            }
+
+            return Json(new
+            {
+                recordsTotal = totalResultados,
+                recordsFiltered = totalResultados,
+                data = result_data
+            });
+        }
+
+
+        [HttpPost]
+        public JsonResult ListaMinhasCompras(DataTableAjaxPostModel dataTableModel, string DataInicio, string DataFim)
+        {
+            /*
+             * consumido por um DataTable serverSide processing ajax POST
+             * 
+             * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
+             */
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            string searchTerm = dataTableModel.search.value;
+            string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
+            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";    
+            
+            DateTime di = DateTime.Parse(DataInicio.ToString(), new CultureInfo("pt-BR"));
+            DateTime df = DateTime.Parse(DataFim.ToString(), new CultureInfo("pt-BR"));
+
+            IEnumerable<Compra> compras = new List<Compra>();
+
+            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+            {
+                compras = _serviceCompra.Buscar(x => x.Associado.Id == associadoLogado.Id)
+                    .Where(x => x.Parceiro.Usuario.Nome.ToUpper()
+                    .Contains(searchTerm.ToUpper()) || x.Associado.Usuario.Nome.ToUpper()
+                    .Contains(searchTerm.ToUpper()) && x.Data >= di && x.Data  <= df);
+            }
+            else
+                compras = _serviceCompra.Buscar(x => x.Associado.Id == associadoLogado.Id).Where(x =>  x.Data >= di && x.Data <= df);
+
+            if (firstOrderColumnIdx.Length > 0)
+            {
+                Func<Compra, Object> orderByExpr = null;
+
+                switch (firstOrderColumnIdx)
+                {
+                    case "1":
+                        orderByExpr = x => x.Parceiro.Usuario.Nome;
+                        break;
+                    case "2":
+                        orderByExpr = x => x.Data;
+                        break;
+                    case "3":
+                        orderByExpr = x => x.Valor;
+                        break;
+                    case "4":
+                        orderByExpr = x => x.Pontos;
+                        break;
+                }
+
+                if (orderByExpr != null)
+                {
+                    if (firstOrderDirection.Length > 0 && firstOrderDirection.Equals("desc"))
+                        compras = compras.OrderByDescending(orderByExpr);
+                    else
+                        compras = compras.OrderBy(orderByExpr);
+                }
+                else
+                {
+                    compras = compras.OrderBy(x => x.Parceiro.Usuario.Nome);
+                }
+            }
+            else
+            {
+                compras = compras.OrderBy(x => x.Parceiro.Usuario.Nome);
+            }
+
+            // pagina a lista
+            int totalResultados = compras.Count();
+            compras = compras.Skip(dataTableModel.start).Take(dataTableModel.length);
+
+            // monta o resultado final
+            List<object> result_data = new List<object>();
+            foreach (var compra in compras)
+            {
+                List<object> result_item = new List<object> {
+                compra.CompraId,
+                compra.Parceiro.Usuario.Nome,
+                String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy HH:mm:ss}", compra.Data),
+                String.Format(new CultureInfo("pt-BR"), "{0:C}", compra.Valor),
+                String.Format(new CultureInfo("pt-BR"), "{0:0,0.0}", compra.Pontos)
                 };
                 result_data.Add(result_item);
 
