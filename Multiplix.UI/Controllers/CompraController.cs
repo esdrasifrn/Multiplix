@@ -51,8 +51,8 @@ namespace Multiplix.UI.Controllers
             compraDTO.DataInicio = DateTime.Now;
             compraDTO.DataFim = DateTime.Now;
 
-            ViewBag.Di = new DateTime(date.Year, date.Month, 1).ToString("dd-MM-yyyy");
-            ViewBag.Df = DateTime.Now.ToString("dd-MM-yyyy");
+            ViewBag.Di = new DateTime(date.Year, date.Month, 1).ToString("dd-MM-yyyy HH:mm:ss");
+            ViewBag.Df = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 
             return View(compraDTO);           
         }
@@ -61,8 +61,8 @@ namespace Multiplix.UI.Controllers
         public IActionResult MinhasCompras(CompraDTO compraDTO)
         {
             DateTime date = DateTime.Now;
-            ViewBag.Di = compraDTO.DataInicio.ToString("dd-MM-yyyy");
-            ViewBag.Df = compraDTO.DataFim.ToString("dd-MM-yyyy");
+            ViewBag.Di = compraDTO.DataInicio.ToString("dd-MM-yyyy HH:mm:ss");
+            ViewBag.Df = compraDTO.DataFim.ToString("dd-MM-yyyy HH:mm:ss");
 
             return View(compraDTO);
         }

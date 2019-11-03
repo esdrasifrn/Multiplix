@@ -66,7 +66,7 @@ namespace Multiplix.UI.Controllers
             var associadoRede = _servicePatrocinador.GetRedeAssociado(associado.Id);
             ViewBag.QTDRede = associadoRede.Count();
             ViewBag.TotalARecebeber = totalIndividual + totalRede;
-            ViewBag.QtdCompras = associado.Compras.Count();
+            ViewBag.QtdCompras = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Count();
             return View();           
         }
 
