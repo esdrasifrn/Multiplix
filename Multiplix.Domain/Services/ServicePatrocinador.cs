@@ -137,7 +137,15 @@ namespace Multiplix.Domain.Services
                     nivel: usuarioDTO.Nivel + 1, // multiplys é o nível zero e seus convidados serão 0 + 1, e assim sucessivamente
                     planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId)
 
-                    ) ; 
+                    ) ;
+
+
+                UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
+                usuarioGrupo.UsuarioId = associado.Usuario.UsuarioId;
+                usuarioGrupo.GrupoId = 1;
+
+                // adiciona o grupo ao usuário via patrocinador
+                associado.Usuario.AddUsuarioGrupo(usuarioGrupo);
 
                 associado.Id = 0;
             }
@@ -172,21 +180,21 @@ namespace Multiplix.Domain.Services
             }
 
             // grupos do usuário do patrocinador
-            if (usuarioDTO.Grupos.Count > 0)
-                _usuarioRepository.DeleteUsuarioGrupos(associado.Usuario.UsuarioId);
+            //if (usuarioDTO.Grupos.Count > 0)
+            //    _usuarioRepository.DeleteUsuarioGrupos(associado.Usuario.UsuarioId);
 
-            if (usuarioDTO.Grupos.Count > 0)
-            {
-                foreach (var grupoDTO in usuarioDTO.Grupos)
-                {
-                    UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
-                    usuarioGrupo.UsuarioId = associado.Usuario.UsuarioId;
-                    usuarioGrupo.GrupoId = grupoDTO.GrupoId;
+            //if (usuarioDTO.Grupos.Count > 0)
+            //{
+            //    foreach (var grupoDTO in usuarioDTO.Grupos)
+            //    {
+            //        UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
+            //        usuarioGrupo.UsuarioId = associado.Usuario.UsuarioId;
+            //        usuarioGrupo.GrupoId = grupoDTO.GrupoId;
 
-                    // adiciona o grupo ao usuário via patrocinador
-                    associado.Usuario.AddUsuarioGrupo(usuarioGrupo);
-                }
-            }
+            //        // adiciona o grupo ao usuário via patrocinador
+            //        associado.Usuario.AddUsuarioGrupo(usuarioGrupo);
+            //    }
+            //}
 
             ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(associado.Usuario);
 
@@ -384,7 +392,14 @@ namespace Multiplix.Domain.Services
 
                     );
 
-                associado.Id = 0;       
+            UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
+            usuarioGrupo.UsuarioId = associado.Usuario.UsuarioId;
+            usuarioGrupo.GrupoId = 1;
+
+            // adiciona o grupo ao usuário via patrocinador
+            associado.Usuario.AddUsuarioGrupo(usuarioGrupo);
+
+            associado.Id = 0;       
 
            
 

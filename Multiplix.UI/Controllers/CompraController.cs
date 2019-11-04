@@ -48,7 +48,7 @@ namespace Multiplix.UI.Controllers
             CompraDTO compraDTO = new CompraDTO();
             DateTime date = DateTime.Now;
 
-            compraDTO.DataInicio = DateTime.Now;
+            compraDTO.DataInicio = new DateTime(date.Year, date.Month, 1);
             compraDTO.DataFim = DateTime.Now;
 
             ViewBag.Di = new DateTime(date.Year, date.Month, 1).ToString("dd-MM-yyyy HH:mm:ss");
