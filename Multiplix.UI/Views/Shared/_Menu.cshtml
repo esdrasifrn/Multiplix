@@ -72,6 +72,10 @@
                         {
                             <li><a class="menu-item" href="/Compra/MinhasCompras"><i></i><span data-i18n="">Minhas compras</span></a></li>
                         }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_produtos_por_parceiro"))
+                        {
+                            <li><a class="menu-item" href="/Parceiro/ProdutosParceiro"><i></i><span data-i18n="">Pesquisa de produtos</span></a></li>
+                        }
                     </ul>
                 }
             </li>
@@ -122,7 +126,7 @@
                     @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_saldo"))
                     {
                         <ul class="menu-content">
-                            <li><a class="menu-item" href="/Usuario/IndexSaldo?idAssociado=1"><i></i><span data-i18n="">Saldo</span></a>
+                            <li><a class="menu-item" href="/Usuario/IndexSaldo?idAssociado=@(User.FindFirst("idAssociado").Value)"><i></i><span data-i18n="">Saldo</span></a>
                         </ul>
                     }
                 </li>

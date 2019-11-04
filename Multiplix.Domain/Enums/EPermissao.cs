@@ -21,7 +21,8 @@ namespace Multiplix.Domain.Enums
                 _("pode_visualizar_minha_rede", "Pode visualizar minha rede"),
                 _("pode_visualizar_menu_rede", "Pode visualizar menu rede"),              
                 _("pode_visualizar_menu_associado", "Pode visualizar menu do associado"),
-                _("pode_visualizar_minhas_compras", "Pode visualizar minhas compras"),                
+                _("pode_visualizar_minhas_compras", "Pode visualizar minhas compras"),
+                _("pode_visualizar_produtos_por_parceiro", "Pode visualizar produtos por parceiro"),                
 
 	            #endregion
 

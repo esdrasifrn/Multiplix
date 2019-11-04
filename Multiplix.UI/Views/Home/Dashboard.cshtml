@@ -14,7 +14,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
                             <a href="/Usuario/IndexRedeDireta?idAssociado=@(User.FindFirst("idAssociado").Value)">
-                                <h1 class="display-4 text-white"><i class="icon-user font-large-2"></i>@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QTDRede)</h1>
+                                <h1 class="display-4 text-white"><i class="icon-user font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QTDRede)</h1>
                                 <span class="text-white">Total da rede</span>
                             </a>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
                             <a href="/Usuario/IndexSaldo?idAssociado=@(User.FindFirst("idAssociado").Value)">
-                                <h1 class="display-4 text-white"><i class="icon-wallet font-large-2"></i>@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalARecebeber)</h1>
+                                <h1 class="display-4 text-white"><i class="icon-wallet font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalARecebeber)</h1>
                                 <span class="text-white">Total de ganhos</span>
                             </a>
                         </div>
@@ -30,7 +30,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
                             <a href="/Compra/MinhasCompras">
-                                <h1 class="display-4 text-white"><i class="icon-basket-loaded font-large-2"></i>@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QtdCompras)</h1>
+                                <h1 class="display-4 text-white"><i class="icon-basket-loaded font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QtdCompras)</h1>
                                 <span class="text-white">Total de compras</span>
                             </a>
                         </div>

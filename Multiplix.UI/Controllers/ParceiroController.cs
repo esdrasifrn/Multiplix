@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,16 @@ namespace Multiplix.UI.Controllers
         {
             _serviceParceiro = serviceParceiro;
             _serviceUsuario = serviceUsuario;
+        }
+
+        public IActionResult ProdutosParceiro()
+        {
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_produtos_por_parceiro"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+            
+            return View();
         }
        
         public IActionResult IndexParceiro()
@@ -245,5 +256,129 @@ namespace Multiplix.UI.Controllers
                 totalResults
             });
         }
+
+
+        [HttpPost]
+        public JsonResult ListaProdutosPorParceiro(DataTableAjaxPostModel dataTableModel)
+        {
+            /*
+             * consumido por um DataTable serverSide processing ajax POST
+             * 
+             * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
+             */
+
+            string searchTerm = dataTableModel.search.value?.ToUpper();
+            string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
+            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
+
+            IEnumerable<Parceiro> parceiros = new List<Parceiro>();
+
+            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+            {
+                parceiros = _serviceParceiro.Buscar(x => x.ParceiroProdutos.Any(y => y.Produto.Descricao.Contains(searchTerm))
+                );
+            }
+            else
+                parceiros = _serviceParceiro.ObterTodos();
+
+            if (firstOrderColumnIdx.Length > 0)
+            {
+                Func<Parceiro, Object> orderByExpr = null;
+
+                switch (firstOrderColumnIdx)
+                {
+                    case "1":
+                        orderByExpr = x => x.Usuario.Nome;
+                        break;
+                    case "2":
+                        orderByExpr = x => x.Usuario.Celular;
+                        break;
+                    case "3":
+                        orderByExpr = x => x.Rua;
+                        break;
+                    case "4":
+                        orderByExpr = x => x.ParceiroProdutos.Select(y=>y.Produto.Descricao).FirstOrDefault();
+                        break;
+                    case "5":
+                        orderByExpr = x => x.ParceiroProdutos.OrderByDescending(y => y.ValorProduto).FirstOrDefault();
+                        break;
+                    case "6":
+                        orderByExpr = x => x.ParceiroProdutos.Select(z => z.PontosPorRealProduto).FirstOrDefault();
+                        break;
+                }
+
+                if (orderByExpr != null)
+                {
+                    if (firstOrderDirection.Length > 0 && firstOrderDirection.Equals("desc"))
+                        parceiros = parceiros.OrderByDescending(orderByExpr);
+                    else
+                        parceiros = parceiros.OrderBy(orderByExpr);
+                }
+                else
+                {
+                    parceiros = parceiros.OrderBy(x => x.Usuario.Nome);
+                }
+            }
+            else
+            {
+                parceiros = parceiros.OrderBy(x => x.Usuario.Nome);
+            }
+
+            // pagina a lista
+            int totalResultados = parceiros.Count();
+            parceiros = parceiros.Skip(dataTableModel.start).Take(dataTableModel.length);
+
+            // monta o resultado final
+            List<object> result_data = new List<object>();
+            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+            {
+                foreach (var parceiro in parceiros)
+                {
+                    foreach (var parceiroProduto in parceiro.ParceiroProdutos.Where(x => x.Produto.Descricao.Contains(searchTerm)))
+                    {
+                        List<object> result_item = new List<object> {
+                    parceiroProduto.Parceiro.Usuario.UsuarioId,
+                    parceiroProduto.Parceiro.Usuario.Nome,
+                    parceiroProduto.Parceiro.Usuario.Celular,
+                    parceiroProduto.Parceiro.Rua,
+                    parceiroProduto.Produto.Descricao,
+                    String.Format(new CultureInfo("pt-BR"), "{0:C}", parceiroProduto.ValorProduto),
+                    parceiroProduto.PontosPorRealProduto
+
+                };
+                        result_data.Add(result_item);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var parceiro in parceiros)
+                {
+                    foreach (var parceiroProduto in parceiro.ParceiroProdutos)
+                    {
+                        List<object> result_item = new List<object> {
+                    parceiroProduto.Parceiro.Usuario.UsuarioId,
+                    parceiroProduto.Parceiro.Usuario.Nome,
+                    parceiroProduto.Parceiro.Usuario.Celular,
+                    parceiroProduto.Parceiro.Rua,
+                    parceiroProduto.Produto.Descricao,
+                    String.Format(new CultureInfo("pt-BR"), "{0:C}", parceiroProduto.ValorProduto),
+                    parceiroProduto.PontosPorRealProduto
+
+                };
+                        result_data.Add(result_item);
+                    }
+                }
+            }
+               
+        
+            return Json(new
+            {
+                recordsTotal = totalResultados,
+                recordsFiltered = totalResultados,
+                data = result_data
+            });
+        }
+        
     }
 }

@@ -244,7 +244,7 @@ namespace Multiplix.UI.Controllers
              * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
              */
 
-            string searchTerm = dataTableModel.search.value;
+            string searchTerm = dataTableModel.search.value?.ToUpper();
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
             string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
 
@@ -333,7 +333,7 @@ namespace Multiplix.UI.Controllers
              * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
              */
 
-            string searchTerm = dataTableModel.search.value;
+            string searchTerm = dataTableModel.search.value?.ToUpper();
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
             string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
 
@@ -421,7 +421,7 @@ namespace Multiplix.UI.Controllers
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
             var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
 
-            string searchTerm = dataTableModel.search.value;
+            string searchTerm = dataTableModel.search.value?.ToUpper();
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
             string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";    
             
