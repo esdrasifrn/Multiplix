@@ -271,39 +271,39 @@ namespace Multiplix.UI.Controllers
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
             string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
 
-            IEnumerable<Parceiro> parceiros = new List<Parceiro>();
+            IEnumerable<ListaProdutoParceiroDTO> parceiros = new List<ListaProdutoParceiroDTO>();
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
-                parceiros = _serviceParceiro.Buscar(x => x.ParceiroProdutos.Any(y => y.Produto.Descricao.Contains(searchTerm))
-                );
+                parceiros = _serviceParceiro.ListaProdutosParceiroDTO(searchTerm);
+
             }
             else
-                parceiros = _serviceParceiro.ObterTodos();
+                parceiros = _serviceParceiro.ListaProdutosParceiroDTO();
 
             if (firstOrderColumnIdx.Length > 0)
             {
-                Func<Parceiro, Object> orderByExpr = null;
+                Func<ListaProdutoParceiroDTO, Object> orderByExpr = null;
 
                 switch (firstOrderColumnIdx)
                 {
                     case "1":
-                        orderByExpr = x => x.Usuario.Nome;
+                        orderByExpr = x => x.Parceiro;
                         break;
                     case "2":
-                        orderByExpr = x => x.Usuario.Celular;
+                        orderByExpr = x => x.Telefone;
                         break;
                     case "3":
-                        orderByExpr = x => x.Rua;
+                        orderByExpr = x => x.Endereco;
                         break;
                     case "4":
-                        orderByExpr = x => x.ParceiroProdutos.Select(y=>y.Produto.Descricao).FirstOrDefault();
+                        orderByExpr = x => x.Produto;
                         break;
                     case "5":
-                        orderByExpr = x => x.ParceiroProdutos.OrderByDescending(y => y.ValorProduto).FirstOrDefault();
+                        orderByExpr = x => x.Preco;
                         break;
                     case "6":
-                        orderByExpr = x => x.ParceiroProdutos.Select(z => z.PontosPorRealProduto).FirstOrDefault();
+                        orderByExpr = x => x.PontosPorReal;
                         break;
                 }
 
@@ -316,12 +316,12 @@ namespace Multiplix.UI.Controllers
                 }
                 else
                 {
-                    parceiros = parceiros.OrderBy(x => x.Usuario.Nome);
+                    parceiros = parceiros.OrderBy(x => x.Parceiro);
                 }
             }
             else
             {
-                parceiros = parceiros.OrderBy(x => x.Usuario.Nome);
+                parceiros = parceiros.OrderBy(x => x.Parceiro);
             }
 
             // pagina a lista
@@ -330,47 +330,21 @@ namespace Multiplix.UI.Controllers
 
             // monta o resultado final
             List<object> result_data = new List<object>();
-            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+           
+            foreach (var parceiro in parceiros)
             {
-                foreach (var parceiro in parceiros)
-                {
-                    foreach (var parceiroProduto in parceiro.ParceiroProdutos.Where(x => x.Produto.Descricao.Contains(searchTerm)))
-                    {
-                        List<object> result_item = new List<object> {
-                    parceiroProduto.Parceiro.Usuario.UsuarioId,
-                    parceiroProduto.Parceiro.Usuario.Nome,
-                    parceiroProduto.Parceiro.Usuario.Celular,
-                    parceiroProduto.Parceiro.Rua,
-                    parceiroProduto.Produto.Descricao,
-                    String.Format(new CultureInfo("pt-BR"), "{0:C}", parceiroProduto.ValorProduto),
-                    parceiroProduto.PontosPorRealProduto
+                List<object> result_item = new List<object> {
+                parceiro.ParceiroId,
+                parceiro.Parceiro,
+                parceiro.Telefone,
+                parceiro.Endereco,
+                parceiro.Produto,
+                String.Format(new CultureInfo("pt-BR"), "{0:C}", parceiro.Preco),
+                parceiro.PontosPorReal
 
                 };
-                        result_data.Add(result_item);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var parceiro in parceiros)
-                {
-                    foreach (var parceiroProduto in parceiro.ParceiroProdutos)
-                    {
-                        List<object> result_item = new List<object> {
-                    parceiroProduto.Parceiro.Usuario.UsuarioId,
-                    parceiroProduto.Parceiro.Usuario.Nome,
-                    parceiroProduto.Parceiro.Usuario.Celular,
-                    parceiroProduto.Parceiro.Rua,
-                    parceiroProduto.Produto.Descricao,
-                    String.Format(new CultureInfo("pt-BR"), "{0:C}", parceiroProduto.ValorProduto),
-                    parceiroProduto.PontosPorRealProduto
-
-                };
-                        result_data.Add(result_item);
-                    }
-                }
-            }
-               
+                result_data.Add(result_item);
+            }      
         
             return Json(new
             {

@@ -48,6 +48,60 @@ namespace Multiplix.Domain.Services
             return _parceiroRepository.BuscarEntidade(predicado);
         }
 
+        public List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(string pesquisa)
+        {
+            var todosParceiros = _parceiroRepository.ObterTodos();
+            List<ListaProdutoParceiroDTO> listaProdutosParceiroDTO = new List<ListaProdutoParceiroDTO>();
+
+            foreach (var Parceiro in todosParceiros)
+            {
+                foreach (var produtoParceiro in Parceiro.ParceiroProdutos.Where(x => x.Produto.Descricao.ToUpper().Contains(pesquisa.ToUpper())))
+                {
+                    var produto = new ListaProdutoParceiroDTO(
+                        produtoParceiro.Parceiro.ParceiroId,
+                        produtoParceiro.Parceiro.Usuario.Nome,
+                        produtoParceiro.Parceiro.Usuario.Celular,
+                        produtoParceiro.Parceiro.Rua,
+                        produtoParceiro.Produto.Descricao,
+                        produtoParceiro.ValorProduto,
+                        produtoParceiro.PontosPorRealProduto
+                    );
+
+                    listaProdutosParceiroDTO.Add(produto);
+                }
+
+            }
+
+            return listaProdutosParceiroDTO;
+        }
+
+        public List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO()
+        {
+            var todosParceiros = _parceiroRepository.ObterTodos();
+            List<ListaProdutoParceiroDTO> listaProdutosParceiroDTO = new List<ListaProdutoParceiroDTO>();
+
+            foreach (var Parceiro in todosParceiros)
+            {
+                foreach (var produtoParceiro in Parceiro.ParceiroProdutos)
+                {
+                    var produto = new ListaProdutoParceiroDTO(
+                        produtoParceiro.Parceiro.ParceiroId,
+                        produtoParceiro.Parceiro.Usuario.Nome,
+                        produtoParceiro.Parceiro.Usuario.Celular,
+                        produtoParceiro.Parceiro.Rua,
+                        produtoParceiro.Produto.Descricao,
+                        produtoParceiro.ValorProduto,
+                        produtoParceiro.PontosPorRealProduto
+                    );
+
+                    listaProdutosParceiroDTO.Add(produto);
+                }
+
+            }
+
+            return listaProdutosParceiroDTO;
+        }
+
         public Parceiro ObterPorId(int id)
         {
             return _parceiroRepository.ObterPorId(id);
