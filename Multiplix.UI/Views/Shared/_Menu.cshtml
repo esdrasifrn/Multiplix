@@ -5,17 +5,22 @@
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class=" nav-item">
                 <a href="/home/Dashboard"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
+                
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_dash_parceiro"))
+                {
+                <a href="/home/DashboardParceiro"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard Parceiro</span></a>
+                }
                 @*<ul class="menu-content">
-                <li class="active">
-                    <a class="menu-item" href="dashboard-ecommerce.html"><i></i><span data-i18n="nav.dash.ecommerce">eCommerce</span></a>
-                </li>
-                <li>
-                    <a class="menu-item" href="dashboard-crypto.html"><i></i><span data-i18n="nav.dash.crypto">Crypto</span></a>
-                </li>
-                <li>
-                    <a class="menu-item" href="dashboard-sales.html"><i></i><span data-i18n="nav.dash.sales">Sales</span></a>
-                </li>
-            </ul>*@
+            <li class="active">
+                <a class="menu-item" href="dashboard-ecommerce.html"><i></i><span data-i18n="nav.dash.ecommerce">eCommerce</span></a>
+            </li>
+            <li>
+                <a class="menu-item" href="dashboard-crypto.html"><i></i><span data-i18n="nav.dash.crypto">Crypto</span></a>
+            </li>
+            <li>
+                <a class="menu-item" href="dashboard-sales.html"><i></i><span data-i18n="nav.dash.sales">Sales</span></a>
+            </li>
+        </ul>*@
             </li>
             @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_administracao"))
             {
@@ -111,7 +116,7 @@
                 @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_minha_rede"))
                 {
                     <li class=" nav-item">
-                        <a href="/Usuario/IndexRedeDireta?idAssociado=@(User.FindFirst("idAssociado").Value)"><i class="la la-sitemap"></i><span class="menu-title" data-i18n="">Minha rede</span></a>
+                        <a href="/Usuario/IndexRedeDireta?idAssociado=@(User.FindFirst("idTipoUsuario").Value)"><i class="la la-sitemap"></i><span class="menu-title" data-i18n="">Minha rede</span></a>
                     </li>
                 }
             }
@@ -126,7 +131,7 @@
                     @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_saldo"))
                     {
                         <ul class="menu-content">
-                            <li><a class="menu-item" href="/Usuario/IndexSaldo?idAssociado=@(User.FindFirst("idAssociado").Value)"><i></i><span data-i18n="">Saldo</span></a>
+                            <li><a class="menu-item" href="/Usuario/IndexSaldo?idAssociado=@(User.FindFirst("idTipoUsuario").Value)"><i></i><span data-i18n="">Saldo</span></a>
                         </ul>
                     }
                 </li>

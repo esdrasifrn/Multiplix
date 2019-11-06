@@ -18,12 +18,14 @@ namespace Multiplix.UI.Controllers
     public class HomeController : Controller
     {       
         private IServicePatrocinador _servicePatrocinador;
+        private IServiceParceiro _serviceParceiro;
         private IServiceUsuario _serviceUsuario;
 
-        public HomeController(IServicePatrocinador servicePatrocinador, IServiceUsuario serviceUsuario)
+        public HomeController(IServicePatrocinador servicePatrocinador, IServiceUsuario serviceUsuario, IServiceParceiro serviceParceiro)
         {
             _servicePatrocinador = servicePatrocinador;
             _serviceUsuario = serviceUsuario;
+            _serviceParceiro = serviceParceiro;
         }
 
         public IActionResult Index()
@@ -66,10 +68,20 @@ namespace Multiplix.UI.Controllers
             var associadoRede = _servicePatrocinador.GetRedeAssociado(associado.Id);
             ViewBag.QTDRede = associadoRede.Count();
             ViewBag.TotalARecebeber = totalIndividual + totalRede;
-            ViewBag.QtdCompras = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Count();
+            ViewBag.QtdCompras = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x=>x.Valor);
             return View();           
         }
 
+        public IActionResult DashboardParceiro()
+        {
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var parceiro = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            ViewBag.QTDVendas = parceiro.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Count();
+            ViewBag.TotalVendas = parceiro.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Valor);
+            ViewBag.TotalRepasse = 0; 
+            return View();
+        }
 
         public IActionResult SalvarTeste()
         {

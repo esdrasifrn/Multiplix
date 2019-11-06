@@ -67,7 +67,7 @@ namespace Multiplix.Domain.DTOs
         //Plano de assinatura
         public int PlanoAssinaturaId { get; set; }
         public string PlanoAssinaturaNome { get; set; }
-
+        public int TipoUsuario { get; set; }
 
         public IList<GrupoDTO> Grupos { get; set; } = new List<GrupoDTO>();
         
@@ -79,5 +79,6 @@ namespace Multiplix.Domain.DTOs
         public string GruposIDs { get; set; } // 1,2,100,...
         public List<PermissaoDTO> Permissoes { get; set; } = new List<PermissaoDTO>();
         public string PermissoesIDs { get; set; } // 1,2,100,...
+
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
+using Multiplix.Domain.Enums;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
 using Multiplix.UI.Utils;
@@ -22,14 +23,16 @@ namespace Multiplix.UI.Controllers
         private IServiceGrupo _serviceGrupo;
         private IServicePermissao _servicePermissao;
         private IServicePatrocinador _servicePatrocinador;
+        private IServiceParceiro _serviceParceiro;
 
         public UsuarioController(IServiceUsuario serviceUsuario, IServiceGrupo serviceGrupo, IServicePermissao servicePermissao,
-            IServicePatrocinador servicePatrocinador)
+            IServicePatrocinador servicePatrocinador, IServiceParceiro serviceParceiro)
         {
             _serviceUsuario = serviceUsuario;
             _serviceGrupo = serviceGrupo;
             _servicePermissao = servicePermissao;
             _servicePatrocinador = servicePatrocinador;
+            _serviceParceiro = serviceParceiro;
         }
 
         #region Usuario      
@@ -61,14 +64,29 @@ namespace Multiplix.UI.Controllers
                 HttpContext.Session.SetString("permissoes", JsonConvert.SerializeObject(_servicePermissao.UsuarioObterTodasPermissoes(usuario)));
                 HttpContext.Session.SetString("superUsuario", usuario.IsSuperUser ? "true" : "false");
 
-                var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuario.UsuarioId).FirstOrDefault();
+                // var eh_associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId.)
+                var idTipoUsuario = 0;
+                string redirecionamento = null;
+
+                //Que tipo de usuário está se logando?
+               if (usuario.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
+                {
+                    idTipoUsuario = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuario.UsuarioId).FirstOrDefault().Id;
+                    redirecionamento = "/Home/Dashboard";
+                }
+                else
+                {
+                    idTipoUsuario = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuario.UsuarioId).FirstOrDefault().ParceiroId;
+                    redirecionamento = "/Home/DashboardParceiro";
+                }
+                
 
                 // criar uma identificação com 3 chaves personalizadas (ID do usuário, login e nome)
                 // e 1 chave padrão
                 var claims = new List<Claim>()
                 {
                     new Claim("UsuarioId", usuario.UsuarioId + ""),
-                    new Claim("idAssociado", associado.Id + ""),
+                    new Claim("idTipoUsuario", idTipoUsuario + ""),
                     new Claim("UsuarioLogin", usuario.Login),
                     new Claim("UsuarioNome", usuario.Nome),
                     new Claim("UsuarioIsSuperUser", usuario.IsSuperUser ? "true" : "false"),
@@ -82,7 +100,7 @@ namespace Multiplix.UI.Controllers
                 ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
                 await HttpContext.SignInAsync(principal);
 
-                return Redirect("/Home/Dashboard");
+                return Redirect(redirecionamento);
             }
             else
             {

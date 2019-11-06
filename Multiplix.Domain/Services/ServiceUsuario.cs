@@ -90,7 +90,8 @@ namespace QuizCorp.Domain.Services
                     nome: usuarioDTO.Nome,
                     celular: usuarioDTO.Celular,
                     email: usuarioDTO.Email,
-                    liberado: usuarioDTO.Liberado
+                    liberado: usuarioDTO.Liberado,
+                    tipoUsuario: usuarioDTO.TipoUsuario
                 );
 
                 usuario.UsuarioId = 0;

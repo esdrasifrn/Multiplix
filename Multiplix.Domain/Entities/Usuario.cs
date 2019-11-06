@@ -9,14 +9,15 @@ namespace Multiplix.Domain.Entities
         private IList<UsuarioGrupo> _usuarioGrupos = new List<UsuarioGrupo>();
         private IList<PermissaoUsuario> _permissaoUsuarios = new List<PermissaoUsuario>();
 
-        public Usuario(string login, string senha, string nome, string celular, string email, bool liberado)
+        public Usuario(string login, string senha, string nome, string celular, string email, bool liberado, int tipoUsuario)
         {
             Login = login;
             Senha = senha;
             Nome = nome;
             Celular = celular;
             Email = email;
-            Liberado = liberado;                 
+            Liberado = liberado;
+            TipoUsuario = tipoUsuario;
         }
 
         public Usuario()
@@ -34,6 +35,7 @@ namespace Multiplix.Domain.Entities
         public bool Liberado { get; set; }
         public DateTime UltimoAcesso { get; set; }
         public bool IsSuperUser { get; set; }
+        public int TipoUsuario { get; set; }
         public virtual ICollection<UsuarioGrupo> UsuarioGrupos { get => _usuarioGrupos; set { } }        
         public virtual ICollection<PermissaoUsuario> PermissaoUsuarios { get => _permissaoUsuarios; set { } }
        
@@ -45,7 +47,6 @@ namespace Multiplix.Domain.Entities
         public void AddPermissaoUsuario(PermissaoUsuario permissaoUsuario)
         {
             _permissaoUsuarios.Add(permissaoUsuario);
-        }
-       
+        }       
     }
 }

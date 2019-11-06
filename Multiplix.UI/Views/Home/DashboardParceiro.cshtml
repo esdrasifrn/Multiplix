@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "DashboardParceiro";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using System.Globalization
@@ -8,34 +8,34 @@
 <!-- eCommerce statistic -->
 <div class="row">
     <div class="col-12">
-        <div class="card bg-gradient-x-success">
+        <div class="card card bg-gradient-x-info">
             <div class="card-content">
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
                             <a href="/Usuario/IndexRedeDireta?idAssociado=@(User.FindFirst("idTipoUsuario").Value)">
-                                <h1 class="display-4 text-white"><i class="icon-user font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QTDRede)</h1>
-                                <span class="text-white">Total da rede</span>
+                                <h1 class="display-4 text-white"><i class="icon-basket-loaded font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QTDVendas)</h1>
+                                <span class="text-white">QTD de vendas</span>
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
                             <a href="/Usuario/IndexSaldo?idAssociado=@(User.FindFirst("idTipoUsuario").Value)">
-                                <h1 class="display-4 text-white"><i class="icon-wallet font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalARecebeber)</h1>
-                                <span class="text-white">Total de ganhos</span>
+                                <h1 class="display-4 text-white"><i class="icon-list font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalVendas)</h1>
+                                <span class="text-white">Total de vendas</span>
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
                             <a href="/Compra/MinhasCompras">
-                                <h1 class="display-4 text-white"><i class="icon-basket-loaded font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.QtdCompras)</h1>
-                                <span class="text-white">Total de compras</span>
+                                <h1 class="display-4 text-white"><i class="icon-share-alt font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalRepasse)</h1>
+                                <span class="text-white">Total de repasse</span>
                             </a>
                         </div>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

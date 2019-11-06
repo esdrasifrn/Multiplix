@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
+using Multiplix.Domain.Enums;
 using Multiplix.Domain.Interfaces.Repository;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.Domain.Validations;
@@ -111,7 +112,8 @@ namespace Multiplix.Domain.Services
                     nome: usuarioDTO.Nome,
                     celular: usuarioDTO.Celular,
                     email: usuarioDTO.Email,
-                    liberado: usuarioDTO.Liberado
+                    liberado: usuarioDTO.Liberado,
+                    tipoUsuario: (int)ETipoUsuario.ASSOCIADO
                 );
                                
 
@@ -364,7 +366,8 @@ namespace Multiplix.Domain.Services
                     nome: usuarioDTO.Nome,
                     celular: usuarioDTO.Celular,
                     email: usuarioDTO.Email,
-                    liberado: usuarioDTO.Liberado
+                    liberado: usuarioDTO.Liberado,
+                    tipoUsuario: (int)ETipoUsuario.ASSOCIADO
                 );
 
 

@@ -74,6 +74,8 @@ namespace Multiplix.Domain.Enums
 
                 _("pode_visualizar_menu_relatorio", "Pode visualizar menu relatório"),
 
+                _("pode_visualizar_dash_parceiro", "Pode visualizar dash do parceiro"),
+
             };
         }
 

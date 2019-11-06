@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
+using Multiplix.Domain.Enums;
 using Multiplix.Domain.Interfaces.Repository;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.Domain.Validations;
@@ -145,7 +146,8 @@ namespace Multiplix.Domain.Services
                     nome: usuarioDTO.Nome,
                     celular: usuarioDTO.Celular,
                     email: usuarioDTO.Email,
-                    liberado: usuarioDTO.Liberado
+                    liberado: usuarioDTO.Liberado,
+                    tipoUsuario: (int)ETipoUsuario.PARCEIRO
                 );               
 
                 //associa o usuário ao parceiro
@@ -193,25 +195,28 @@ namespace Multiplix.Domain.Services
                 parceiro.CNPJ = usuarioDTO.CNPJ;
            
             }
-                       
+
             #region  grupos do usuário do parceiro
-            if (usuarioDTO.ParceiroId > 0)
-                _usuarioRepository.DeleteUsuarioGrupos(parceiro.Usuario.UsuarioId);
+            UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
+            usuarioGrupo.UsuarioId = parceiro.Usuario.UsuarioId;
+            usuarioGrupo.GrupoId = 2;
+            //if (usuarioDTO.ParceiroId > 0)
+            //    _usuarioRepository.DeleteUsuarioGrupos(parceiro.Usuario.UsuarioId);
 
-            if (usuarioDTO.Grupos.Count > 0)
-            {
-                foreach (var grupoDTO in usuarioDTO.Grupos)
-                {
-                    UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
-                    usuarioGrupo.UsuarioId = parceiro.Usuario.UsuarioId;
-                    usuarioGrupo.GrupoId = grupoDTO.GrupoId;
+            //if (usuarioDTO.Grupos.Count > 0)
+            //{
+            //    foreach (var grupoDTO in usuarioDTO.Grupos)
+            //    {
+            //        UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
+            //        usuarioGrupo.UsuarioId = parceiro.Usuario.UsuarioId;
+            //        usuarioGrupo.GrupoId = grupoDTO.GrupoId;
 
-                    // adiciona o grupo ao usuário via patrocinador
-                    parceiro.Usuario.AddUsuarioGrupo(usuarioGrupo);
-                }
-            }
+            //        // adiciona o grupo ao usuário via patrocinador
+            //        parceiro.Usuario.AddUsuarioGrupo(usuarioGrupo);
+            //    }
+            //}
             #endregion
-                        
+
             #region produtos do parceiro
             if (usuarioDTO.UsuarioId > 0)
                 _parceiroRepository.DeleteProdutosParceiro(parceiro.ParceiroId);
