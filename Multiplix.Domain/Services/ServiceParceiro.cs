@@ -165,7 +165,12 @@ namespace Multiplix.Domain.Services
                     pontoPorReal: usuarioDTO.PontoPorReal,                   
                     cnpj: usuarioDTO.CNPJ
                     
-                    ) ; 
+                    ) ;
+
+                UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
+                usuarioGrupo.UsuarioId = parceiro.Usuario.UsuarioId;
+                usuarioGrupo.GrupoId = 2;
+                parceiro.Usuario.AddUsuarioGrupo(usuarioGrupo);
 
                 parceiro.ParceiroId = 0;
             }
@@ -197,9 +202,7 @@ namespace Multiplix.Domain.Services
             }
 
             #region  grupos do usuário do parceiro
-            UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
-            usuarioGrupo.UsuarioId = parceiro.Usuario.UsuarioId;
-            usuarioGrupo.GrupoId = 2;
+         
             //if (usuarioDTO.ParceiroId > 0)
             //    _usuarioRepository.DeleteUsuarioGrupos(parceiro.Usuario.UsuarioId);
 

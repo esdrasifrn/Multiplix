@@ -12,6 +12,7 @@ using MercadoPago.Resources;
 using MercadoPago.DataStructures.Preference;
 using MercadoPago.Common;
 using Multiplix.UI.Utils;
+using Multiplix.Domain.Enums;
 
 namespace Multiplix.UI.Controllers
 {
@@ -59,7 +60,14 @@ namespace Multiplix.UI.Controllers
 
         public IActionResult Dashboard()
         {
+
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+
+            if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.PARCEIRO)
+            {
+                return Redirect("/Home/DashboardParceiro");
+            }
+
             var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
 
             var totalIndividual = _servicePatrocinador.GetGanhosIndividual(DateTime.Now.Month, associado.Id);

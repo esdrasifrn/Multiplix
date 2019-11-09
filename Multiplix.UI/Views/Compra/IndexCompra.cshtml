@@ -1,12 +1,12 @@
 ﻿@using Multiplix.UI.Utils
 @{
-    ViewData["Title"] = "Compras";
+    ViewData["Title"] = "Vendas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section breadcrumbs{
     <div class="content-header-left col-md-6 col-12 mb-2">
-        <h3 class="content-header-title mb-0">Listagem de Compras</h3>
+        <h3 class="content-header-title mb-0">Listagem de Vendas</h3>
         <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
@@ -22,7 +22,7 @@
     </div>
     <div class="content-header-right text-md-right col-md-6 col-12">
         <div class="btn-group">
-            <a id="btn_add_parceiro" href="/Compra/AdicionarCompra" class="btn btn-round btn-info"><i class="icon-cog3"></i> Adicionar compra</a>
+            <a id="btn_add_parceiro" href="/Compra/AdicionarCompra" class="btn btn-round btn-info"><i class="icon-cog3"></i> Adicionar venda</a>
         </div>
     </div>
 }
@@ -37,13 +37,14 @@
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
                         <div class="table-responsive">
-                            <table id="data-table-compras" class="table table-striped table-bordered text-nowrap w-100">
+                            <table id="data-table-vendas" class="table table-striped table-bordered text-nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>ID</th> <!-- ocultada pelo datatable -->
                                         <th>Associado</th>
+                                        <th>Data/hora da venda</th>
                                         <th>Valor total</th>
-                                        <th>Pontos obtidos</th>                                        
+                                        <th>Pontos obtidos</th>
                                         <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
                                     </tr>
                                 </thead>
@@ -65,9 +66,9 @@
             var podeExcluirCompra = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_compra").ToString().ToLower();
             var podeVisualizarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compra").ToString().ToLower();
             var botoes = [{ title: "Visualizar", url: "#", permission: podeVisualizarCompra }];
-            generateDataTable("#data-table-compras",
-                "Compras",
-                "/Compra/ListaCompras",
+            generateDataTable("#data-table-vendas",
+                "Venda",
+                "/Compra/ListaVendas",
                 false,
                 "/Compra/EditarCompra/?compraId=",
                 false,

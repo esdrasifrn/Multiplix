@@ -4,11 +4,14 @@
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class=" nav-item">
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_dash_associado"))
+                {
                 <a href="/home/Dashboard"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
-                
+                }
+
                 @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_dash_parceiro"))
                 {
-                <a href="/home/DashboardParceiro"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard Parceiro</span></a>
+                <a href="/home/DashboardParceiro"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
                 }
                 @*<ul class="menu-content">
             <li class="active">
@@ -95,7 +98,7 @@
                         }
                         @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compras_parceiro"))
                         {
-                            <li><a class="menu-item" href="/Compra/IndexCompra"><i></i><span data-i18n="">Compras</span></a></li>
+                            <li><a class="menu-item" href="/Compra/IndexCompra"><i></i><span data-i18n="">Vendas</span></a></li>
                         }
                     </ul>
                 }

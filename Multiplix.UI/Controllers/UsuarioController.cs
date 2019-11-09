@@ -629,7 +629,9 @@ namespace Multiplix.UI.Controllers
             IEnumerable<Associado> associados = new List<Associado>();
 
             if (!String.IsNullOrEmpty(searchTerm))
-                associados = _servicePatrocinador.Buscar(x => x.Usuario.Nome.Contains(searchTerm));
+                associados = _servicePatrocinador.Buscar(x => x.Usuario.Nome.Contains(searchTerm) 
+                || x.CPF.Replace(".", "").Replace("-", "").Contains(searchTerm) 
+                || x.IdCarteira.Contains(searchTerm));
             else
                 associados = _servicePatrocinador.ObterTodos();
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
+using Multiplix.Domain.Enums;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
 using Multiplix.UI.Utils;
@@ -107,13 +108,28 @@ namespace Multiplix.UI.Controllers
             return View();
         }
 
+        private void TipoUsuario()
+        {
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
 
+            if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
+            {
+                ViewBag.TipoUsuario = EChoicesUtil.Get(ETipoUsuarioChoices.Choices, ETipoUsuario.ASSOCIADO).ValueInt;
+            }
+            else
+            {
+                ViewBag.TipoUsuario = EChoicesUtil.Get(ETipoUsuarioChoices.Choices, ETipoUsuario.PARCEIRO).ValueInt;
+            }
+        }
 
         [HttpGet]
         public IActionResult AdicionarCompra()
         {
-            ViewData["Title"] = "Nova Compra";
+            ViewData["Title"] = "Nova Venda";
             CompraDTO compraDTO = new CompraDTO();
+
+            TipoUsuario();
+
             return View("AdicionarEditarCompra", compraDTO);
         }
 
@@ -121,11 +137,22 @@ namespace Multiplix.UI.Controllers
         public IActionResult AdicionarCompra(CompraDTO compraDTO)
         {
             ViewData["Title"] = "Nova Compra";
+            TipoUsuario();
+
             return SalvarCompra(compraDTO, "Compra adicionada com sucesso!");
         }
 
         private IActionResult SalvarCompra(CompraDTO compraDTO, string mensagemRetorno)
         {
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+
+            //Se o usuário logado for um parceiro o código do parceiro será o do parceiro logado, isso é importante pq o usuário admin é um associado e tem acesso 
+            //a essa área do parceiro também
+            if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.PARCEIRO)
+            {
+                compraDTO.ParceiroId = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault().ParceiroId;
+            }
+
             var result = _serviceCompra.Salvar(compraDTO);
 
             if (result.IsValid)
@@ -138,8 +165,22 @@ namespace Multiplix.UI.Controllers
 
         public IActionResult GetInfoProdutoParceiro(int produtoId, int parceiroId)
         {
-            var parceiro = _serviceParceiro.ObterPorId(parceiroId);
-            var infoProdutoParceiro = parceiro.ParceiroProdutos.Where(x => x.ProdutoId == produtoId).FirstOrDefault();
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            ParceiroProduto infoProdutoParceiro = null;
+            Parceiro parceiro = null;
+
+            if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
+            {
+                parceiro = _serviceParceiro.ObterPorId(parceiroId);
+                infoProdutoParceiro = parceiro.ParceiroProdutos.Where(x => x.ProdutoId == produtoId).FirstOrDefault();
+            }
+            else if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.PARCEIRO)
+            {
+                //Localiza qual parceiro é o usuário logado
+                parceiro = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+                infoProdutoParceiro = parceiro.ParceiroProdutos.Where(x => x.ProdutoId == produtoId).FirstOrDefault();
+            }
+            
             var resultado = new
             {
                 valor = /*string.Format("{0:#.00}", Convert.ToDecimal(*/infoProdutoParceiro.ValorProduto/*))*/, //passar os campos minusculos para o js
@@ -149,13 +190,18 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpPost]
-        public JsonResult ListaCompras(DataTableAjaxPostModel dataTableModel)
+        public JsonResult ListaVendas(DataTableAjaxPostModel dataTableModel)
         {
             /*
              * consumido por um DataTable serverSide processing ajax POST
              * 
              * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
              */
+
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var parceiroLogado = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            
 
             string searchTerm = dataTableModel.search.value;
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
@@ -165,32 +211,54 @@ namespace Multiplix.UI.Controllers
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
-                compras = _serviceCompra.Buscar(
-                    x => x.Parceiro.Usuario.Nome.Contains(searchTerm) ||
-                         x.Associado.Usuario.Nome.Contains(searchTerm) 
+                if (parceiroLogado.Usuario.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
+                {
+                    compras = _serviceCompra.Buscar(
+                    x => x.Associado.Usuario.Nome.Contains(searchTerm) ||
+                    x.Associado.CPF.Contains(searchTerm) ||
+                    x.Associado.IdCarteira.Contains(searchTerm)
                 );
+
+                }
+                else
+                {
+                    compras = _serviceCompra.Buscar(x => x.Parceiro.ParceiroId == parceiroLogado.ParceiroId)
+                   .Where(x => x.Associado.CPF.Replace(".", "").Replace("-", "").ToUpper()
+                   .Contains(searchTerm.ToUpper()) || x.Associado.Usuario.Nome.ToUpper()
+                   .Contains(searchTerm.ToUpper()) && x.Data.Month == DateTime.Now.Month);
+                }
+
             }
             else
-                compras = _serviceCompra.ObterTodos();
+            {
+                if (parceiroLogado.Usuario.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
+                {
+                    compras = _serviceCompra.ObterTodos();
+                }
+                else
+                {
+                    compras = _serviceCompra.Buscar(x => x.Parceiro.ParceiroId == parceiroLogado.ParceiroId).Where(x => x.Data.Month == DateTime.Now.Month);
+                }
+            }              
 
             if (firstOrderColumnIdx.Length > 0)
             {
                 Func<Compra, Object> orderByExpr = null;
 
                 switch (firstOrderColumnIdx)
-                {
+                {                   
                     case "1":
-                        orderByExpr = x => x.Parceiro.Usuario.Nome;
+                        orderByExpr = x => x.Associado.Usuario.Nome;
                         break;
                     case "2":
-                        orderByExpr = x => x.Associado.Usuario.Nome;
+                        orderByExpr = x => x.Data;
                         break;
                     case "3":
                         orderByExpr = x => x.Valor;
                         break;
                     case "4":
                         orderByExpr = x => x.Pontos;
-                        break;                 
+                        break;                  
                 }
 
                 if (orderByExpr != null)
@@ -219,8 +287,9 @@ namespace Multiplix.UI.Controllers
             foreach (var compra in compras)
             {
                 List<object> result_item = new List<object> {
-                    compra.CompraId,
+                    compra.CompraId,                   
                     compra.Associado.Usuario.Nome,
+                    String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy HH:mm:ss}", compra.Data),
                     String.Format(new CultureInfo("pt-BR"), "{0:C}", compra.Valor),
                     compra.Pontos               
                 };

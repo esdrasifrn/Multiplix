@@ -17,10 +17,10 @@
                         <a href="/Home/Dashboard">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="/Usuario/Index">Listagem de compras</a>
+                        <a href="/Usuario/Index">Listagem de vendas</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        Cadastro de compra
+                        Cadastro de venda
                     </li>
                 </ol>
             </div>
@@ -35,7 +35,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title" id="horz-layout-basic">Dados da compra</h4>
+                    <h4 class="card-title" id="horz-layout-basic">Dados da venda</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -53,34 +53,56 @@
 
                                 <h4 class="form-section"><i class="ft-user"></i> Dados do associado</h4>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="projectinput1">Parceiro</label>
-                                            <select id="Parceiro"
-                                                    name="Parceiro"
-                                                    class="has-select2"
-                                                    data-select2-url="/Parceiro/PesquisaParceiro"
-                                                    data-js-callback-init-data="iniciar_Parceiro"
-                                                    data-mapper-attr-id="ParceiroId"
-                                                    data-mapper-attr-text="ParceiroNome">
-                                                <!-- Select2 -->
-                                            </select>
+                                    @if (ViewBag.TipoUsuario == (int)ETipoUsuario.PARCEIRO)
+                                    {
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="projectinput2">Associado</label>
+                                                <select id="Associado"
+                                                        name="Associado"
+                                                        class="has-select2"
+                                                        data-select2-url="/Usuario/PesquisaAssociado"
+                                                        data-js-callback-init-data="iniciar_Associado"
+                                                        data-mapper-attr-id="AssociadoId"
+                                                        data-mapper-attr-text="AssociadoNome">
+                                                    <!-- Select2 -->
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="projectinput2">Associado</label>
-                                            <select id="Associado"
-                                                    name="Associado"
-                                                    class="has-select2"
-                                                    data-select2-url="/Usuario/PesquisaAssociado"
-                                                    data-js-callback-init-data="iniciar_Associado"
-                                                    data-mapper-attr-id="AssociadoId"
-                                                    data-mapper-attr-text="AssociadoNome">
-                                                <!-- Select2 -->
-                                            </select>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="projectinput1">Parceiro</label>
+                                                <select id="Parceiro"
+                                                        name="Parceiro"
+                                                        class="has-select2"
+                                                        data-select2-url="/Parceiro/PesquisaParceiro"
+                                                        data-js-callback-init-data="iniciar_Parceiro"
+                                                        data-mapper-attr-id="ParceiroId"
+                                                        data-mapper-attr-text="ParceiroNome">
+                                                    <!-- Select2 -->
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="projectinput2">Associado</label>
+                                                <select id="Associado"
+                                                        name="Associado"
+                                                        class="has-select2"
+                                                        data-select2-url="/Usuario/PesquisaAssociado"
+                                                        data-js-callback-init-data="iniciar_Associado"
+                                                        data-mapper-attr-id="AssociadoId"
+                                                        data-mapper-attr-text="AssociadoNome">
+                                                    <!-- Select2 -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    }
+
                                 </div>
 
                                 <h4 class="form-section"><i class="ft-user"></i> Dados do produto</h4>
@@ -132,7 +154,7 @@
                                     </div>
                                 </div>
 
-                                <h4 class="form-section"><i class="ft-user"></i> Itens da compra</h4>
+                                <h4 class="form-section"><i class="ft-user"></i> Itens da venda</h4>
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -152,15 +174,15 @@
                                             </table>
                                         </div>
                                     </div>
-                                 </div>
-
-                                    <div class="form-actions">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="la la-check-square-o"></i> Finalizar
-                                        </button>
-                                        <a href="/Compra/IndexCompra" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
-                                    </div>
                                 </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="la la-check-square-o"></i> Finalizar
+                                    </button>
+                                    <a href="/Compra/IndexCompra" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -209,9 +231,9 @@
                             //if (pode_alterar_alarme === true) {
                             //    opts += '<a href="/Alarme/Editar/?alarmeId=' + row[0] + '" class="btn btn-link btn-warning btn-icon btn-sm"><i class="tim-icons icon-pencil"></i></a>';
                             //}
-                            //if (pode_excluir_alarme === true) {                               
+                            //if (pode_excluir_alarme === true) {
                                 opts += '<a href="javascript:void(0)" class="btn btn-link btn-danger btn-icon btn-sm btn-remove"><i class="la la-trash-o la-lg"></i></a>';
-                    
+
                             //}
 
                             return opts;
@@ -225,15 +247,15 @@
                 $("#Produto").val(null).trigger("change");
                 $("#qtd").val("");
                 $("#ValorUnidade").val("");
-                $("#Subtotal").val(""); 
+                $("#Subtotal").val("");
                 $("#Pontos").val("");
             });
 
             $("#Produto").change(() => {
-                
+
                 $("#qtd").val("");
                 $("#ValorUnidade").val("");
-                $("#Subtotal").val(""); 
+                $("#Subtotal").val("");
                 $("#Pontos").val("");
             });
 
@@ -258,7 +280,7 @@
 
                         if (produto_id === row_data[0]) {
 
-                            swal("Atenção!", "Esse produto já está na lista!", "warning");        
+                            swal("Atenção!", "Esse produto já está na lista!", "warning");
 
                             temLinhaDuplicada = true;
                         }
@@ -273,37 +295,37 @@
                         swal("Atenção!", "Digite uma quantidade válida!", "warning");
                         temProdutoPonto = false;
                     }
-                   
+
                     if ($("#ValorProduto").val() === "R$ 00." || $("#ValorProduto").val() === "" || $("#ValorProduto").val() === "R$ ." || $("#ValorProduto").val() === "R$ 0.00")  {
                         swal("Atenção!", "Digite o valor do produto", "warning");
                         temValorProduto = false;
                     }
 
                     if (temLinhaDuplicada === false && temProdutoPonto === true && temValorProduto === true) {
-   
+
                         tabela_produtos.row.add([produto_id, produto_descricao, produto_qtd, produto_valor_unidade, subtotal, pontos, ""]).draw();
                         $("#Produto").val(null).trigger("change");
                         $("#qtd").val("");
                         $("#ValorUnidade").val("");
-                        $("#Subtotal").val(""); 
+                        $("#Subtotal").val("");
                         $("#Pontos").val("");
-                    }                   
+                    }
                 }
             });
 
              $("#form-compra").submit(function() {
                 var form = this;
-                var seq = 0;                  
+                var seq = 0;
 
                 tabela_produtos.rows().every(function() {
                     var row_data = this.data();
-                  
+
                     $(form).append('<input type="hidden" name="CompraItems['+seq+'].ProdutoId" value="'+row_data[0]+'">');
                     $(form).append('<input type="hidden" name="CompraItems['+seq+'].Qtd" value="'+row_data[2]+'">');
                     $(form).append('<input type="hidden" name="CompraItems['+seq+'].ValorUnidade" value="'+row_data[3].replace(",","").replace("R$","").replace(".",",")+'">');
                     $(form).append('<input type="hidden" name="CompraItems[' + seq + '].Subtotal" value="' + row_data[4].replace(",", "").replace("R$", "").replace(".", ",") + '">');
-                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].SubtotalPontos" value="'+row_data[5].replace(".",",")+'">');  
-                    
+                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].SubtotalPontos" value="'+row_data[5].replace(".",",")+'">');
+
                     seq++;
                 });
             });
@@ -331,7 +353,7 @@
                         $("#Subtotal").val(subtotal);
                         $("#Pontos").val(parseFloat(response.pontos_produto * subtotal).toFixed(2));
                        // alert(total);
-                        //console.log(response.pontos_produto);                    
+                        //console.log(response.pontos_produto);
                     }//,
                     //error: function (response) {
                     //    console.log(response);
@@ -339,7 +361,7 @@
                     //}
                 });
             });
-            
+
             $('#data-table-produtos tbody').on('click', '.btn-remove', function () {
 
                 swal({
@@ -392,7 +414,7 @@
                 'allowMinus': false,
                 'prefix': 'R$ ',
                 'placeholder': ''
-             });  
+             });
 
         });
 
@@ -401,7 +423,7 @@
            return {
                ParceiroId: $(select).val()
            }
-        }        
+        }
 
          function iniciar_Parceiro() {
             var objs = [];
@@ -419,7 +441,7 @@
 	$('.curency-formatter').formatter({
 		'pattern': "^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$"
     });
-   
+
     </script>
 
 }

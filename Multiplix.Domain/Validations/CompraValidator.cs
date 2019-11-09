@@ -14,9 +14,9 @@ namespace Multiplix.Domain.Validations
                .NotEmpty()
                .WithMessage("O Valor é obrigatório.");
 
-            RuleFor(compra => compra.Parceiro)
-                .NotEmpty()
-                .WithMessage("O Parceiro é obrigatório.");
+            //RuleFor(compra => compra.Parceiro)
+            //    .NotEmpty()
+            //    .WithMessage("O Parceiro é obrigatório.");
 
             RuleFor(compra => compra.Associado)
                 .NotEmpty()

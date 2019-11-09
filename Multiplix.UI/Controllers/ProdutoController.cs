@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
+using Multiplix.Domain.Enums;
 using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
 using Multiplix.UI.Utils;
@@ -15,10 +16,14 @@ namespace Multiplix.UI.Controllers
     public class ProdutoController : Controller
     {
         private IServiceProduto _serviceProduto;
+        private readonly IServiceUsuario _serviceUsuario;
+        private readonly IServiceParceiro _serviceParceiro;
 
-        public ProdutoController(IServiceProduto  serviceProduto)
+        public ProdutoController(IServiceProduto  serviceProduto, IServiceUsuario serviceUsuario, IServiceParceiro serviceParceiro)
         {
             _serviceProduto = serviceProduto;
+            _serviceUsuario = serviceUsuario;
+            _serviceParceiro = serviceParceiro;
         }
 
         public IActionResult Index()
@@ -95,6 +100,13 @@ namespace Multiplix.UI.Controllers
 
             List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
             Expression<Func<Produto, bool>> searchFor;
+
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+
+            if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.PARCEIRO)
+            {
+                ParceiroId = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault().ParceiroId;
+            }                
 
             IEnumerable<Produto> produtos = new List<Produto>();
             if (ParceiroId == 0)
