@@ -20,6 +20,7 @@
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/vendors/css/charts/chartist.css">
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/vendors/css/charts/chartist-plugin-tooltip.css">
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/vendors/css/tables/datatable/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/vendors/css/charts/c3.css">
     <!-- END: Vendor CSS-->
     <!-- BEGIN: Theme CSS-->
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/css/bootstrap.css">
@@ -33,7 +34,8 @@
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/fonts/simple-line-icons/style.css">
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/css/core/colors/palette-gradient.css">
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/css/pages/timeline.css">
-    <link rel="stylesheet" type="text/css" href=".~/layout/modern-admin/app-assets/css/pages/dashboard-ecommerce.css">
+    <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/css/pages/dashboard-ecommerce.css">
+    <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/app-assets/css/plugins/charts/c3-chart.css">
     <!-- END: Page CSS-->
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="~/layout/modern-admin/assets/css/style.css">
@@ -66,7 +68,7 @@
                 <div class="collapse navbar-collapse" id="navbar-mobile">
                     <ul class="nav navbar-nav mr-auto float-left">
                         <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand" href="#"><i class="ficon ft-maximize"></i></a></li>
-                    
+
                         <li class="nav-item nav-search">
                             <a class="nav-link nav-link-search" href="#"><i class="ficon ft-search"></i></a>
                             <div class="search-input">
@@ -82,8 +84,8 @@
                                 <li class="dropdown-menu-header">
                                     <h6 class="dropdown-header m-0"><span class="grey darken-2">Notificações</span></h6><span class="notification-tag badge badge-danger float-right m-0">1 nova</span>
                                 </li>
-                                <li class="scrollable-container media-list w-100">                                   
-                                   <a href="javascript:void(0)">
+                                <li class="scrollable-container media-list w-100">
+                                    <a href="javascript:void(0)">
                                         <div class="media">
                                             <div class="media-left align-self-center"><i class="ft-check-circle icon-bg-circle bg-cyan"></i></div>
                                             <div class="media-body">
@@ -114,7 +116,7 @@
                                                 </small>
                                             </div>
                                         </div>
-                                    </a>                                  
+                                    </a>
                                 </li>
                                 <li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center" href="javascript:void(0)">Ler todas as mensagens</a></li>
                             </ul>
@@ -160,7 +162,6 @@
     <!-- BEGIN: Vendor JS-->
     <script src="~/layout/modern-admin/app-assets/vendors/js/vendors.min.js"></script>
     <!-- BEGIN Vendor JS-->
-
     <!-- BEGIN: Page Vendor JS-->
     <script src="~/layout/modern-admin/app-assets/vendors/js/forms/select/select2.full.min.js"></script>
     <script src="~/js/select2-util.js"></script>
@@ -173,15 +174,33 @@
     <script src="~/layout/modern-admin/app-assets/vendors/js/timeline/horizontal-timeline.js"></script>
     <script src="~/layout/modern-admin/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
     <script src="~/layout/modern-admin/app-assets/vendors/js/extensions/sweetalert.min.js"></script>
-  
-    <!-- END: Page Vendor JS-->
 
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/d3.min.js"></script>
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/c3.min.js"></script>
+
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/flot/jquery.flot.min.js"></script>
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/flot/jquery.flot.resize.js"></script>
+    <script src="~/layout/modern-admin//app-assets/vendors/js/charts/flot/jquery.flot.categories.js"></script>
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/flot/jquery.flot.threshold.js"></script>
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/flot/jquery.flot.stack.js"></script>
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/flot/jquery.flot.errorbars.js"></script>
+    <script src="~/layout/modern-admin/app-assets/vendors/js/charts/flot/jquery.flot.navigate.js"></script>
+
+    <!-- END: Page Vendor JS-->
     <!-- BEGIN: Theme JS-->
     <script src="~/layout/modern-admin/app-assets/js/core/app-menu.js"></script>
     <script src="~/layout/modern-admin/app-assets/js/core/app.js"></script>
     <!-- END: Theme JS-->
-    <!-- BEGIN: Page JS-->
-    <script src="~/layout/modern-admin/app-assets/js/scripts/pages/dashboard-ecommerce.js"></script>
+    <!-- BEGIN: Page JS-->   
+
+    <script src="~/layout/modern-admin/app-assets/js/scripts/charts/c3/bar-pie/bar.js"></script>
+    <script src="~/layout/modern-admin/app-assets/js/scripts/charts/c3/bar-pie/column.js"></script>
+    <script src="~/layout/modern-admin/app-assets/js/scripts/charts/c3/bar-pie/donut.js"></script>
+    <script src="~/layout/modern-admin/app-assets/js/scripts/charts/c3/bar-pie/pie.js"></script>
+    <script src="~/layout/modern-admin/app-assets/js/scripts/charts/c3/bar-pie/stacked-bar.js"></script>
+    <script src="~/layout/modern-admin/app-assets/js/scripts/charts/c3/bar-pie/stacked-column.js"></script>
+
+    <script src="~/layout/modern-admin/app-assets/js/scripts/charts/flot/bar/bar.js"></script>
     <!-- END: Page JS-->
 
     @RenderSection("Scripts", required: false)

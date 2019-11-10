@@ -43,46 +43,29 @@
 </div>
 <!--/ eCommerce statistic -->
 <!-- Products sell and New Orders -->
-<div class="row match-height">
-    <div class="col-xl-12 col-12" id="ecommerceChartView">
-        <div class="card card-shadow">
-            <div class="card-header card-header-transparent py-20">
-                <div class="btn-group dropdown">
-                    <a href="#" class="text-body dropdown-toggle blue-grey-700" data-toggle="dropdown">Crescimento da rede</a>
-                    <div class="dropdown-menu animate" role="menu">
-                        <a class="dropdown-item" href="#" role="menuitem">Sales</a>
-                        <a class="dropdown-item" href="#" role="menuitem">Total sales</a>
-                        <a class="dropdown-item" href="#" role="menuitem">profit</a>
+<section id="flot-bar-charts">
+    <!-- Simple Bar Chart -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Vendas por mês</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
                     </div>
                 </div>
-                <ul class="nav nav-pills nav-pills-rounded chart-action float-right btn-group" role="group">
-                    <li class="nav-item"><a class="active nav-link" data-toggle="tab" href="#scoreLineToDay">Dia</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#scoreLineToWeek">Mês</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#scoreLineToMonth">Ano</a></li>
-                </ul>
-            </div>
-            <div class="widget-content tab-content bg-white p-20">
-                <div class="ct-chart tab-pane active scoreLineShadow" id="scoreLineToDay"></div>
-                <div class="ct-chart tab-pane scoreLineShadow" id="scoreLineToWeek"></div>
-                <div class="ct-chart tab-pane scoreLineShadow" id="scoreLineToMonth"></div>
+                <div class="card-content collapse show">
+                    <div class="card-body">
+                        <div id="bar-chart" class="height-400"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    @*<div class="col-xl-4 col-lg-12">
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body sales-growth-chart">
-                        <div id="monthly-sales" class="height-250"></div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="chart-title mb-1 text-center">
-                        <h6>Total monthly Sales.</h6>
-                    </div>
-                    <div class="chart-stats text-center">
-                        <a href="#" class="btn btn-sm btn-danger box-shadow-2 mr-1">Statistics <i class="ft-bar-chart"></i></a> <span class="text-muted">for the last year.</span>
-                    </div>
-                </div>
-            </div>
-        </div>*@
-</div>
+</section>

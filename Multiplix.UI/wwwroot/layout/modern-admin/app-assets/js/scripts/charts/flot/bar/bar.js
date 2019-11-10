@@ -12,7 +12,7 @@
 // ------------------------------
 $(window).on("load", function(){
 
-    var data = [ ["January", 10], ["February", 8], ["March", 4], ["April", 13], ["May", 17], ["June", 9] ];
+    var data = [["Janeiro", 10], ["Fevereiro", 8], ["Mar", 4], ["Abril", 13], ["Maio", 17], ["Junho", 9], ["Julho", 4], ["Agosto", 7], ["Setembro", 11], ["Outubro", 14], ["Novembro", 5] ];
 
     $.plot("#bar-chart", [ data ], {
         series: {

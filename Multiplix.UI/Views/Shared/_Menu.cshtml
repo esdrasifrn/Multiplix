@@ -100,14 +100,18 @@
                         {
                             <li><a class="menu-item" href="/Compra/IndexCompra"><i></i><span data-i18n="">Vendas</span></a></li>
                         }
+                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_vendas_por_parceiro"))
+                        {
+                            <li><a class="menu-item" href="/Compra/IndexCompra"><i></i><span data-i18n="">Vendas por parceiro</span></a></li>
+                        }
                     </ul>
                 }
             </li>
             @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_grupo"))
             {
-                <li class=" nav-item">
+                @*<li class=" nav-item">
                     <a href="#"><i class="la la-key"></i><span class="menu-title" data-i18n="">Grupo de permissões</span></a>
-                </li>
+                </li>*@
             }
 
 

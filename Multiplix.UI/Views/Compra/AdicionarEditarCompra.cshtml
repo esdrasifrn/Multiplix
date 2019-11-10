@@ -198,6 +198,30 @@
 
     <script>
         $(document).ready(() => {
+
+
+            $(".select2-selection").on("focus", function () {
+                $(this).parent().parent().prev().select2("open");
+            });
+
+            $('#qtd').bind('keypress', function (e) {
+                if (e.keyCode == 13) {                   
+                    $('#add-produto').click();
+                    return false;
+                }
+            });           
+
+            //$(document).on('keyup', '.select2-search__field', function (e) {
+            //    if (e.which === 13) {
+            //        $("#Produto").select2("close");
+            //        $("#qtd").focus();
+            //    }
+            //});
+
+           
+
+            $("#Associado").select2('open');
+
             var tabela_produtos = $('#data-table-produtos').DataTable({
                 processing: true,
                 paging: true,
@@ -309,6 +333,7 @@
                         $("#ValorUnidade").val("");
                         $("#Subtotal").val("");
                         $("#Pontos").val("");
+                        $("#Produto").select2('open');
                     }
                 }
             });
@@ -329,7 +354,6 @@
                     seq++;
                 });
             });
-
 
             $("#qtd").keydown(() => {
                 var produto_select = $("#Produto").find("option:selected");
@@ -402,8 +426,6 @@
                     });
             });
 
-
-
             $(".money").inputmask('decimal', {
                 'alias': 'numeric',
                 'groupSeparator': ',',
@@ -416,7 +438,9 @@
                 'placeholder': ''
              });
 
+
         });
+
 
          function produto_extra_filter(elem_select) {
            var select = $("select[name=Parceiro]");

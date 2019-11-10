@@ -181,6 +181,7 @@ namespace Multiplix.UI.Controllers
                 infoProdutoParceiro = parceiro.ParceiroProdutos.Where(x => x.ProdutoId == produtoId).FirstOrDefault();
             }
             
+            
             var resultado = new
             {
                 valor = /*string.Format("{0:#.00}", Convert.ToDecimal(*/infoProdutoParceiro.ValorProduto/*))*/, //passar os campos minusculos para o js
@@ -199,9 +200,12 @@ namespace Multiplix.UI.Controllers
              */
 
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
-            var parceiroLogado = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+            Parceiro parceiroLogado = null;
 
-            
+            if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.PARCEIRO)
+            {
+                 parceiroLogado = _serviceParceiro.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+            }            
 
             string searchTerm = dataTableModel.search.value;
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
@@ -211,7 +215,7 @@ namespace Multiplix.UI.Controllers
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
-                if (parceiroLogado.Usuario.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
+                if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
                 {
                     compras = _serviceCompra.Buscar(
                     x => x.Associado.Usuario.Nome.Contains(searchTerm) ||
@@ -223,15 +227,14 @@ namespace Multiplix.UI.Controllers
                 else
                 {
                     compras = _serviceCompra.Buscar(x => x.Parceiro.ParceiroId == parceiroLogado.ParceiroId)
-                   .Where(x => x.Associado.CPF.Replace(".", "").Replace("-", "").ToUpper()
-                   .Contains(searchTerm.ToUpper()) || x.Associado.Usuario.Nome.ToUpper()
+                   .Where(x => x.Associado.Usuario.Nome.ToUpper()
                    .Contains(searchTerm.ToUpper()) && x.Data.Month == DateTime.Now.Month);
                 }
 
             }
             else
             {
-                if (parceiroLogado.Usuario.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
+                if (usuarioLogado.TipoUsuario == (int)ETipoUsuario.ASSOCIADO)
                 {
                     compras = _serviceCompra.ObterTodos();
                 }
