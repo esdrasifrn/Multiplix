@@ -28,10 +28,10 @@ namespace Multiplix.Domain.Validations
               .Must((usuario, login) => LoginRotaJaExiste(usuario.Login))
               .When((usuario) => Atualizando(!_isAtualizacao))
               .WithMessage("O Login ja existe para outro associado.");
-
-            RuleFor(usuario => usuario.Senha)
-                .NotEmpty()
-                .WithMessage("A Senha é obrigatória.");
+            
+            //RuleFor(usuario => usuario.Senha)
+            //    .NotEmpty()
+            //    .WithMessage("A Senha é obrigatória.");
 
             RuleFor(usuario => usuario.Email)
                .NotEmpty()

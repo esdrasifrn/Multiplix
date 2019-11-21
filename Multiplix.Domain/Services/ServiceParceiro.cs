@@ -181,7 +181,13 @@ namespace Multiplix.Domain.Services
                 parceiro = _parceiroRepository.Buscar(x => x.Usuario.UsuarioId == usuarioDTO.UsuarioId).FirstOrDefault();
 
                 parceiro.Usuario.Login = usuarioDTO.Login;
-                parceiro.Usuario.Senha = usuarioDTO.Senha;
+
+                //Na edição só atualiza a senha se for digitada alguma
+                if (!String.IsNullOrEmpty(usuarioDTO.Senha))
+                {
+                    parceiro.Usuario.Senha = usuarioDTO.Senha;
+                }
+               
                 parceiro.Usuario.Nome = usuarioDTO.Nome;
                 parceiro.Usuario.Celular = usuarioDTO.Celular;
                 parceiro.Usuario.Email = usuarioDTO.Email;
@@ -241,7 +247,13 @@ namespace Multiplix.Domain.Services
 
             #endregion
 
-            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(parceiro.Usuario);           
+            ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(parceiro.Usuario);
+
+            //se estou inserindo a senha é obrigatória
+            if (!atualizando)
+            {
+                result.Errors.Add(new ValidationFailure("Senha", "A Senha é obrigatória."));
+            }
 
             if (result.IsValid)
             {

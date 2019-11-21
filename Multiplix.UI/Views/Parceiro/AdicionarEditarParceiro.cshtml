@@ -181,7 +181,7 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="Senha">Senha*</label>
                                             <div class="col-md-9 mx-auto">
-                                                <input type="password" id="Senha" class="form-control" placeholder="Senha" name="Senha">
+                                                <input type="password" disabled="disabled" autocomplete="off" id="Senha" class="form-control" placeholder="Senha" name="Senha">
                                             </div>
                                         </div>
                                     </div>
@@ -267,6 +267,12 @@
 
     <script>
         $(document).ready(() => {
+
+            // Usando um pequeno delay de 100ms porque às vezes o navegador preenche o campo logo que o documento está pronto, e pode não funcionar como esperado
+            setTimeout(function () {
+                $('#Senha').removeAttr('disabled');
+            }, 1000);
+
             // ativa a tab 1
             $("#active-tab1").trigger("click");
 

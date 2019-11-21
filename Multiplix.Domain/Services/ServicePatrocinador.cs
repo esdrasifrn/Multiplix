@@ -157,7 +157,13 @@ namespace Multiplix.Domain.Services
                 associado = _patrocinadorRepository.Buscar(x => x.UsuarioId == usuarioDTO.UsuarioId).FirstOrDefault();
 
                 associado.Usuario.Login = usuarioDTO.Login;
-                associado.Usuario.Senha = usuarioDTO.Senha;
+
+                //Na edição só atualiza a senha se for digitada alguma
+                if (!String.IsNullOrEmpty(usuarioDTO.Senha))
+                {
+                    associado.Usuario.Senha = usuarioDTO.Senha;
+                }                
+
                 associado.Usuario.Nome = usuarioDTO.Nome;
                 associado.Usuario.Celular = usuarioDTO.Celular;
                 associado.Usuario.Email = usuarioDTO.Email;
@@ -213,11 +219,14 @@ namespace Multiplix.Domain.Services
             if (associado.PatrocinadorId == 0)
             {
                 result.Errors.Add(new ValidationFailure("Associado", "O patrocinador é obrigatório."));
-            }
+            }       
 
-            if (_patrocinadorRepository.CPFJaExiste(associado.CPF) && !atualizando)
+            if ((!string.IsNullOrEmpty(associado.CPF)))
             {
-                result.Errors.Add(new ValidationFailure("CPF", "CPF já existe"));
+                if (_patrocinadorRepository.CPFJaExiste(associado.CPF) && !atualizando)
+                {
+                    result.Errors.Add(new ValidationFailure("CPF", "CPF já existe"));
+                }
             }
 
             if ((string.IsNullOrEmpty(associado.CPF)))
@@ -225,10 +234,20 @@ namespace Multiplix.Domain.Services
                 result.Errors.Add(new ValidationFailure("CPF", "CPF é obrigatório"));
             }
 
-            if (!ValidaCPF.IsCpf(associado.CPF))
+            if ((!string.IsNullOrEmpty(associado.CPF)))
             {
-                result.Errors.Add(new ValidationFailure("CPF", "CPF inválido"));
+                if (!ValidaCPF.IsCpf(associado.CPF))
+                {
+                    result.Errors.Add(new ValidationFailure("CPF", "CPF inválido"));
+                }
             }
+
+            //se estou inserindo a senha é obrigatória
+            if ((!atualizando) && (string.IsNullOrEmpty(associado.Usuario.Senha)))
+            {
+                result.Errors.Add(new ValidationFailure("Senha", "A Senha é obrigatória."));
+            }
+           
 
             if (result.IsValid)
             {
