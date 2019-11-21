@@ -50,6 +50,10 @@
                         {
                             <li><a class="menu-item" href="/PlanoAssinatura/IndexPlanoAssinatura"><i></i><span data-i18n="">Plano de assinatura</span></a></li>
                         }
+                        @*@if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_cidade"))
+                        {
+                            <li><a class="menu-item" href="/Cidade/IndexCidade"><i></i><span data-i18n="">Cidade</span></a></li>
+                        }*@
                     </ul>
                 </li>
             }

@@ -47,7 +47,10 @@ namespace Multiplix.Domain.Enums
 
                 _("pode_visualizar_unidade", "Pode visualizar unidade"),
                 _("pode_cadastrar_unidade", "Pode cadastrar unidade"),
-                _("pode_alterar_unidade", "Pode alterar unidade"), 
+                _("pode_alterar_unidade", "Pode alterar unidade"),
+
+                _("pode_visualizar_cidade", "Pode visualizar cidade"),
+                _("pode_alterar_cidade", "Pode alterar cidade"),                
 
 	            #endregion
 

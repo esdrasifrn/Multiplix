@@ -76,6 +76,12 @@ namespace Multiplix.UI
             services.AddScoped<IServicePlanoAssinatura, ServicePlanoAssinatura>();
             services.AddScoped<IPlanoAssinaturaRepository, PlanoAssinaturaRepository>();
 
+            services.AddScoped<IServiceCidade, ServiceCidade>();
+            services.AddScoped<ICidadeRepository, CidadeRepository>();
+
+            services.AddScoped<IServiceEstado, ServiceEstado>();
+            services.AddScoped<IEstadoRepository, EstadoRepository>();
+
             #endregion
 
             #region CookieAuth

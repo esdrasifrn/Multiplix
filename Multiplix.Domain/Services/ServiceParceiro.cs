@@ -20,13 +20,15 @@ namespace Multiplix.Domain.Services
         private readonly IParceiroRepository _parceiroRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IRamoAtividadeRepository _ramoAtividade;
+        private readonly ICidadeRepository _cidadeRepository;
 
         public ServiceParceiro(IParceiroRepository parceiroRepository, 
-            IUsuarioRepository usuarioRepository, IRamoAtividadeRepository ramoAtividade)
+            IUsuarioRepository usuarioRepository, IRamoAtividadeRepository ramoAtividade, ICidadeRepository cidadeRepository)
         {
             _parceiroRepository = parceiroRepository;
             _usuarioRepository = usuarioRepository;
             _ramoAtividade = ramoAtividade;
+            _cidadeRepository = cidadeRepository;
         }
 
         public Parceiro Adicionar(Parceiro entity)
@@ -157,14 +159,12 @@ namespace Multiplix.Domain.Services
                     rua: usuarioDTO.Rua,
                     numero: usuarioDTO.Numero,
                     cep: usuarioDTO.CEP,
-                    cidade: usuarioDTO.Cidade,
+                    cidade: _cidadeRepository.ObterPorId(usuarioDTO.CidadeId),
                     bairro: usuarioDTO.Bairro,
-                    complemento: usuarioDTO.Complemento,
-                    estado: usuarioDTO.Estado,
-                    ramo: _ramoAtividade.ObterPorId(usuarioDTO.RamoAtividadeId),
-                    pontoPorReal: usuarioDTO.PontoPorReal,                   
-                    cnpj: usuarioDTO.CNPJ
-                    
+                    complemento: usuarioDTO.Complemento,                   
+                    ramo: _ramoAtividade.ObterPorId(usuarioDTO.RamoAtividadeId),                                   
+                    cnpj: usuarioDTO.CNPJ,
+                    responsavel: usuarioDTO.Responsavel                    
                     ) ;
 
                 UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
@@ -196,14 +196,13 @@ namespace Multiplix.Domain.Services
                 parceiro.Rua = usuarioDTO.Rua;
                 parceiro.Numero = usuarioDTO.Numero;
                 parceiro.CEP = usuarioDTO.CEP;
-                parceiro.Cidade = usuarioDTO.Cidade;
+                parceiro.Cidade = _cidadeRepository.ObterPorId(usuarioDTO.CidadeId);
                 parceiro.Bairro = usuarioDTO.Bairro;
-                parceiro.Complemento = usuarioDTO.Complemento;
-                parceiro.Estado = usuarioDTO.Estado;
-                parceiro.Ramo = _ramoAtividade.ObterPorId(usuarioDTO.RamoAtividadeId);
-                parceiro.PontoPorReal = usuarioDTO.PontoPorReal;
+                parceiro.Complemento = usuarioDTO.Complemento;               
+                parceiro.Ramo = _ramoAtividade.ObterPorId(usuarioDTO.RamoAtividadeId);                
                 parceiro.HorarioFuncionamento = usuarioDTO.HorarioFuncionamento;
                 parceiro.CNPJ = usuarioDTO.CNPJ;
+                parceiro.Responsavel = usuarioDTO.Responsavel;
            
             }
 
@@ -250,9 +249,14 @@ namespace Multiplix.Domain.Services
             ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(parceiro.Usuario);
 
             //se estou inserindo a senha é obrigatória
-            if (!atualizando)
+            if ((!atualizando) && (string.IsNullOrEmpty(parceiro.Usuario.Senha)))
             {
                 result.Errors.Add(new ValidationFailure("Senha", "A Senha é obrigatória."));
+            }
+
+            if (parceiro.Cidade == null)
+            {
+                result.Errors.Add(new ValidationFailure("Cidade", "Campo obrigatório."));
             }
 
             if (result.IsValid)

@@ -32,20 +32,16 @@ namespace Multiplix.Infrastructure.EntityConfig
                 .IsRequired(false);
 
             builder
+               .Property(pa => pa.CidadeId)
+               .IsRequired(false);
+
+            builder
                 .Property(ba => ba.BancoId)
                 .IsRequired(false);
             
             builder                
                 .Property(a => a.Rua).HasColumnName("Rua")
                 .HasColumnType("varchar(200)");
-
-            builder               
-                .Property(a => a.Cidade).HasColumnName("Cidade")
-                .HasColumnType("varchar(200)");
-
-            builder                
-                .Property(a => a.Estado).HasColumnName("Estado")
-                .HasColumnType("varchar(2)"); ;
 
             builder               
                 .Property(a => a.CEP).HasColumnName("CEP")

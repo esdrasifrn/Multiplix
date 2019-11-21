@@ -23,6 +23,20 @@ namespace Multiplix.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Estado",
+                columns: table => new
+                {
+                    EstadoId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Nome = table.Column<string>(type: "varchar(100)", nullable: true),
+                    Sigla = table.Column<string>(type: "varchar(2)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Estado", x => x.EstadoId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Grupo",
                 columns: table => new
                 {
@@ -104,11 +118,32 @@ namespace Multiplix.Infrastructure.Migrations
                     ValidadeSenha = table.Column<DateTime>(nullable: false),
                     Liberado = table.Column<bool>(nullable: false),
                     UltimoAcesso = table.Column<DateTime>(nullable: false),
-                    IsSuperUser = table.Column<bool>(nullable: false)
+                    IsSuperUser = table.Column<bool>(nullable: false),
+                    TipoUsuario = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuario", x => x.UsuarioId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cidade",
+                columns: table => new
+                {
+                    CidadeId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Descricao = table.Column<string>(nullable: true),
+                    EstadoId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cidade", x => x.CidadeId);
+                    table.ForeignKey(
+                        name: "FK_Cidade_Estado_EstadoId",
+                        column: x => x.EstadoId,
+                        principalTable: "Estado",
+                        principalColumn: "EstadoId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -133,98 +168,6 @@ namespace Multiplix.Infrastructure.Migrations
                         principalTable: "Permissao",
                         principalColumn: "PermisaoId",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Associado",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Nivel = table.Column<int>(nullable: false),
-                    IdCarteira = table.Column<string>(nullable: true),
-                    UsuarioId = table.Column<int>(nullable: false),
-                    PlanoAssinaturaId = table.Column<int>(nullable: false),
-                    PatrocinadorId = table.Column<int>(nullable: true),
-                    Sexo = table.Column<string>(type: "varchar(1)", nullable: true),
-                    CPF = table.Column<string>(type: "varchar(25)", nullable: true),
-                    Nascimento = table.Column<DateTime>(nullable: false),
-                    EmailAlternativo = table.Column<string>(nullable: true),
-                    BancoId = table.Column<int>(nullable: false),
-                    TipoConta = table.Column<int>(nullable: false),
-                    Agencia = table.Column<string>(nullable: true),
-                    Conta = table.Column<string>(nullable: true),
-                    Rua = table.Column<string>(type: "varchar(200)", nullable: true),
-                    Cidade = table.Column<string>(type: "varchar(200)", nullable: true),
-                    Estado = table.Column<string>(type: "varchar(2)", nullable: true),
-                    CEP = table.Column<string>(type: "varchar(15)", nullable: true),
-                    Numero = table.Column<string>(type: "varchar(10)", nullable: true),
-                    Bairro = table.Column<string>(nullable: true),
-                    Complemento = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Associado", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Associado_Banco_BancoId",
-                        column: x => x.BancoId,
-                        principalTable: "Banco",
-                        principalColumn: "BancoId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Associado_Associado_PatrocinadorId",
-                        column: x => x.PatrocinadorId,
-                        principalTable: "Associado",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Associado_PlanoAssinatura_PlanoAssinaturaId",
-                        column: x => x.PlanoAssinaturaId,
-                        principalTable: "PlanoAssinatura",
-                        principalColumn: "PlanoAssinaturaId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Associado_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Parceiro",
-                columns: table => new
-                {
-                    ParceiroId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UsuarioId = table.Column<int>(nullable: true),
-                    HorarioFuncionamento = table.Column<string>(type: "varchar(75)", nullable: true),
-                    RamoAtividadeId = table.Column<int>(nullable: true),
-                    PontoPorReal = table.Column<int>(nullable: false),
-                    CNPJ = table.Column<string>(nullable: true),
-                    Rua = table.Column<string>(type: "varchar(200)", nullable: true),
-                    Cidade = table.Column<string>(type: "varchar(200)", nullable: true),
-                    Estado = table.Column<string>(type: "varchar(2)", nullable: true),
-                    CEP = table.Column<string>(type: "varchar(15)", nullable: true),
-                    Numero = table.Column<string>(type: "varchar(10)", nullable: true),
-                    Bairro = table.Column<string>(nullable: true),
-                    Complemento = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Parceiro", x => x.ParceiroId);
-                    table.ForeignKey(
-                        name: "FK_Parceiro_RamoDeAtividade_RamoAtividadeId",
-                        column: x => x.RamoAtividadeId,
-                        principalTable: "RamoDeAtividade",
-                        principalColumn: "RamoAtividadeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Parceiro_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -273,6 +216,108 @@ namespace Multiplix.Infrastructure.Migrations
                         principalTable: "Usuario",
                         principalColumn: "UsuarioId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Associado",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Nivel = table.Column<int>(nullable: false),
+                    IdCarteira = table.Column<string>(nullable: true),
+                    CidadeId = table.Column<int>(nullable: true),
+                    UsuarioId = table.Column<int>(nullable: false),
+                    PlanoAssinaturaId = table.Column<int>(nullable: false),
+                    PatrocinadorId = table.Column<int>(nullable: true),
+                    Sexo = table.Column<string>(type: "varchar(1)", nullable: true),
+                    CPF = table.Column<string>(type: "varchar(25)", nullable: true),
+                    Nascimento = table.Column<DateTime>(nullable: false),
+                    EmailAlternativo = table.Column<string>(nullable: true),
+                    BancoId = table.Column<int>(nullable: true),
+                    TipoConta = table.Column<int>(nullable: false),
+                    Agencia = table.Column<string>(nullable: true),
+                    Conta = table.Column<string>(nullable: true),
+                    Rua = table.Column<string>(type: "varchar(200)", nullable: true),
+                    CEP = table.Column<string>(type: "varchar(15)", nullable: true),
+                    Numero = table.Column<string>(type: "varchar(10)", nullable: true),
+                    Bairro = table.Column<string>(nullable: true),
+                    Complemento = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Associado", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Associado_Banco_BancoId",
+                        column: x => x.BancoId,
+                        principalTable: "Banco",
+                        principalColumn: "BancoId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Associado_Cidade_CidadeId",
+                        column: x => x.CidadeId,
+                        principalTable: "Cidade",
+                        principalColumn: "CidadeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Associado_Associado_PatrocinadorId",
+                        column: x => x.PatrocinadorId,
+                        principalTable: "Associado",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Associado_PlanoAssinatura_PlanoAssinaturaId",
+                        column: x => x.PlanoAssinaturaId,
+                        principalTable: "PlanoAssinatura",
+                        principalColumn: "PlanoAssinaturaId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Associado_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Parceiro",
+                columns: table => new
+                {
+                    ParceiroId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UsuarioId = table.Column<int>(nullable: true),
+                    HorarioFuncionamento = table.Column<string>(type: "varchar(75)", nullable: true),
+                    RamoAtividadeId = table.Column<int>(nullable: true),
+                    CidadeId = table.Column<int>(nullable: true),
+                    PontoPorReal = table.Column<int>(nullable: false),
+                    CNPJ = table.Column<string>(nullable: true),
+                    Rua = table.Column<string>(type: "varchar(200)", nullable: true),
+                    CEP = table.Column<string>(type: "varchar(15)", nullable: true),
+                    Numero = table.Column<string>(type: "varchar(10)", nullable: true),
+                    Bairro = table.Column<string>(nullable: true),
+                    Complemento = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Parceiro", x => x.ParceiroId);
+                    table.ForeignKey(
+                        name: "FK_Parceiro_Cidade_CidadeId",
+                        column: x => x.CidadeId,
+                        principalTable: "Cidade",
+                        principalColumn: "CidadeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Parceiro_RamoDeAtividade_RamoAtividadeId",
+                        column: x => x.RamoAtividadeId,
+                        principalTable: "RamoDeAtividade",
+                        principalColumn: "RamoAtividadeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Parceiro_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -372,18 +417,23 @@ namespace Multiplix.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Usuario",
-                columns: new[] { "UsuarioId", "Celular", "Email", "IsSuperUser", "Liberado", "Login", "Nome", "Senha", "UltimoAcesso", "ValidadeSenha" },
-                values: new object[] { 1, "98776655", "admin@hotmail.com", true, false, "admin", "Multiplys", "123", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+                columns: new[] { "UsuarioId", "Celular", "Email", "IsSuperUser", "Liberado", "Login", "Nome", "Senha", "TipoUsuario", "UltimoAcesso", "ValidadeSenha" },
+                values: new object[] { 1, "98776655", "admin@hotmail.com", true, false, "admin", "Multiplys", "123", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
 
             migrationBuilder.InsertData(
                 table: "Associado",
-                columns: new[] { "Id", "Agencia", "Bairro", "BancoId", "CEP", "CPF", "Cidade", "Complemento", "Conta", "EmailAlternativo", "Estado", "IdCarteira", "Nascimento", "Nivel", "Numero", "PatrocinadorId", "PlanoAssinaturaId", "Rua", "Sexo", "TipoConta", "UsuarioId" },
-                values: new object[] { 1, null, null, 1, null, null, null, null, null, null, "RN", "201900000001", new DateTime(2019, 10, 25, 16, 50, 16, 50, DateTimeKind.Local).AddTicks(7611), 0, null, null, 1, null, null, 1, 1 });
+                columns: new[] { "Id", "Agencia", "Bairro", "BancoId", "CEP", "CPF", "CidadeId", "Complemento", "Conta", "EmailAlternativo", "IdCarteira", "Nascimento", "Nivel", "Numero", "PatrocinadorId", "PlanoAssinaturaId", "Rua", "Sexo", "TipoConta", "UsuarioId" },
+                values: new object[] { 1, null, null, 1, null, null, null, null, null, null, "201900000001", new DateTime(2019, 11, 21, 18, 18, 12, 910, DateTimeKind.Local).AddTicks(9443), 0, null, null, 1, null, null, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Associado_BancoId",
                 table: "Associado",
                 column: "BancoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Associado_CidadeId",
+                table: "Associado",
+                column: "CidadeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Associado_PatrocinadorId",
@@ -399,6 +449,11 @@ namespace Multiplix.Infrastructure.Migrations
                 name: "IX_Associado_UsuarioId",
                 table: "Associado",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cidade_EstadoId",
+                table: "Cidade",
+                column: "EstadoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Compra_AssociadoId",
@@ -419,6 +474,11 @@ namespace Multiplix.Infrastructure.Migrations
                 name: "IX_CompraItem_ProdutoId",
                 table: "CompraItem",
                 column: "ProdutoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Parceiro_CidadeId",
+                table: "Parceiro",
+                column: "CidadeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parceiro_RamoAtividadeId",
@@ -493,10 +553,16 @@ namespace Multiplix.Infrastructure.Migrations
                 name: "PlanoAssinatura");
 
             migrationBuilder.DropTable(
+                name: "Cidade");
+
+            migrationBuilder.DropTable(
                 name: "RamoDeAtividade");
 
             migrationBuilder.DropTable(
                 name: "Usuario");
+
+            migrationBuilder.DropTable(
+                name: "Estado");
         }
     }
 }

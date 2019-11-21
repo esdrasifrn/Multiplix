@@ -73,17 +73,19 @@ namespace Multiplix.UI.Controllers
                 Rua = parceiro.Rua,
                 Numero = parceiro.Numero,
                 CEP = parceiro.CEP,
-                Cidade = parceiro.Cidade,
+                CidadeId = parceiro.Cidade.CidadeId,
+                CidadeNome = parceiro.Cidade.Descricao,
                 Bairro = parceiro.Bairro,
-                Complemento = parceiro.Complemento,
-                Estado = parceiro.Estado,
+                Complemento = parceiro.Complemento,                
                 Email = parceiro.Usuario.Email,               
                 Celular = parceiro.Usuario.Celular,              
                 Login = parceiro.Usuario.Login,
-                HorarioFuncionamento = parceiro.HorarioFuncionamento,
-                PontoPorReal = parceiro.PontoPorReal,
+                HorarioFuncionamento = parceiro.HorarioFuncionamento,               
                 RamoAtividadeId = parceiro.Ramo != null ? parceiro.Ramo.RamoAtividadeId : 0,
-                RamoAtividadeNome = parceiro.Ramo != null ? parceiro.Ramo.Nome : ""
+                RamoAtividadeNome = parceiro.Ramo != null ? parceiro.Ramo.Nome : "",
+                EstadoId = parceiro.Cidade.Estado.EstadoId,
+                EstadoNome = parceiro.Cidade.Estado.Nome,
+                Responsavel = parceiro.Responsavel
             };
 
             foreach (var parceiroProduto in parceiro.ParceiroProdutos)
@@ -166,10 +168,7 @@ namespace Multiplix.UI.Controllers
                         break;
                     case "5":
                         orderByExpr = x => x.CNPJ;
-                        break;
-                    case "6":
-                        orderByExpr = x => x.PontoPorReal;
-                        break;
+                        break;                   
                 }
 
                 if (orderByExpr != null)

@@ -19,7 +19,7 @@ namespace Multiplix.Domain.Entities
         /// </summary>
         private IList<Compra> _compras = new List<Compra>();
 
-        public Associado(Usuario usuario, int? patrocinadorId, string rua, string numero, string cep,  string cidade, 
+        public Associado(Usuario usuario, int? patrocinadorId, string rua, string numero, string cep,  Cidade cidade, 
             string bairro, string complemento, string estado, DateTime nascimento,
             string sexo, string cpf, string emailAlternativo, Banco banco, int tipoConta, string agengia, string conta, int nivel,
             PlanoAssinatura planoAssinatura)
@@ -29,8 +29,7 @@ namespace Multiplix.Domain.Entities
             IdCarteira = $"{DateTime.Now.Year.ToString()}{Id:00000000}";
             _patrocinados = new List<Associado>();
             Rua = rua;
-            Cidade = cidade;
-            Estado = estado;
+            Cidade = cidade;          
             CEP = cep;
             Numero = numero;
             Bairro = bairro;
@@ -56,6 +55,8 @@ namespace Multiplix.Domain.Entities
         public int Nivel { get; set; }
         public string IdCarteira { get; set; }
         public virtual Usuario Usuario { get; set; }
+        public virtual Cidade Cidade { get; set; }
+        public int? CidadeId { get; set; }
         public int UsuarioId { get; set; }
         public virtual PlanoAssinatura PlanoAssinatura { get; set; }
         public int PlanoAssinaturaId { get; set; }
@@ -73,9 +74,7 @@ namespace Multiplix.Domain.Entities
         public string Conta { get; set; }
 
 
-        public String Rua { get;  set; }
-        public String Cidade { get; set; }
-        public String Estado { get; set; }
+        public String Rua { get;  set; }      
         public String CEP { get; set; }
         public String Numero { get; set; }
         public String Bairro { get; set; }

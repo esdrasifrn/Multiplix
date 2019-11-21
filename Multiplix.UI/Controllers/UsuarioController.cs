@@ -171,10 +171,10 @@ namespace Multiplix.UI.Controllers
                 Rua = associado.Rua,
                 Numero = associado.Numero,
                 CEP = associado.CEP,
-                Cidade = associado.Cidade,
+                CidadeId = associado.Cidade != null ? associado.Cidade.CidadeId : 0,
+                CidadeNome = associado.Cidade != null ? associado.Cidade.Descricao : "-",
                 Bairro = associado.Bairro,
-                Complemento = associado.Complemento,
-                Estado = associado.Estado,
+                Complemento = associado.Complemento,               
                 Email = associado.Usuario.Email,
                 EmailAlternativo = associado.EmailAlternativo,
                 Celular = associado.Usuario.Celular,
@@ -185,7 +185,9 @@ namespace Multiplix.UI.Controllers
                 Conta = associado.Conta,
                 Login = associado.Usuario.Login,
                 PlanoAssinaturaNome = associado.PlanoAssinatura.ToString(),
-                PlanoAssinaturaId = associado.PlanoAssinatura.PlanoAssinaturaId
+                PlanoAssinaturaId = associado.PlanoAssinatura.PlanoAssinaturaId,
+                EstadoId = associado.Cidade != null ? associado.Cidade.Estado.EstadoId : 0,
+                EstadoNome = associado.Cidade != null ? associado.Cidade.Estado.Nome : "-"
 
             };
 

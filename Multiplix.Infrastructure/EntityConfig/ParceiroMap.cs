@@ -18,19 +18,15 @@ namespace Multiplix.Infrastructure.EntityConfig
                 .WithMany(r => r.Parceiros);
 
             builder
+               .HasOne(pa => pa.Cidade)
+               .WithMany(r => r.Parceiros);
+
+            builder
                .HasOne(pa => pa.Usuario);         
 
             builder               
                 .Property(a => a.Rua).HasColumnName("Rua")
-                .HasColumnType("varchar(200)");
-
-            builder               
-                .Property(a => a.Cidade).HasColumnName("Cidade")
-                .HasColumnType("varchar(200)");
-
-            builder                
-                .Property(a => a.Estado).HasColumnName("Estado")
-                .HasColumnType("varchar(2)"); ;
+                .HasColumnType("varchar(200)");          
 
             builder               
                 .Property(a => a.CEP).HasColumnName("CEP")

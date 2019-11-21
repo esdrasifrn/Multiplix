@@ -21,40 +21,39 @@ namespace Multiplix.Domain.Entities
         public virtual Usuario Usuario { get; set; }
         public String HorarioFuncionamento { get; set; }
         public virtual RamoAtividade Ramo { get; set; }
-        public int PontoPorReal { get; set; }
+        public virtual Cidade Cidade { get; set; }      
         public string CNPJ { get; set; }
+        public string Responsavel { get; set; }
+
 
         public virtual ICollection<Compra> Compras { get => _compras; set { } }
         public virtual ICollection<ParceiroProduto> ParceiroProdutos { get => _parceiroProdutos; set { } }
 
 
         //Endereço
-        public String Rua { get; set; }
-        public String Cidade { get; set; }
-        public String Estado { get; set; }
+        public String Rua { get; set; }      
         public String CEP { get; set; }
         public String Numero { get; set; }
         public String Bairro { get; set; }
-        public String Complemento { get; set; }
+        public String Complemento { get; set; }       
 
-        public Parceiro() { }
-
-        public Parceiro(Usuario usuario, string horarioFuncionamento, string rua, string numero, string cep, string cidade,
-            string bairro, string complemento, string estado, RamoAtividade ramo, int pontoPorReal, string cnpj)
+        public Parceiro(Usuario usuario, string horarioFuncionamento, string rua, string numero, string cep, Cidade cidade,
+            string bairro, string complemento,  RamoAtividade ramo, string cnpj, string responsavel)
         {
             Usuario = usuario;
             HorarioFuncionamento = horarioFuncionamento;
             Rua = rua;
-            Cidade = cidade;
-            Estado = estado;
+            Cidade = cidade;          
             CEP = cep;
             Numero = numero;
             Bairro = bairro;
             Complemento = complemento;
-            Ramo = ramo;
-            PontoPorReal = pontoPorReal;
+            Ramo = ramo;          
             CNPJ = cnpj;
+            Responsavel = responsavel;
         }
+
+        public Parceiro() { }
 
         public void AddCompra(Compra compra)
         {

@@ -13,6 +13,7 @@ namespace Multiplix.Domain.DTOs
         //Patrocinador
         public int PatrocinadorId { get; set; }
         public string PatrocinadorNome { get; set; }
+        public string Responsavel { get; set; }
 
         //Associado
         public int AssociadoId { get; set; }
@@ -34,7 +35,11 @@ namespace Multiplix.Domain.DTOs
 
         public String Rua { get;  set; }
         public String Cidade { get;  set; }
+        public int CidadeId { get; set; }
+        public String CidadeNome { get; set; }
         public String Estado { get;  set; }
+        public int EstadoId { get; set; }
+        public string EstadoNome { get; set; }
         public String CEP { get;  set; }
         public String Numero { get;  set; }
 

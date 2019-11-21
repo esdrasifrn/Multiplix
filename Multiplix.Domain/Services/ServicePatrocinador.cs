@@ -21,15 +21,18 @@ namespace Multiplix.Domain.Services
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IBancoRepository _bancoRepository;
         private readonly IPlanoAssinaturaRepository _planoAssinatura;
+        private readonly ICidadeRepository _cidadeRepository;
 
         public ServicePatrocinador(IPatrocinadorRepository patrocinadorRepository, 
             IUsuarioRepository usuarioRepository, IBancoRepository bancoRepository, 
-            IPlanoAssinaturaRepository planoAssinatura)
+            IPlanoAssinaturaRepository planoAssinatura,
+            ICidadeRepository cidadeRepository)
         {
             _patrocinadorRepository = patrocinadorRepository;
             _usuarioRepository = usuarioRepository;
             _bancoRepository = bancoRepository;
             _planoAssinatura = planoAssinatura;
+            _cidadeRepository = cidadeRepository;
         }
 
         public Associado Adicionar(Associado entity)
@@ -124,7 +127,7 @@ namespace Multiplix.Domain.Services
                     rua: usuarioDTO.Rua,
                     numero: usuarioDTO.Numero,
                     cep: usuarioDTO.CEP,
-                    cidade: usuarioDTO.Cidade,
+                    cidade: _cidadeRepository.ObterPorId(usuarioDTO.CidadeId),
                     bairro: usuarioDTO.Bairro,
                     complemento: usuarioDTO.Complemento,
                     estado: usuarioDTO.Estado,
@@ -172,10 +175,9 @@ namespace Multiplix.Domain.Services
                 associado.Rua = usuarioDTO.Rua;
                 associado.Numero = usuarioDTO.Numero;
                 associado.CEP = usuarioDTO.CEP;
-                associado.Cidade = usuarioDTO.Cidade;
+                associado.Cidade = _cidadeRepository.ObterPorId(usuarioDTO.CidadeId);
                 associado.Bairro = usuarioDTO.Bairro;
-                associado.Complemento = usuarioDTO.Complemento;
-                associado.Estado = usuarioDTO.Estado;
+                associado.Complemento = usuarioDTO.Complemento;               
                 associado.Nascimento = usuarioDTO.Nascimento;
                 associado.Sexo = usuarioDTO.Sexo;
                 associado.CPF = usuarioDTO.CPF;
@@ -247,7 +249,12 @@ namespace Multiplix.Domain.Services
             {
                 result.Errors.Add(new ValidationFailure("Senha", "A Senha é obrigatória."));
             }
-           
+
+            if (associado.Cidade == null)
+            {
+                result.Errors.Add(new ValidationFailure("Cidade", "Campo obrigatório."));
+            }
+
 
             if (result.IsValid)
             {
@@ -397,7 +404,7 @@ namespace Multiplix.Domain.Services
                     rua: usuarioDTO.Rua,
                     numero: usuarioDTO.Numero,
                     cep: usuarioDTO.CEP,
-                    cidade: usuarioDTO.Cidade,
+                    cidade: _cidadeRepository.ObterPorId(usuarioDTO.CidadeId),
                     bairro: usuarioDTO.Bairro,
                     complemento: usuarioDTO.Complemento,
                     estado: usuarioDTO.Estado,

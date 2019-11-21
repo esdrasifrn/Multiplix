@@ -10,8 +10,8 @@ using Multiplix.Infrastructure.Data;
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    [Migration("20191106202429_tipoUsuario")]
-    partial class tipoUsuario
+    [Migration("20191121211813_inicial")]
+    partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,7 +31,7 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<string>("Bairro");
 
-                    b.Property<int>("BancoId");
+                    b.Property<int?>("BancoId");
 
                     b.Property<string>("CEP")
                         .HasColumnName("CEP")
@@ -40,19 +40,13 @@ namespace Multiplix.Infrastructure.Migrations
                     b.Property<string>("CPF")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<string>("Cidade")
-                        .HasColumnName("Cidade")
-                        .HasColumnType("varchar(200)");
+                    b.Property<int?>("CidadeId");
 
                     b.Property<string>("Complemento");
 
                     b.Property<string>("Conta");
 
                     b.Property<string>("EmailAlternativo");
-
-                    b.Property<string>("Estado")
-                        .HasColumnName("Estado")
-                        .HasColumnType("varchar(2)");
 
                     b.Property<string>("IdCarteira");
 
@@ -83,6 +77,8 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.HasIndex("BancoId");
 
+                    b.HasIndex("CidadeId");
+
                     b.HasIndex("PatrocinadorId");
 
                     b.HasIndex("PlanoAssinaturaId");
@@ -96,9 +92,8 @@ namespace Multiplix.Infrastructure.Migrations
                         {
                             Id = 1,
                             BancoId = 1,
-                            Estado = "RN",
                             IdCarteira = "201900000001",
-                            Nascimento = new DateTime(2019, 11, 6, 17, 24, 28, 565, DateTimeKind.Local).AddTicks(6322),
+                            Nascimento = new DateTime(2019, 11, 21, 18, 18, 12, 910, DateTimeKind.Local).AddTicks(9443),
                             Nivel = 0,
                             PlanoAssinaturaId = 1,
                             TipoConta = 1,
@@ -127,6 +122,23 @@ namespace Multiplix.Infrastructure.Migrations
                             Codigo = "101",
                             Nome = "Brasil"
                         });
+                });
+
+            modelBuilder.Entity("Multiplix.Domain.Entities.Cidade", b =>
+                {
+                    b.Property<int>("CidadeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descricao");
+
+                    b.Property<int?>("EstadoId");
+
+                    b.HasKey("CidadeId");
+
+                    b.HasIndex("EstadoId");
+
+                    b.ToTable("Cidade");
                 });
 
             modelBuilder.Entity("Multiplix.Domain.Entities.Compra", b =>
@@ -181,6 +193,23 @@ namespace Multiplix.Infrastructure.Migrations
                     b.ToTable("CompraItem");
                 });
 
+            modelBuilder.Entity("Multiplix.Domain.Entities.Estado", b =>
+                {
+                    b.Property<int>("EstadoId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Sigla")
+                        .HasColumnType("varchar(2)");
+
+                    b.HasKey("EstadoId");
+
+                    b.ToTable("Estado");
+                });
+
             modelBuilder.Entity("Multiplix.Domain.Entities.Grupo", b =>
                 {
                     b.Property<int>("GrupoId")
@@ -210,15 +239,9 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<string>("CNPJ");
 
-                    b.Property<string>("Cidade")
-                        .HasColumnName("Cidade")
-                        .HasColumnType("varchar(200)");
+                    b.Property<int?>("CidadeId");
 
                     b.Property<string>("Complemento");
-
-                    b.Property<string>("Estado")
-                        .HasColumnName("Estado")
-                        .HasColumnType("varchar(2)");
 
                     b.Property<string>("HorarioFuncionamento")
                         .HasColumnName("HorarioFuncionamento")
@@ -239,6 +262,8 @@ namespace Multiplix.Infrastructure.Migrations
                     b.Property<int?>("UsuarioId");
 
                     b.HasKey("ParceiroId");
+
+                    b.HasIndex("CidadeId");
 
                     b.HasIndex("RamoAtividadeId");
 
@@ -430,8 +455,11 @@ namespace Multiplix.Infrastructure.Migrations
                 {
                     b.HasOne("Multiplix.Domain.Entities.Banco", "Banco")
                         .WithMany()
-                        .HasForeignKey("BancoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BancoId");
+
+                    b.HasOne("Multiplix.Domain.Entities.Cidade", "Cidade")
+                        .WithMany("Associados")
+                        .HasForeignKey("CidadeId");
 
                     b.HasOne("Multiplix.Domain.Entities.Associado")
                         .WithMany("Patrocinados")
@@ -446,6 +474,13 @@ namespace Multiplix.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Multiplix.Domain.Entities.Cidade", b =>
+                {
+                    b.HasOne("Multiplix.Domain.Entities.Estado", "Estado")
+                        .WithMany("Cidades")
+                        .HasForeignKey("EstadoId");
                 });
 
             modelBuilder.Entity("Multiplix.Domain.Entities.Compra", b =>
@@ -472,6 +507,10 @@ namespace Multiplix.Infrastructure.Migrations
 
             modelBuilder.Entity("Multiplix.Domain.Entities.Parceiro", b =>
                 {
+                    b.HasOne("Multiplix.Domain.Entities.Cidade", "Cidade")
+                        .WithMany("Parceiros")
+                        .HasForeignKey("CidadeId");
+
                     b.HasOne("Multiplix.Domain.Entities.RamoAtividade", "Ramo")
                         .WithMany("Parceiros")
                         .HasForeignKey("RamoAtividadeId");
