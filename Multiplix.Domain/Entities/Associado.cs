@@ -67,7 +67,7 @@ namespace Multiplix.Domain.Entities
         public string EmailAlternativo { get; set; }
 
         public virtual Banco Banco { get; set; }
-        public int BancoId { get; set; }
+        public int? BancoId { get; set; }
         public int TipoConta { get; set; }
         public string Agencia { get; set; }
         public string Conta { get; set; }

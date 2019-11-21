@@ -1,12 +1,14 @@
 ﻿@using Multiplix.UI.Utils
 @{
-    ViewData["Title"] = "Vendas";
+    ViewData["Title"] = "Compras";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model Multiplix.Domain.DTOs.CompraDTO
+
 @section breadcrumbs{
     <div class="content-header-left col-md-6 col-12 mb-2">
-        <h3 class="content-header-title mb-0">Listagem de Vendas</h3>
+        <h3 class="content-header-title mb-0">Listagem de Itens vendidos</h3>
         <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
@@ -14,15 +16,10 @@
                         <a href="/Home/Dashboard">Home</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        Listagem
+                        Itens vendidos por associado
                     </li>
                 </ol>
             </div>
-        </div>
-    </div>
-    <div class="content-header-right text-md-right col-md-6 col-12">
-        <div class="btn-group">
-            <a id="btn_add_parceiro" href="/Compra/AdicionarCompra" class="btn btn-round btn-info"><i class="icon-cog3"></i> Adicionar venda</a>
         </div>
     </div>
 }
@@ -31,20 +28,22 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <div class="card-title">@ViewData["Title"]</div>
+                <div class="card-title">Itens vendidos para o  <strong>Associado</strong>: @ViewBag.Associado no <strong>Parceiro</strong>: @ViewBag.Parceiro </div>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
                         <div class="table-responsive">
-                            <table id="data-table-vendas" class="table table-striped table-bordered text-nowrap w-100">
+                            <table id="data-table-itemcompras-associado" class="table table-striped table-bordered text-nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>ID</th> <!-- ocultada pelo datatable -->
-                                        <th>Associado</th>
-                                        <th>Data/hora da venda</th>
-                                        <th>Valor total</th>
-                                        <th>Pontos obtidos</th>
+                                        <th>Produto</th>
+                                        <th>Qtd vendida</th>
+                                        <th>Valor da unidade</th>
+                                        <th>Subtotal</th>
+                                        <th>Pontos por real</th>
+                                        <th>Pontos obtidos pelo associado</th>
                                         <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
                                     </tr>
                                 </thead>
@@ -65,15 +64,16 @@
             var podeAlterarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_compra").ToString().ToLower();
             var podeExcluirCompra = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_compra").ToString().ToLower();
             var podeVisualizarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compra").ToString().ToLower();
-            var botoes = [{ title: "Ver itens vendidos", url: "/Compra/ItensVendidos/?compraId=", permission: true }];
-            generateDataTable("#data-table-vendas",
-                "Venda",
-                "/Compra/ListaVendas",
+            var botoes = [{ title: "Ver itens comprados", url: "/Compra/ItensComprados/?compraId=", permission: podeVisualizarCompra }];
+            generateDataTable("#data-table-itemcompras-associado",
+                "Iten",
+                "/Compra/ListaItensVendaPorAssociado?CompraId=@ViewBag.CompraId",
                 false,
                 "/Compra/EditarCompra/?compraId=",
                 false,
-                "/Compra/Excluir/?compraId=", botoes);
+                "/Compra/Excluir/?compraId=");
         });
+
     </script>
 }
 

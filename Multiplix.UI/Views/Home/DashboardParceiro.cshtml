@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
-                            <a href="/Usuario/IndexRedeDireta?idAssociado=@(User.FindFirst("idTipoUsuario").Value)">
+                            <a href="/Compra/IndexCompra">
                                 <h1 class="display-4 text-white"><i class="icon-basket-loaded font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:0,0}", ViewBag.QTDVendas)</h1>
                                 <span class="text-white">QTD de vendas</span>
                             </a>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
-                            <a href="/Usuario/IndexSaldo?idAssociado=@(User.FindFirst("idTipoUsuario").Value)">
+                            <a href="/Compra/IndexCompra">
                                 <h1 class="display-4 text-white"><i class="icon-list font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalVendas)</h1>
                                 <span class="text-white">Total de vendas</span>
                             </a>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 border-right-success border-right-lighten-3">
                         <div class="card-body text-center">
-                            <a href="/Compra/MinhasCompras">
+                            <a href="#">
                                 <h1 class="display-4 text-white"><i class="icon-share-alt font-large-2"></i>&nbsp;@String.Format(CultureInfo.CreateSpecificCulture("pt-BR"), "{0:C}", ViewBag.TotalRepasse)</h1>
                                 <span class="text-white">Total de repasse</span>
                             </a>

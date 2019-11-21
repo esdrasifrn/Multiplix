@@ -30,6 +30,10 @@ namespace Multiplix.Infrastructure.EntityConfig
             builder
                 .Property(pa => pa.PatrocinadorId)
                 .IsRequired(false);
+
+            builder
+                .Property(ba => ba.BancoId)
+                .IsRequired(false);
             
             builder                
                 .Property(a => a.Rua).HasColumnName("Rua")

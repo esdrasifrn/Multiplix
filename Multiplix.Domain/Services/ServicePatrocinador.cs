@@ -402,25 +402,22 @@ namespace Multiplix.Domain.Services
             // adiciona o grupo ao usuário via patrocinador
             associado.Usuario.AddUsuarioGrupo(usuarioGrupo);
 
-            associado.Id = 0;       
-
-           
+            associado.Id = 0;    
 
             ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando:false).Validate(associado.Usuario);
 
-            if (associado.Banco == null)
-            {
-                result.Errors.Add(new ValidationFailure("Banco", "Campo obrigatório."));
-            }
-
+          
             if (associado.PlanoAssinatura == null)
             {
                 result.Errors.Add(new ValidationFailure("PlanoAssinatura", "Campo obrigatório."));
             }
 
-            if (_patrocinadorRepository.CPFJaExiste(associado.CPF))
+            if ((!string.IsNullOrEmpty(associado.CPF)))
             {
-                result.Errors.Add(new ValidationFailure("CPF", "CPF já existe"));
+                if (_patrocinadorRepository.CPFJaExiste(associado.CPF))
+                {
+                    result.Errors.Add(new ValidationFailure("CPF", "CPF já existe"));
+                }
             }
 
             if ((string.IsNullOrEmpty(associado.CPF)))
@@ -428,9 +425,12 @@ namespace Multiplix.Domain.Services
                 result.Errors.Add(new ValidationFailure("CPF", "CPF é obrigatório"));
             }
 
-            if (!ValidaCPF.IsCpf(associado.CPF))
+            if ((!string.IsNullOrEmpty(associado.CPF)))
             {
-                result.Errors.Add(new ValidationFailure("CPF", "CPF inválido"));
+                if (!ValidaCPF.IsCpf(associado.CPF))
+                {
+                    result.Errors.Add(new ValidationFailure("CPF", "CPF inválido"));
+                }
             }
 
             if (result.IsValid)

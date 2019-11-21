@@ -66,7 +66,7 @@
             var podeVisualizarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compra").ToString().ToLower();
             var botoes = [{ title: "Ver itens comprados", url: "/Compra/ItensComprados/?compraId=", permission: podeVisualizarCompra }];
             generateDataTable("#data-table-itemcompras-associado",
-                "Compras",
+                "Compra",
                 "/Compra/ListaItensCompraPorAssociado?CompraId=@ViewBag.CompraId",
                 false,
                 "/Compra/EditarCompra/?compraId=",

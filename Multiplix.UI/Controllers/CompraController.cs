@@ -108,6 +108,16 @@ namespace Multiplix.UI.Controllers
             return View();
         }
 
+        public IActionResult ItensVendidos(int compraId)
+        {
+            var compra = _serviceCompra.ObterPorId(compraId);
+
+            ViewBag.CompraId = compraId;
+            ViewBag.Parceiro = compra.Parceiro.Usuario.Nome;
+            ViewBag.Associado = compra.Associado.Usuario.Nome;
+            return View();
+        }
+
         private void TipoUsuario()
         {
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
@@ -430,6 +440,91 @@ namespace Multiplix.UI.Controllers
                 {
                     case "1":
                         orderByExpr = x => x.Produto.Descricao;                      
+                        break;
+                }
+
+                if (orderByExpr != null)
+                {
+                    if (firstOrderDirection.Length > 0 && firstOrderDirection.Equals("desc"))
+                        compraItems = compraItems.OrderByDescending(orderByExpr);
+                    else
+                        compraItems = compraItems.OrderBy(orderByExpr);
+                }
+                else
+                {
+                    compraItems = compraItems.OrderBy(x => x.Produto.Descricao);
+                }
+            }
+            else
+            {
+                compraItems = compraItems.OrderBy(x => x.Produto.Descricao);
+            }
+
+            // pagina a lista
+            int totalResultados = compraItems.Count();
+            compraItems = compraItems.Skip(dataTableModel.start).Take(dataTableModel.length);
+
+            // monta o resultado final
+            List<object> result_data = new List<object>();
+            foreach (var compraItem in compraItems)
+            {
+                Decimal pontosPorReal = (Decimal)compraItem.Compra.Parceiro.ParceiroProdutos.Where(x => x.ProdutoId == compraItem.Produto.ProdutoId).FirstOrDefault().PontosPorRealProduto;
+
+                List<object> result_item = new List<object> {
+                compraItem.CompraItemId,
+                compraItem.Produto.Descricao,
+                compraItem.Qtd,
+                String.Format(new CultureInfo("pt-BR"), "{0:C}", compraItem.ValorUnidade),
+                String.Format(new CultureInfo("pt-BR"), "{0:C}", compraItem.Subtotal),
+                pontosPorReal.ToString("0.0"),
+                String.Format(new CultureInfo("pt-BR"), "{0:0,0.0}", compraItem.SubtotalPontos)
+                };
+                result_data.Add(result_item);
+
+            }
+
+            return Json(new
+            {
+                recordsTotal = totalResultados,
+                recordsFiltered = totalResultados,
+                data = result_data
+            });
+        }
+
+        [HttpPost]
+        public JsonResult ListaItensVendaPorAssociado(DataTableAjaxPostModel dataTableModel, int compraId)
+        {
+            /*
+             * consumido por um DataTable serverSide processing ajax POST
+             * 
+             * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
+             */
+
+            string searchTerm = dataTableModel.search.value?.ToUpper();
+            string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
+            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
+
+            IEnumerable<Compra> compras = new List<Compra>();
+            IEnumerable<CompraItem> compraItems = new List<CompraItem>();
+
+            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+            {
+                compras = _serviceCompra.Buscar(x => x.CompraId == compraId)
+                    .Where(x => x.Parceiro.Usuario.Nome.ToUpper()
+                    .Contains(searchTerm.ToUpper()) || x.Associado.Usuario.Nome.ToUpper()
+                    .Contains(searchTerm.ToUpper()));
+            }
+            else
+                compraItems = _serviceCompra.ObterPorId(compraId).CompraItems;
+
+            if (firstOrderColumnIdx.Length > 0)
+            {
+                Func<CompraItem, Object> orderByExpr = null;
+
+                switch (firstOrderColumnIdx)
+                {
+                    case "1":
+                        orderByExpr = x => x.Produto.Descricao;
                         break;
                 }
 
