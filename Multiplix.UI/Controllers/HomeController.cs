@@ -77,6 +77,7 @@ namespace Multiplix.UI.Controllers
             ViewBag.QTDRede = associadoRede.Count();
             ViewBag.TotalARecebeber = totalIndividual + totalRede;
             ViewBag.QtdCompras = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x=>x.Valor);
+            ViewBag.NumeroCartao = associado.IdCarteira.ToString();
             return View();           
         }
 
@@ -87,7 +88,8 @@ namespace Multiplix.UI.Controllers
 
             ViewBag.QTDVendas = parceiro.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Count();
             ViewBag.TotalVendas = parceiro.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Valor);
-            ViewBag.TotalRepasse = 0; 
+            ViewBag.TotalRepasse = 0;
+            
             return View();
         }
 
