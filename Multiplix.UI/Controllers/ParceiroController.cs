@@ -16,23 +16,51 @@ namespace Multiplix.UI.Controllers
     {
         private IServiceParceiro _serviceParceiro { get; set; }
         private IServiceUsuario _serviceUsuario;
+        private IServicePatrocinador _servicePatrocinador;
 
-        public ParceiroController(IServiceParceiro serviceParceiro, IServiceUsuario serviceUsuario)
+        public ParceiroController(IServiceParceiro serviceParceiro, IServiceUsuario serviceUsuario, IServicePatrocinador servicePatrocinador)
         {
             _serviceParceiro = serviceParceiro;
             _serviceUsuario = serviceUsuario;
+            _servicePatrocinador = servicePatrocinador;
         }
 
         public IActionResult ProdutosParceiro()
         {
+
             if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_produtos_por_parceiro"))
             {
                 return RedirectToAction("UnauthorizedResult", "Permissao");
             }
-            
-            return View();
+
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
+            usuarioDTO.EstadoId = associadoLogado.Cidade.Estado.EstadoId;
+            usuarioDTO.EstadoNome = associadoLogado.Cidade.Estado.Nome;
+            usuarioDTO.CidadeId = associadoLogado.Cidade.CidadeId;
+            usuarioDTO.CidadeNome = associadoLogado.Cidade.Descricao;
+
+            ViewBag.CidadeId = associadoLogado.Cidade.CidadeId;
+
+            return View(usuarioDTO);
         }
-       
+
+        [HttpPost]
+        public IActionResult ProdutosParceiro(UsuarioDTO usuarioDTO)
+        {
+
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_produtos_por_parceiro"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
+            ViewBag.CidadeId = usuarioDTO.CidadeId;
+
+            return View(usuarioDTO);
+        }
+
         public IActionResult IndexParceiro()
         {
             if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_parceiro"))
@@ -258,7 +286,7 @@ namespace Multiplix.UI.Controllers
 
 
         [HttpPost]
-        public JsonResult ListaProdutosPorParceiro(DataTableAjaxPostModel dataTableModel)
+        public JsonResult ListaProdutosPorParceiro(DataTableAjaxPostModel dataTableModel, int cidadeId)
         {
             /*
              * consumido por um DataTable serverSide processing ajax POST
@@ -274,11 +302,12 @@ namespace Multiplix.UI.Controllers
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
-                parceiros = _serviceParceiro.ListaProdutosParceiroDTO(searchTerm);
+                //produtos dos parceiros da cidade do associado logado e que atenda a um termo pesquisado
+                parceiros = _serviceParceiro.ListaProdutosParceiroDTO(searchTerm, cidadeId);
 
             }
-            else
-                parceiros = _serviceParceiro.ListaProdutosParceiroDTO();
+            else//produtos dos parceiros da cidade do associado logado
+                parceiros = _serviceParceiro.ListaProdutosParceiroDTO(cidadeId);
 
             if (firstOrderColumnIdx.Length > 0)
             {

@@ -9,8 +9,8 @@ namespace Multiplix.Domain.Interfaces.Services
     {
        
         ValidationResult SalvarParceiro(UsuarioDTO usuarioDTO);
-        List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(string pesquisa);
-        List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO();
+        List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(string pesquisa, int cidadeId);
+        List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(int cidadeId);
 
     }
 }

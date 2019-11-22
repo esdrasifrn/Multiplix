@@ -51,14 +51,14 @@ namespace Multiplix.Domain.Services
             return _parceiroRepository.BuscarEntidade(predicado);
         }
 
-        public List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(string pesquisa)
+        public List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(string pesquisa, int cidadeId)
         {
             var todosParceiros = _parceiroRepository.ObterTodos();
             List<ListaProdutoParceiroDTO> listaProdutosParceiroDTO = new List<ListaProdutoParceiroDTO>();
 
             foreach (var Parceiro in todosParceiros)
             {
-                foreach (var produtoParceiro in Parceiro.ParceiroProdutos.Where(x => x.Produto.Descricao.ToUpper().Contains(pesquisa.ToUpper())))
+                foreach (var produtoParceiro in Parceiro.ParceiroProdutos.Where(x => x.Produto.Descricao.ToUpper().Contains(pesquisa.ToUpper()) && x.Parceiro.Cidade.CidadeId == cidadeId))
                 {
                     var produto = new ListaProdutoParceiroDTO(
                         produtoParceiro.Parceiro.ParceiroId,
@@ -78,9 +78,9 @@ namespace Multiplix.Domain.Services
             return listaProdutosParceiroDTO;
         }
 
-        public List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO()
+        public List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(int cidadeId)
         {
-            var todosParceiros = _parceiroRepository.ObterTodos();
+            var todosParceiros = _parceiroRepository.ObterTodos().Where(x => x.Cidade.CidadeId == cidadeId);
             List<ListaProdutoParceiroDTO> listaProdutosParceiroDTO = new List<ListaProdutoParceiroDTO>();
 
             foreach (var Parceiro in todosParceiros)

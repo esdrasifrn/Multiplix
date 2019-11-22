@@ -1,4 +1,6 @@
 ﻿@using Multiplix.UI.Utils
+@using Multiplix.Domain.Enums
+@model Multiplix.Domain.DTOs.UsuarioDTO
 @{
     ViewData["Title"] = "Produtos";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,8 +21,57 @@
                 </ol>
             </div>
         </div>
-    </div>   
+    </div>
 }
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Escolha a cidade</div>
+            </div>
+            <div class="card-body">
+                <form method="post" id="form-pesquisa-cidade" class="form form-horizontal">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Estado">Estado*</label>
+                                <select id="Estado"
+                                        name="Estado"
+                                        class="has-select2"
+                                        data-select2-url="/Estado/PesquisaEstado"
+                                        data-js-callback-init-data="iniciar_Estado"
+                                        data-mapper-attr-id="EstadoId"
+                                        data-mapper-attr-text="EstadoNome">
+                                    <!-- Select2 -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Cidade">Cidade</label>
+                                <select id="Cidade"
+                                        name="Cidade"
+                                        class="has-select2"
+                                        data-select2-url="/Cidade/PesquisaCidade"
+                                        data-js-callback-init-data="iniciar_Cidade"
+                                        data-mapper-attr-id="CidadeId"
+                                        data-mapper-attr-text="CidadeNome"
+                                        data-js-callback-extra-request-params="cidade_extra_filter">
+                                    <!-- Select2 -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="la la-check-square-o"></i> Filtrar
+                    </button>
+                </form>
+            </div>           
+        </div>      
+    </div>
+
+</div>
 
 <div class="row">
     <div class="col-12">
@@ -58,20 +109,43 @@
 
     <script src="~/js/datatable-generator.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+             $("#Estado").change(() => {
+                $("#Cidade").val(null).trigger("change");             
+             });
+            
             var podeAlterarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_compra").ToString().ToLower();
             var podeExcluirCompra = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_compra").ToString().ToLower();
             var podeVisualizarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compra").ToString().ToLower();
             var botoes = [{ title: "Visualizar", url: "#"/*, permission: podeVisualizarCompra*/ }];
             generateDataTable("#data-table-produtos",
                 "Produto",
-                "/Parceiro/ListaProdutosPorParceiro",
+                "/Parceiro/ListaProdutosPorParceiro?cidadeId=@ViewBag.CidadeId",
                 false,
                 "/Produto/EditarProduto/?produtoId=",
                 false,
                 "/Compra/Excluir/?compraId=");
         });
-    </script>
 
+        function cidade_extra_filter(elem_select) {
+            var select = $("select[name=Estado]");
+            return {
+                EstadoId: $(select).val()
+            }
+        }
+
+        function iniciar_Cidade() {
+            var objs = [];
+            objs.push({ id: "@Model.CidadeId", text: "@Model.CidadeNome" });
+            return objs;
+        }
+
+        function iniciar_Estado() {
+            var objs = [];
+            objs.push({ id: "@Model.EstadoId", text: "@Model.EstadoNome" });
+            return objs;
+        }
+    </script>
 }
 

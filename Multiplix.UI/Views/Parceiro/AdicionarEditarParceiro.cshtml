@@ -137,7 +137,7 @@
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="Estado">Estado</label>
                                             <div class="col-md-9 mx-auto">
-                                                <select id="Cidade"
+                                                <select id="Estado"
                                                         name="Estado"
                                                         class="has-select2"
                                                         data-select2-url="/Estado/PesquisaEstado"
@@ -287,6 +287,10 @@
 
     <script>
         $(document).ready(() => {
+
+             $("#Estado").change(() => {
+            $("#Cidade").val(null).trigger("change");
+        });
 
             // Usando um pequeno delay de 100ms porque às vezes o navegador preenche o campo logo que o documento está pronto, e pode não funcionar como esperado
             setTimeout(function () {
