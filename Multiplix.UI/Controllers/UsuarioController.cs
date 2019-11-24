@@ -14,6 +14,7 @@ using Multiplix.Domain.Interfaces.Services;
 using Multiplix.UI.Models;
 using Multiplix.UI.Utils;
 using Newtonsoft.Json;
+using Wangkanai.Detection;
 
 namespace Multiplix.UI.Controllers
 {
@@ -24,15 +25,18 @@ namespace Multiplix.UI.Controllers
         private IServicePermissao _servicePermissao;
         private IServicePatrocinador _servicePatrocinador;
         private IServiceParceiro _serviceParceiro;
+        private readonly IDevice _device;
 
         public UsuarioController(IServiceUsuario serviceUsuario, IServiceGrupo serviceGrupo, IServicePermissao servicePermissao,
-            IServicePatrocinador servicePatrocinador, IServiceParceiro serviceParceiro)
+            IServicePatrocinador servicePatrocinador, IServiceParceiro serviceParceiro, 
+            IDeviceResolver deviceResolver)
         {
             _serviceUsuario = serviceUsuario;
             _serviceGrupo = serviceGrupo;
             _servicePermissao = servicePermissao;
             _servicePatrocinador = servicePatrocinador;
             _serviceParceiro = serviceParceiro;
+            _device = deviceResolver.Device;
         }
 
         #region Usuario      
@@ -122,6 +126,15 @@ namespace Multiplix.UI.Controllers
             if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_link_convite"))
             {
                 return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
+            if (_device.Type == DeviceType.Desktop)
+            {
+                ViewBag.DeviceType = "Desktop";
+            }
+            else if (_device.Type == DeviceType.Mobile)
+            {
+                ViewBag.DeviceType = "Mobile";
             }
 
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
@@ -644,7 +657,7 @@ namespace Multiplix.UI.Controllers
             {
                 Dictionary<string, string> result_item = new Dictionary<string, string>();
                 result_item.Add("id", associado.Id + "");
-                result_item.Add("text", associado.Usuario.Nome);
+                result_item.Add("text", associado.ToString());
                 results.Add(result_item);
             }
 
@@ -660,8 +673,7 @@ namespace Multiplix.UI.Controllers
         {
             return View();
         }
-
-
+        
 
         [AllowAnonymous]
         public IActionResult Invite(string id)
@@ -693,8 +705,7 @@ namespace Multiplix.UI.Controllers
 
             return View(usuarioDTO);
         }
-
-
+        
         [AllowAnonymous]
         [HttpPost]
         public IActionResult Invite(UsuarioDTO usuarioDTO, string id)

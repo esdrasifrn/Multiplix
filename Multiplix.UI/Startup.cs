@@ -113,6 +113,7 @@ namespace Multiplix.UI
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDistributedMemoryCache();
             services.AddSession();
+            services.AddDetection();
 
             services.AddMvc().AddMvcOptions(options => {
                 options.Filters.AddService(typeof(GlobalFilter)); // Adiciona o middleware a todos os actions

@@ -14,6 +14,9 @@ namespace Multiplix.Domain.Entities
 
         public virtual Compra Compra { get; set; }
         public virtual Produto Produto { get; set; }
+        public float PercentualRepasseEfetivado { get; set; }
+        public float ValorRepasse { get; set; }
+
 
         public CompraItem(int qtd, float valorUnidade, Produto produto, float subtotal, float subtotalPontos)
         {

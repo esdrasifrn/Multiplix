@@ -104,5 +104,10 @@ namespace Multiplix.Domain.Entities
         }
 
         public string GenerateCodeInvite => Convert.ToBase64String(Encoding.UTF8.GetBytes(IdCarteira));
+
+        public override string ToString()
+        {
+            return $"{Usuario.Nome} - {IdCarteira}";
+        }
     }
 }
