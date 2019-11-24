@@ -14,6 +14,8 @@ namespace Multiplix.Domain.DTOs
         public float SubtotalPontos { get; set; }
         public int CompraId { get; set; }
         public int ProdutoId { get; set; }
+        public float PercentualRepasseEfetivado { get; set; }
+        public float ValorRepasse { get; set; }
         public IList<ValidationFailure> ValidationErrors { get; set; } = new List<ValidationFailure>();
  
     }

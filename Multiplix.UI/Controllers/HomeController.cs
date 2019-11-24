@@ -88,7 +88,7 @@ namespace Multiplix.UI.Controllers
 
             ViewBag.QTDVendas = parceiro.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Count();
             ViewBag.TotalVendas = parceiro.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.Valor);
-            ViewBag.TotalRepasse = 0;
+            ViewBag.TotalRepasse = parceiro.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x => x.CompraItems.Sum(y => y.ValorRepasse));
             
             return View();
         }
