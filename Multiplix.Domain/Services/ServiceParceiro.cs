@@ -238,6 +238,7 @@ namespace Multiplix.Domain.Services
                     parceiroProduto.ProdutoId = produto.ProdutoId;
                     parceiroProduto.PontosPorRealProduto = produto.PontosPorRealProduto;
                     parceiroProduto.ValorProduto = produto.ValorProduto;
+                    parceiroProduto.PercentualRepasseAtual = produto.PercentualRepasse;
 
                     // adiciona o produto ao parceiro
                     parceiro.AddProdutoParceiro(parceiroProduto);

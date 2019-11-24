@@ -217,6 +217,7 @@
                                                             <th>Produto</th>
                                                             <th>Pontos</th>
                                                             <th>Valor</th>
+                                                            <th>Repasse (%)</th>
                                                             <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
                                                         </tr>
                                                     </thead>
@@ -248,6 +249,14 @@
                                                 <input style="text-align:left;" type="text" class="form-control money text-left" id="ValorProduto" name="ValorProduto">
                                             </div>
                                         </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-md-3 label-control" for="PercentualRepasseAtual">Repasse %</label>
+                                            <div class="col-md-9 mx-auto">
+                                                <input type="number" class="form-control" id="PercentualRepasseAtual" name="PercentualRepasseAtual">
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control">&nbsp;</label>
                                             <div class="col-md-9 mx-auto">
@@ -375,7 +384,9 @@
                     "@produto.ProdutoId",
                     "@produto.Descricao",
                     parseFloat("@produto.PontosPorRealProduto".replace(",", ".")),
-                    parseFloat("@produto.ValorProduto".replace(",", ".")));</Text>
+                    parseFloat("@produto.ValorProduto".replace(",", ".")),
+                    parseFloat("@produto.PercentualRepasse".replace(",", "."))
+            );</Text>
             }
 
             $("#add-produto").click(() => {
@@ -385,7 +396,8 @@
                     var produto_id = $(produto_select).attr("value"),
                         produto_descricao = $(produto_select).text(),
                         produto_pontos_por_real = $("#PontosPorRealProduto").val(),
-                        produto_valor = $("#ValorProduto").val();
+                        produto_valor = $("#ValorProduto").val(),
+                        percentual_repasse_atual = $("#PercentualRepasseAtual").val();
 
                     var temLinhaDuplicada = false;
 
@@ -400,10 +412,16 @@
 
                     var temProdutoPonto = true;
                     var temValorProduto = true;
+                    var temRepasse = true;
 
                     if (produto_pontos_por_real === "") {
                         swal("Atenção!", "Digite quanto vale em pontos cada real desse produto!", "warning");
                         temProdutoPonto = false;
+                    }
+
+                    if (percentual_repasse_atual === "") {
+                        swal("Atenção!", "Digite o valor do percentual de repasse desse produto!", "warning");
+                        temRepasse = false;
                     }
 
                     if ($("#ValorProduto").val() === "R$ 00." || $("#ValorProduto").val() === "" || $("#ValorProduto").val() === "R$ ." || $("#ValorProduto").val() === "R$ 0.00")  {
@@ -411,29 +429,33 @@
                         temValorProduto = false;
                     }
 
-                    if (!temLinhaDuplicada && temProdutoPonto && temValorProduto) {
+                    if (!temLinhaDuplicada && temProdutoPonto && temValorProduto && temRepasse) {
                         produto_pontos_por_real = parseFloat(produto_pontos_por_real.replace(",", "").trim());
                         produto_valor = parseFloat(produto_valor.replace(",", "").replace("R$", "").trim());
+                        percentual_repasse_atual = parseFloat(percentual_repasse_atual.replace(",", "").trim());
 
-                        add_produto_na_tabela(produto_id, produto_descricao, produto_pontos_por_real, produto_valor);
+                        add_produto_na_tabela(produto_id, produto_descricao, produto_pontos_por_real, produto_valor, percentual_repasse_atual);
 
                         produtos_modo_add();
                     }
                 }
             });
 
-            function add_produto_na_tabela(produto_id, produto_descricao, float_produto_pontos_por_real, float_produto_valor) {
-                var produto_pontos_por_real = float_produto_pontos_por_real.toFixed(2).replace(".", ","),
+            function add_produto_na_tabela(produto_id, produto_descricao, float_produto_pontos_por_real, float_produto_valor, float_repasse) {
+                var produto_pontos_por_real = float_produto_pontos_por_real.toFixed(2).replace(".", ",");
                     produto_valor = "R$ " + float_produto_valor.toFixed(2).replace(".", ",");
+                var percentual_repasse = float_repasse.toFixed(2).replace(".", ",");
 
-                tabela_produtos.row.add([produto_id, produto_descricao, produto_pontos_por_real, produto_valor, ""]).draw();
+
+                tabela_produtos.row.add([produto_id, produto_descricao, produto_pontos_por_real, produto_valor, percentual_repasse, ""]).draw();
             }
 
             $('#data-table-produtos tbody').on('click', '.btn-edit', function () {
                 var produto_id = $(this).attr("data-produto-id"),
                     produto_select2 = $("#Produto"),
                     produto_pontos_por_real_input = $("#PontosPorRealProduto"),
-                    produto_valor_input = $("#ValorProduto");
+                    produto_valor_input = $("#ValorProduto"),
+                    percentual_repasse_atual_input = $("#PercentualRepasseAtual");
 
                 tabela_produtos.rows().every(function () {
                     var row = this.data();
@@ -449,6 +471,7 @@
 
                         $(produto_pontos_por_real_input).val(row[2].replace(",", ".").trim());
                         $(produto_valor_input).val(row[3].replace(",", ".").replace("R$", "").trim());
+                        $(percentual_repasse_atual_input).val(row[4].replace(",", ".").trim());
 
                         produtos_modo_edit();
                     }
@@ -480,6 +503,7 @@
                 $("#Produto").val(null).trigger("change");
                 $("#PontosPorRealProduto").val("0");
                 $("#ValorProduto").val("0");
+                $("#PercentualRepasseAtual").val("0");
             }
             produtos_modo_add();
 
@@ -487,31 +511,40 @@
                 var produto_select = $("#Produto").find("option:selected"),
                     produto_id = $(produto_select).attr("value"),
                     produto_pontos_por_real = $("#PontosPorRealProduto").val(),
+                    percentual_repasse = $("#PercentualRepasseAtual").val(),
                     produto_valor = $("#ValorProduto").val();
+                    
 
                 var temProdutoPonto = true;
                 var temValorProduto = true;
+                var temRepasse = true;
 
                 if (produto_pontos_por_real === "") {
                     swal("Atenção!", "Digite quanto vale em pontos cada real desse produto!", "warning");
                     temProdutoPonto = false;
                 }
 
+                if (percentual_repasse === "") {
+                        swal("Atenção!", "Digite o valor do percentual de repasse desse produto!", "warning");
+                        temRepasse = false;
+                    }
+
                 if ($("#ValorProduto").val() === "R$ 00." || $("#ValorProduto").val() === "" || $("#ValorProduto").val() === "R$ ." || $("#ValorProduto").val() === "R$ 0.00") {
                     swal("Atenção!", "Digite o valor do produto", "warning");
                     temValorProduto = false;
                 }
 
-                if (temProdutoPonto && temValorProduto) {
+                if (temProdutoPonto && temValorProduto && temRepasse) {
                     produto_pontos_por_real = parseFloat(produto_pontos_por_real.replace(",", "").trim());
                     produto_valor = parseFloat(produto_valor.replace(",", "").replace("R$", "").trim());
+                    percentual_repasse = parseFloat(percentual_repasse.replace(",", "").trim());
 
                     tabela_produtos.rows().every(function () {
                         var row = this,
                             row_data = row.data();
 
                         if (produto_id === row_data[0]) {
-                            edit_produto_na_tabela(row, produto_pontos_por_real, produto_valor);
+                            edit_produto_na_tabela(row, produto_pontos_por_real, produto_valor, percentual_repasse);
 
                             produtos_modo_add();
                         }
@@ -519,14 +552,15 @@
                 }
             });
 
-            function edit_produto_na_tabela(datatable_row, float_produto_pontos_por_real, float_produto_valor) {
+            function edit_produto_na_tabela(datatable_row, float_produto_pontos_por_real, float_produto_valor, float_repasse) {
                 var row_data = datatable_row.data(),
                     produto_id = row_data[0],
                     produto_descricao = row_data[1],
                     produto_pontos_por_real = float_produto_pontos_por_real.toFixed(2).replace(".", ","),
-                    produto_valor = "R$ " + float_produto_valor.toFixed(2).replace(".", ",");
+                    produto_valor = "R$ " + float_produto_valor.toFixed(2).replace(".", ","),
+                    percentual_repasse = float_repasse.toFixed(2).replace(".", ",");
 
-                datatable_row.data([produto_id, produto_descricao, produto_pontos_por_real, produto_valor, ""]).draw();
+                datatable_row.data([produto_id, produto_descricao, produto_pontos_por_real, produto_valor, percentual_repasse, ""]).draw();
             }
 
             $("#cancel-edit-produto").click(() => {
@@ -582,11 +616,13 @@
                         produto_descricao = row_data[1],
                         produto_pontos_por_real = row_data[2],
                         produto_valor = row_data[3].replace("R$", "").trim();
+                        percentual_repasse = row_data[4];
 
                     $(form).append('<input type="hidden" name="Produtos[' + seq + '].ProdutoId" value="' + produto_id + '"/>');
                     $(form).append('<input type="hidden" name="Produtos[' + seq + '].Descricao" value="' + produto_descricao + '"/>');
                     $(form).append('<input type="hidden" name="Produtos[' + seq + '].PontosPorRealProduto" value="' + produto_pontos_por_real + '"/>');
                     $(form).append('<input type="hidden" name="Produtos[' + seq + '].ValorProduto" value="' + produto_valor + '"/>');
+                    $(form).append('<input type="hidden" name="Produtos[' + seq + '].PercentualRepasse" value="' + percentual_repasse + '"/>');
 
                     seq++;
                 });

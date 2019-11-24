@@ -122,7 +122,8 @@ namespace Multiplix.UI.Controllers
                     ProdutoId = parceiroProduto.Produto.ProdutoId,
                     Descricao = parceiroProduto.Produto.Descricao,
                     PontosPorRealProduto = parceiroProduto.PontosPorRealProduto,
-                    ValorProduto = parceiroProduto.ValorProduto
+                    ValorProduto = parceiroProduto.ValorProduto,
+                    PercentualRepasse = parceiroProduto.PercentualRepasseAtual
                 });
             }
 
