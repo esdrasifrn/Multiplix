@@ -128,13 +128,13 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="ValorUnidade">Valor Unidade*</label>
-                                            <input type="text" id="ValorUnidade" disabled class="form-control money  round font-weight-bold" placeholder="Valor da unidade" name="ValorUnidade">
+                                            <input disabled type="text" id="ValorUnidade"  class="form-control round font-weight-bold" placeholder="Valor da unidade" name="ValorUnidade">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="Subtotal">Subtotal*</label>
-                                            <input type="text" id="Subtotal" disabled class="form-control money  round font-weight-bold" placeholder="Subtotal" name="Subtotal">
+                                            <input type="text" id="Subtotal" disabled class="form-control  round font-weight-bold" placeholder="Subtotal" name="Subtotal">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -210,7 +210,8 @@
                     return false;
                 }
             });                     
-           
+
+            $("#ValorUnidade").maskMoney({ prefix: '', allowNegative: false, thousands: '.', decimal: ',', affixesStay: false });
 
             $("#Associado").select2('open');
 
@@ -339,17 +340,18 @@
 
                     $(form).append('<input type="hidden" name="CompraItems['+seq+'].ProdutoId" value="'+row_data[0]+'">');
                     $(form).append('<input type="hidden" name="CompraItems['+seq+'].Qtd" value="'+row_data[2]+'">');
-                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].ValorUnidade" value="'+row_data[3].replace(",","").replace("R$","").replace(".",",")+'">');
-                    $(form).append('<input type="hidden" name="CompraItems[' + seq + '].Subtotal" value="' + row_data[4].replace(",", "").replace("R$", "").replace(".", ",") + '">');
+                    $(form).append('<input type="hidden" name="CompraItems['+seq+'].ValorUnidade" value="'+row_data[3].replace(".","").replace("R$","")+'">');
+                    $(form).append('<input type="hidden" name="CompraItems[' + seq + '].Subtotal" value="' + row_data[4].replace(".", "").replace("R$", "") + '">');
                     $(form).append('<input type="hidden" name="CompraItems['+seq+'].SubtotalPontos" value="'+row_data[5].replace(".",",")+'">');
 
                     seq++;
                 });
             });
 
-            $("#qtd").keydown(() => {
+            $("#qtd").keyup(() => {
                 var produto_select = $("#Produto").find("option:selected");
                 var produto_id = $(produto_select).attr("value");
+                var qtd = $("#qtd").val();
 
                 var parceiro_select = $("#Parceiro").find("option:selected"); //depois substituir para parceiro logado
                  var parceiro_id = $(parceiro_select).attr("value");
@@ -357,16 +359,17 @@
                 $.ajax({
                 url: "/Compra/GetInfoProdutoParceiro",
                 type: "get",
-                data: { "produtoId": produto_id, "parceiroId": parceiro_id },
+                data: { "produtoId": produto_id, "parceiroId": parceiro_id, "qtd": qtd },
                 dataType: 'json',
                 contentType: 'application/json; charset=UTF-8',
                     success: function (response) {
-                        $("#ValorUnidade").val(response.valor);
+                        $("#ValorUnidade").val(response.valor_formatado);
 
                         var qtd = $("#qtd").val();
-                        var subtotal = parseFloat(response.valor) * parseInt(qtd);
+                        var subtotal = response.subtotal // parseFloat(response.valor) * parseInt(qtd);
 
-                        $("#Subtotal").val(subtotal);
+                        $("#Subtotal").val(response.subtotal_formatado);
+
                         $("#Pontos").val(parseFloat(response.pontos_produto * subtotal).toFixed(2));
                        // alert(total);
                         //console.log(response.pontos_produto);

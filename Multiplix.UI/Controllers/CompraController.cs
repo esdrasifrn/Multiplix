@@ -173,7 +173,7 @@ namespace Multiplix.UI.Controllers
             return View("AdicionarEditarCompra", compraDTO);
         }
 
-        public IActionResult GetInfoProdutoParceiro(int produtoId, int parceiroId)
+        public IActionResult GetInfoProdutoParceiro(int produtoId, int parceiroId, int qtd)
         {
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
             ParceiroProduto infoProdutoParceiro = null;
@@ -194,8 +194,11 @@ namespace Multiplix.UI.Controllers
             
             var resultado = new
             {
-                valor = /*string.Format("{0:#.00}", Convert.ToDecimal(*/infoProdutoParceiro.ValorProduto/*))*/, //passar os campos minusculos para o js
-                pontos_produto = infoProdutoParceiro.PontosPorRealProduto
+                valor = infoProdutoParceiro.ValorProduto, //passar os campos minusculos para o js
+                pontos_produto = infoProdutoParceiro.PontosPorRealProduto,
+                valor_formatado = @String.Format("{0:C}", infoProdutoParceiro.ValorProduto).ToString(),
+                subtotal = infoProdutoParceiro.ValorProduto * qtd,
+                subtotal_formatado = @String.Format("{0:C}", (infoProdutoParceiro.ValorProduto * qtd)).ToString()
             };
             return Json(resultado);
         }
@@ -252,7 +255,9 @@ namespace Multiplix.UI.Controllers
                 {
                     compras = _serviceCompra.Buscar(x => x.Parceiro.ParceiroId == parceiroLogado.ParceiroId).Where(x => x.Data.Month == DateTime.Now.Month);
                 }
-            }              
+            }
+
+            compras = compras.OrderByDescending(x => x.Data);
 
             if (firstOrderColumnIdx.Length > 0)
             {
@@ -291,7 +296,7 @@ namespace Multiplix.UI.Controllers
                 compras = compras.OrderBy(x => x.Associado.Usuario.Nome);
             }
 
-            // pagina a lista
+            // pagina a lista           
             int totalResultados = compras.Count();
             compras = compras.Skip(dataTableModel.start).Take(dataTableModel.length);
 
