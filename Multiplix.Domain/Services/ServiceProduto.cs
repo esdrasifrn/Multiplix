@@ -71,7 +71,8 @@ namespace QuizCorp.Domain.Services
             if (produtoDTO.ProdutoId == 0)
             {
                 produto = new Produto(
-                   descricao: produtoDTO.Descricao
+                   descricao: produtoDTO.Descricao,
+                   precoMedio: produtoDTO.PrecoMedio
                 );
 
                 produto.ProdutoId = 0;
@@ -79,7 +80,8 @@ namespace QuizCorp.Domain.Services
             else
             {
                 produto = _produtoRepository.ObterPorId(produtoDTO.ProdutoId);
-                produto.Descricao = produtoDTO.Descricao;              
+                produto.Descricao = produtoDTO.Descricao;
+                produto.PrecoMedio = produtoDTO.PrecoMedio;
             }         
 
             ValidationResult result = new ProdutoValidator().Validate(produto);

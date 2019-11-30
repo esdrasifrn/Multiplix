@@ -50,17 +50,24 @@
                     <div class="card-body">
                         <form method="post" id="form-parceiro" class="form form-horizontal">
                             <div class="form-body">
-                               
 
-                                        <h4 class="form-section"><i class="ft-user"></i> Dados gerais</h4>
-                                        <div class="form-group row">
-                                            <label class="col-md-3 label-control" for="Nome">Descrição</label>
-                                            <div class="col-md-9 mx-auto">
-                                                <input type="text" id="Descricao" asp-for="Descricao" class="form-control" placeholder="Descrição" name="Descricao">
-                                            </div>
-                                        </div>                                   
+
+                                <h4 class="form-section"><i class="ft-user"></i> Dados gerais</h4>
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Nome">Descrição</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="Descricao" asp-for="Descricao" class="form-control" placeholder="Descrição" name="Descricao">
+                                    </div>
                                 </div>
-                          
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Nome">Preço médio</label>
+                                    <div class="col-md-9 mx-auto">
+                                        <input type="text" id="PrecoMedioString" asp-for="PrecoMedioString" class="form-control" placeholder="Preco Médio" name="PrecoMedioString">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="la la-check-square-o"></i> Salvar
@@ -78,10 +85,12 @@
 
 @section Scripts
 {
-    <partial name="_componente_form_validation_fluent_messages_script" />
-
+    <partial name="_componente_form_validation_fluent_messages_script" />   
     <script>
         $(document).ready(() => {
+
+            $("#PrecoMedioString").maskMoney({ prefix: '', allowNegative: false, thousands: '.', decimal: ',', affixesStay: false });
+
             // ativa a tab 1
             $("#active-tab1").trigger("click");
 
@@ -114,10 +123,10 @@
                 'pattern': "{{99}}.{{999}}-{{999}}"
             });
 
-           
+
         });
 
-     
+
     </script>
 
 }

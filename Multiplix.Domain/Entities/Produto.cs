@@ -16,12 +16,14 @@ namespace Multiplix.Domain.Entities
 
         public int ProdutoId { get; set; }
         public string Descricao { get; set; }
+        public float PrecoMedio { get; set; }
         public virtual ICollection<ParceiroProduto> ParceiroProdutos { get => _parceiroProdutos; set { } }
         public virtual ICollection<CompraItem> CompraItems { get => _compraItems; set { } }
 
-        public Produto(string descricao)
+        public Produto(string descricao, float precoMedio)
         {
             Descricao = descricao;
+            PrecoMedio = precoMedio;
         }
 
         public Produto()

@@ -53,6 +53,8 @@ namespace Multiplix.UI.Controllers
         public IActionResult AdicionarProduto(ProdutoDTO produtoDTO)
         {
             ViewData["Title"] = "Novo Produto";
+            produtoDTO.PrecoMedioString = produtoDTO.PrecoMedioString.Replace(".", "");
+            produtoDTO.PrecoMedio = float.Parse(produtoDTO.PrecoMedioString);
             return SalvarProduto(produtoDTO, "Produdo adicionado com sucesso!");
         }
 
@@ -63,7 +65,8 @@ namespace Multiplix.UI.Controllers
             Produto produto = _serviceProduto.ObterPorId(produtoId);
             ProdutoDTO produtoDTO = new ProdutoDTO()
             {
-                Descricao = produto.Descricao               
+                Descricao = produto.Descricao,
+                PrecoMedioString = produto.PrecoMedio.ToString()
             };
 
             return View("AdicionarEditarProduto", produtoDTO);
@@ -73,6 +76,8 @@ namespace Multiplix.UI.Controllers
         public IActionResult EditarProduto(ProdutoDTO produtoDTO)
         {
             ViewData["Title"] = "Editar produto";
+            produtoDTO.PrecoMedioString = produtoDTO.PrecoMedioString.Replace(".", "");
+            produtoDTO.PrecoMedio = float.Parse(produtoDTO.PrecoMedioString);
             return SalvarProduto(produtoDTO, "Produto alterado com sucesso!");
         }
 
@@ -214,7 +219,8 @@ namespace Multiplix.UI.Controllers
             {
                 List<object> result_item = new List<object> {
                     produto.ProdutoId,
-                    produto.Descricao                  
+                    produto.Descricao,
+                    String.Format("{0:C}", produto.PrecoMedio)
                 };
                 result_data.Add(result_item);
             }

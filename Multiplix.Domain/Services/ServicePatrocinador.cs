@@ -337,6 +337,7 @@ namespace Multiplix.Domain.Services
         public float GetGanhosIndividual(int mes, int associadoId)
         {
             float pontosIndividual = GetPontosIndividuaisPorMes(mes, associadoId);
+
             float pontosRede = GetPontosRedePorMes(mes, associadoId);
             float pontosTotal = pontosIndividual + pontosRede;
             float perncentualAssociado = GetPercentagem(pontosTotal);
