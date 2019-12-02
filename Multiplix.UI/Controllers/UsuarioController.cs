@@ -91,6 +91,7 @@ namespace Multiplix.UI.Controllers
                 {
                     new Claim("UsuarioId", usuario.UsuarioId + ""),
                     new Claim("idTipoUsuario", idTipoUsuario + ""),
+                    new Claim("TipoUsuario", usuario.TipoUsuario + ""),
                     new Claim("UsuarioLogin", usuario.Login),
                     new Claim("UsuarioNome", usuario.Nome),
                     new Claim("UsuarioIsSuperUser", usuario.IsSuperUser ? "true" : "false"),

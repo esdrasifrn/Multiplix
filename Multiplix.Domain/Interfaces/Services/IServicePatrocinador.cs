@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Multiplix.Domain.DTOs;
 using Multiplix.Domain.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Multiplix.Domain.Interfaces.Services
@@ -67,6 +68,8 @@ namespace Multiplix.Domain.Interfaces.Services
         float GetPontosTotal(int mes, int associadoId);
 
         bool CPFJaExiste(string cpf);
+        List<Associado> GetAssociadosAniversariantes(int mesNascimento);
+        List<DiasSemComprarDTO> GetDiasSemConsumo(int dias);
 
 
     }

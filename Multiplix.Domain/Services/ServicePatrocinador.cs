@@ -22,17 +22,20 @@ namespace Multiplix.Domain.Services
         private readonly IBancoRepository _bancoRepository;
         private readonly IPlanoAssinaturaRepository _planoAssinatura;
         private readonly ICidadeRepository _cidadeRepository;
+        private readonly ICompraRepository _compraRepository;
 
         public ServicePatrocinador(IPatrocinadorRepository patrocinadorRepository, 
             IUsuarioRepository usuarioRepository, IBancoRepository bancoRepository, 
             IPlanoAssinaturaRepository planoAssinatura,
-            ICidadeRepository cidadeRepository)
+            ICidadeRepository cidadeRepository, 
+            ICompraRepository compraRepository)
         {
             _patrocinadorRepository = patrocinadorRepository;
             _usuarioRepository = usuarioRepository;
             _bancoRepository = bancoRepository;
             _planoAssinatura = planoAssinatura;
             _cidadeRepository = cidadeRepository;
+            _compraRepository = compraRepository;
         }
 
         public Associado Adicionar(Associado entity)
@@ -482,6 +485,41 @@ namespace Multiplix.Domain.Services
         {
             throw new NotImplementedException();
         }
+
+        public List<Associado> GetAssociadosAniversariantes(int mesNascimento)
+        {
+            List<Associado> associados = _patrocinadorRepository.Buscar(x => x.Nascimento.Date.Month == mesNascimento).ToList();
+
+            return associados;
+        }
+
+        public List<DiasSemComprarDTO> GetDiasSemConsumo(int dias)
+        {
+            List<Associado> associados = _patrocinadorRepository.ObterTodos().ToList();
+            List<DiasSemComprarDTO> listadiasSemComprarDTO = new List<DiasSemComprarDTO>();
+            foreach (var associado in associados)
+            {
+                DiasSemComprarDTO semcomprarDTO = new DiasSemComprarDTO();
+
+                Compra ultimaCompra = associado.Compras.LastOrDefault();
+                
+                if (ultimaCompra != null)
+                {
+                    semcomprarDTO.DiasSemComprar = (int)(DateTime.Now.Subtract(ultimaCompra.Data).TotalDays);
+                    semcomprarDTO.NomeAssociado = associado.Usuario.Nome;
+                    semcomprarDTO.UsuarioId = associado.Usuario.UsuarioId;
+                    semcomprarDTO.DataUltimaCompra = ultimaCompra.Data;
+
+                    if (semcomprarDTO.DiasSemComprar >= dias)
+                    {
+                        listadiasSemComprarDTO.Add(semcomprarDTO);
+                    }
+                }
+               
+            }
+
+            return listadiasSemComprarDTO;
+        }            
 
         /// <summary>
         /// Realiza a validação do CPF

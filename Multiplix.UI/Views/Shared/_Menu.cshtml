@@ -1,29 +1,36 @@
 ﻿@using Multiplix.UI.Utils
+@using Multiplix.Domain.Enums
 
 <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class=" nav-item">
+
                 @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_dash_associado"))
                 {
-                <a href="/home/Dashboard"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
+                    <a href="/home/Dashboard"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
                 }
 
-                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_dash_parceiro"))
+                @if (User.FindFirst("TipoUsuario").Value == "1")
                 {
-                <a href="/home/DashboardParceiro"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
+                    @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_dash_parceiro"))
+                    {
+                        <a href="/home/DashboardParceiro"><i class="la la-home"></i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
+                    }
                 }
+
+
                 @*<ul class="menu-content">
-            <li class="active">
-                <a class="menu-item" href="dashboard-ecommerce.html"><i></i><span data-i18n="nav.dash.ecommerce">eCommerce</span></a>
-            </li>
-            <li>
-                <a class="menu-item" href="dashboard-crypto.html"><i></i><span data-i18n="nav.dash.crypto">Crypto</span></a>
-            </li>
-            <li>
-                <a class="menu-item" href="dashboard-sales.html"><i></i><span data-i18n="nav.dash.sales">Sales</span></a>
-            </li>
-        </ul>*@
+                <li class="active">
+                    <a class="menu-item" href="dashboard-ecommerce.html"><i></i><span data-i18n="nav.dash.ecommerce">eCommerce</span></a>
+                </li>
+                <li>
+                    <a class="menu-item" href="dashboard-crypto.html"><i></i><span data-i18n="nav.dash.crypto">Crypto</span></a>
+                </li>
+                <li>
+                    <a class="menu-item" href="dashboard-sales.html"><i></i><span data-i18n="nav.dash.sales">Sales</span></a>
+                </li>
+            </ul>*@
             </li>
             @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_administracao"))
             {
@@ -51,9 +58,9 @@
                             <li><a class="menu-item" href="/PlanoAssinatura/IndexPlanoAssinatura"><i></i><span data-i18n="">Plano de assinatura</span></a></li>
                         }
                         @*@if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_cidade"))
-                        {
-                            <li><a class="menu-item" href="/Cidade/IndexCidade"><i></i><span data-i18n="">Cidade</span></a></li>
-                        }*@
+                    {
+                        <li><a class="menu-item" href="/Cidade/IndexCidade"><i></i><span data-i18n="">Cidade</span></a></li>
+                    }*@
                     </ul>
                 </li>
             }
@@ -114,8 +121,8 @@
             @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_grupo"))
             {
                 @*<li class=" nav-item">
-                    <a href="#"><i class="la la-key"></i><span class="menu-title" data-i18n="">Grupo de permissões</span></a>
-                </li>*@
+                <a href="#"><i class="la la-key"></i><span class="menu-title" data-i18n="">Grupo de permissões</span></a>
+            </li>*@
             }
 
 
@@ -151,16 +158,36 @@
             @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_relatorio"))
             {
                 <li class=" navigation-header">
-                    <span data-i18n="nav.category.support">Relatórios</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Relatórios"></i>
+                    <span data-i18n="nav.category.support">Gestão</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Relatórios"></i>
                 </li>
-                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_relatorio"))
-                {
+              
                     <li class=" nav-item">
-                        <a href="#"><i class="la la-file-pdf-o"></i><span class="menu-title" data-i18n="nav.support_raise_support.main">Bônus</span></a>
-                    </li>
-                }
-             }
-            </ul>
+                        <a href="news-feed.html"><i class="la la-file-pdf-o"></i><span class="menu-title" data-i18n="">Relatórios</span></a>
+
+                        <ul class="menu-content">
+                            <li>
+                                <a class="menu-item" href="#"><i></i><span data-i18n="">Associado</span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="/Relatorio/Aniversariantes"><i></i><span data-i18n="">Aniversariantes</span></a></li>
+                                    <li><a class="menu-item" href="/Relatorio/DiasSemComprar"><i></i><span data-i18n="">Dias sem consumo</span></a>
+                                    <li><a class="menu-item" href="#"><i></i><span data-i18n="">Contratos a vencer</span></a>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a class="menu-item" href="#"><i></i><span data-i18n="">Parceiro</span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="#"><i></i><span data-i18n="">Repasse por parceiro</span></a>
+                                    <li><a class="menu-item" href="#"><i></i><span data-i18n="">Produto vendido</span></a>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </li>                
+            }
+
+
+        </ul>
             
     </div>
 </div>

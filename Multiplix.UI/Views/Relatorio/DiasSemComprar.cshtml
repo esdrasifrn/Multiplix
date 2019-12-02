@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Aniversariantes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Multiplix.Domain.Enums
+@using Multiplix.UI.Utils
+@model Multiplix.UI.Models.ViewModel.DiasSemComprarVM
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">Dias sem comprar</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Associados sem comprar
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Escolha o mês</div>
+            </div>
+            <div class="card-body">
+                <form method="post" id="form-compra" class="form form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="mes">Associados sem comprar à  >=</label>
+                                    <input type="text" id="Nome" asp-for="Dias" class="form-control" placeholder="Dias" name="Dias">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-min-width mr-1 mb-1">
+                            <i class="la la-check-square-o"></i> Filtrar
+                        </button>
+                        <button type="submit" class="btn btn-secondary btn-min-width mr-1 mb-1">
+                            <i class="la la-print"></i> Imprimir
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">@ViewData["Title"]</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="table-responsive">
+                            <table id="data-table-dias-sem-comprar" class="table table-striped table-bordered text-nowrap w-100">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th> <!-- ocultada pelo datatable -->
+                                        <th>Associado</th>
+                                        <th>Data da última compra</th>
+                                        <th>Dias sem comprar</th>
+                                        <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/js/datatable-generator.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#dias").val(@ViewBag.dias);
+
+            var podeAlterarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_compra").ToString().ToLower();
+            var podeExcluirCompra = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_compra").ToString().ToLower();
+            var podeVisualizarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compra").ToString().ToLower();
+            var botoes = [{ title: "Ver itens comprados", url: "/Compra/ItensComprados/?compraId="/*, permission: podeVisualizarCompra*/ }];
+            generateDataTable("#data-table-dias-sem-comprar",
+                "Dias sem comprar",
+                "/Relatorio/ListaDiasSemComprar?dias=@ViewBag.dias",
+                false,
+                "/Compra/EditarCompra/?compraId=",
+                false,
+                "/Compra/Excluir/?compraId=");
+        });
+
+
+
+    </script>
+}
+
+

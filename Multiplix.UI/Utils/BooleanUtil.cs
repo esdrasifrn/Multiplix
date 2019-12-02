@@ -23,6 +23,17 @@ namespace Multiplix.UI.Utils
             {
                 _("M", "M"),
                 _("F", "F"),
+                _("O", "Outro")
+            };
+        }
+
+        public static List<SelectListItem> MesoSelect()
+        {
+            return new List<SelectListItem>()
+            {
+                _("M", "M"),
+                _("F", "F"),
+                _("O", "Outro")
             };
         }
 
@@ -34,7 +45,7 @@ namespace Multiplix.UI.Utils
                 items.Add(_(estado.Key, estado.Value));
             }
             return items;
-        }
+        }      
 
         private static SelectListItem _(bool valor, string titulo)
         {
