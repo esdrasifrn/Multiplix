@@ -505,7 +505,7 @@ namespace Multiplix.Domain.Services
                 
                 if (ultimaCompra != null)
                 {
-                    semcomprarDTO.DiasSemComprar = (int)(DateTime.Now.Subtract(ultimaCompra.Data).TotalDays);
+                    semcomprarDTO.DiasSemComprar = (int)Math.Abs(Math.Round(DateTime.Now.Subtract(ultimaCompra.Data).TotalDays));
                     semcomprarDTO.NomeAssociado = associado.Usuario.Nome;
                     semcomprarDTO.UsuarioId = associado.Usuario.UsuarioId;
                     semcomprarDTO.DataUltimaCompra = ultimaCompra.Data;

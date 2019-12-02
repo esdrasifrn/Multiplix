@@ -205,8 +205,8 @@ namespace Multiplix.UI.Controllers
                 List<object> result_item = new List<object> {
                 associado.UsuarioId,
                 associado.NomeAssociado,
-                associado.DataUltimaCompra,
-                String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy}", associado.DiasSemComprar)                               
+                 String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy}", associado.DataUltimaCompra),
+                associado.DiasSemComprar                              
                 };
                 result_data.Add(result_item);
 
