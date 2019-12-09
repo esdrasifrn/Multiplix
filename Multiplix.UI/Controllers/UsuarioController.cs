@@ -141,6 +141,11 @@ namespace Multiplix.UI.Controllers
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
             var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
 
+            if (!usuarioLogado.Liberado == true)
+            {
+                return RedirectToAction("Ativacao", "Permissao");
+            }
+
             ViewBag.LinkConvite = associado.GenerateCodeInvite;
             return View();
         }

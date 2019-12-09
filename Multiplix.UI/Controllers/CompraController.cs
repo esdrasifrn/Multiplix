@@ -46,6 +46,12 @@ namespace Multiplix.UI.Controllers
                 return RedirectToAction("UnauthorizedResult", "Permissao");
             }
 
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            if (!usuarioLogado.Liberado == true)
+            {
+                return RedirectToAction("Ativacao", "Permissao");
+            }
+
             CompraDTO compraDTO = new CompraDTO();
             DateTime date = DateTime.Now;
 

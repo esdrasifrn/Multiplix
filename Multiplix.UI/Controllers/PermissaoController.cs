@@ -148,5 +148,10 @@ namespace Multiplix.UI.Controllers
         {
             return View();
         }
+
+        public IActionResult Ativacao()
+        {
+            return View();
+        }
     }
 }

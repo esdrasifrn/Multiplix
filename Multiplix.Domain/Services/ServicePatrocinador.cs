@@ -286,35 +286,35 @@ namespace Multiplix.Domain.Services
         {
             int percentagemAtual = 0;
 
-            if (totalGeralPontos <= 599.99)
+            if (totalGeralPontos <= 1199.99)
             {
                 percentagemAtual = 0;
             }
-            else if (totalGeralPontos >= 600 && totalGeralPontos <= 3099.9)
+            else if (totalGeralPontos >= 1200 && totalGeralPontos <= 6199.9)
             {
                 percentagemAtual = 3;
             }
-            else if (totalGeralPontos >= 3100 && totalGeralPontos <= 15599.9)
+            else if (totalGeralPontos >= 6200 && totalGeralPontos <= 31199.9)
             {
                 percentagemAtual = 6;
             }
-            else if (totalGeralPontos >= 15600 && totalGeralPontos <= 78099.9)
+            else if (totalGeralPontos >= 31200 && totalGeralPontos <= 156199.9)
             {
                 percentagemAtual = 9;
             }
-            else if (totalGeralPontos >= 78100 && totalGeralPontos <= 390599.9)
+            else if (totalGeralPontos >= 156200 && totalGeralPontos <= 781199.9)
             {
                 percentagemAtual = 12;
             }
-            else if (totalGeralPontos >= 390600 && totalGeralPontos <= 1953009)
+            else if (totalGeralPontos >= 781200 && totalGeralPontos <= 3906019)
             {
                 percentagemAtual = 15;
             }
-            else if (totalGeralPontos >= 1953010 && totalGeralPontos <= 9765059)
+            else if (totalGeralPontos >= 3906020 && totalGeralPontos <= 19530119)
             {
                 percentagemAtual = 18;
             }
-            else if (totalGeralPontos >= 9765060)
+            else if (totalGeralPontos >= 19530120)
             {
                 percentagemAtual = 21;
             }
