@@ -73,7 +73,7 @@
             <li class=" nav-item">
                 @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_associado"))
                 {
-                    <a href="#"><i class="la la-user"></i><span class="menu-title" data-i18n="">Associado</span></a>
+                    <a href="#"><i class="la la-user"></i><span class="menu-title" data-i18n="">Afiliado</span></a>
                     <ul class="menu-content">
                         @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_associado"))
                         {
@@ -85,7 +85,7 @@
                         }
                         @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compras_por_associado"))
                         {
-                            <li><a class="menu-item" href="/Compra/ComprasPorAssociado"><i></i><span data-i18n="">Compras por associado</span></a></li>
+                            <li><a class="menu-item" href="/Compra/ComprasPorAssociado"><i></i><span data-i18n="">Compras por afiliado</span></a></li>
                         }
                         @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_minhas_compras"))
                         {
@@ -166,7 +166,7 @@
 
                         <ul class="menu-content">
                             <li>
-                                <a class="menu-item" href="#"><i></i><span data-i18n="">Associado</span></a>
+                                <a class="menu-item" href="#"><i></i><span data-i18n="">Afiliado</span></a>
                                 <ul class="menu-content">
                                     <li><a class="menu-item" href="/Relatorio/Aniversariantes"><i></i><span data-i18n="">Aniversariantes</span></a></li>
                                     <li><a class="menu-item" href="/Relatorio/DiasSemComprar"><i></i><span data-i18n="">Dias sem consumo</span></a>

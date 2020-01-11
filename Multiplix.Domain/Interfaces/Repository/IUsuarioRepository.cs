@@ -12,5 +12,6 @@ namespace Multiplix.Domain.Interfaces.Repository
 
         //bool CPFJaExiste(string cpf);
         bool LoginJaExiste(string login);
+        bool EmailJaExiste(string email);
     }
 }

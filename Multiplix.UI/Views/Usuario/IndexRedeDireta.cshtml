@@ -7,7 +7,7 @@
 
 @section breadcrumbs{
     <div class="content-header-left col-md-6 col-12 mb-2">
-        <h3 class="content-header-title mb-0">Associados diretos</h3>
+        <h3 class="content-header-title mb-0">Afiliados diretos</h3>
         <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
@@ -30,7 +30,7 @@
                 <div class="card-title">Resumo</div>
             </div>
             <div class="card-body">
-                <h1 class="text-bold-600">Associado: @ViewBag.NomeAssociado</h1>
+                <h1 class="text-bold-600">Afiliado: @ViewBag.NomeAssociado</h1>
                 <h5 class="text-bold-600">Nível: @ViewBag.Nivel</h5>
                 <h5 class="text-bold-600">Mês: @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month))</h5>
                 <div class="row">
@@ -145,7 +145,7 @@
             var podeVisualizarAssociado = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_permissao_usuario").ToString().ToLower();
             var botoes = [{ title: "Ver diretos", url: "/Usuario/IndexRedeDireta/?idAssociado="/*, permission: podeVisualizarAssociado */}];
             generateDataTable("#data-table-usuarios",
-                "Associado direto",
+                "Afiliado direto",
                 "/Usuario/ListaRedeDiretaAssociados?idAssociado=@ViewBag.idAssociado",
                 false,
                 "/Usuario/EditarAssociado/?associadoId=",

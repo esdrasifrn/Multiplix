@@ -27,7 +27,7 @@ namespace Multiplix.Domain.Validations
               .WithMessage("O Login é obrigatório.")
               .Must((usuario, login) => LoginRotaJaExiste(usuario.Login))
               .When((usuario) => Atualizando(!_isAtualizacao))
-              .WithMessage("O Login ja existe para outro associado.");
+              .WithMessage("O Login ja existe.");
             
             //RuleFor(usuario => usuario.Senha)
             //    .NotEmpty()
@@ -35,13 +35,21 @@ namespace Multiplix.Domain.Validations
 
             RuleFor(usuario => usuario.Email)
                .NotEmpty()
-               .WithMessage("O email é obrigatório.");           
+               .WithMessage("O email é obrigatório.")
+               .Must((usuario, email) => EmaiExiste(usuario.Email))
+               .When((usuario) => Atualizando(!_isAtualizacao))
+               .WithMessage("O Email ja existe.");
         }
 
         public bool LoginRotaJaExiste(string login)
         {
             return (!_usuarioRepository.LoginJaExiste(login));
         }
+        public bool EmaiExiste(string email)
+        {
+            return (!_usuarioRepository.EmailJaExiste(email));
+        }
+
         public bool Atualizando(bool acao)
         {
             return acao;

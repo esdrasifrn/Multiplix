@@ -857,7 +857,7 @@
                         $.error("Can't find field '" + elementName + "' to match '" + $this.attr("name") + "' against in '" + name + "' validator");
                     }
 
-                    var message = "Must match";
+                    var message = "Este campo deve ser igual a";
                     var $label = null;
                     if (($label = $form.find("label[for=\"" + elementName + "\"]")).length) {
                         message += " '" + $label.text() + "'";
@@ -1103,7 +1103,7 @@
             required: {
                 name: "Required",
                 type: "required",
-                message: "This is required<!-- data-validator-required-message to override -->"
+                message: "Campo obrigat\u00f3rio<!-- data-validator-required-message to override -->"
             },
             checkone: {
                 name: "Checkone",

@@ -253,7 +253,7 @@ namespace Multiplix.Domain.Services
             if ((!atualizando) && (string.IsNullOrEmpty(parceiro.Usuario.Senha)))
             {
                 result.Errors.Add(new ValidationFailure("Senha", "A Senha é obrigatória."));
-            }
+            }           
 
             if (parceiro.Cidade == null)
             {

@@ -153,7 +153,7 @@ namespace Multiplix.UI.Controllers
         [HttpGet]
         public IActionResult AdicionarAssociado()
         {
-            ViewData["Title"] = "Novo Associado";
+            ViewData["Title"] = "Novo Afiliado";
             UsuarioDTO usuarioDTO = new UsuarioDTO();
             return View("AdicionarEditarPatrocinador", usuarioDTO);
         }
@@ -161,7 +161,7 @@ namespace Multiplix.UI.Controllers
         [HttpPost]
         public IActionResult AdicionarAssociado(UsuarioDTO usuarioDTO)
         {
-            ViewData["Title"] = "Novo Associado";
+            ViewData["Title"] = "Novo Afiliado";
 
             if (usuarioDTO.UsuarioId > 0)
             {
@@ -716,7 +716,7 @@ namespace Multiplix.UI.Controllers
         [HttpPost]
         public IActionResult Invite(UsuarioDTO usuarioDTO, string id)
         {
-            ViewData["Title"] = "Novo Associado";
+            ViewData["Title"] = "Novo Afiliado";
             ViewBag.UserValido = "s";
 
             var idCarteiraUser = AssociadoUtil.Base64Decode(id);

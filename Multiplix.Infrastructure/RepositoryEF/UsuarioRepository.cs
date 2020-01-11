@@ -54,5 +54,12 @@ namespace Multiplix.Infrastructure.RepositoryEF
 
             return loginExiste.Count() > 0;
         }
+
+        public bool EmailJaExiste(string email)
+        {
+            var emailExiste = _dbContext.Usuarios.Where(x => x.Email == email);
+
+            return emailExiste.Count() > 0;
+        }
     }
 }
