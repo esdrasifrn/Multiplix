@@ -14,6 +14,8 @@ namespace Multiplix.Domain.Entities
         /// </summary>
         private IList<Associado> _patrocinados;
 
+        private IList<Bonus> _bonus = new List<Bonus>();
+
         /// <summary>
         /// Um associado pode fazer várias compras em um associado
         /// </summary>
@@ -83,6 +85,7 @@ namespace Multiplix.Domain.Entities
 
         public virtual ICollection<Associado> Patrocinados { get => _patrocinados; set { } }
         public virtual ICollection<Compra> Compras { get => _compras; set { } }
+        public virtual ICollection<Bonus> Bonus { get => _bonus; set { } }
 
         /// <summary>
         /// Adiciona o associado patrocinado ao associado patrocinador que fez o convite
@@ -96,6 +99,11 @@ namespace Multiplix.Domain.Entities
         public void AddCompra(Compra compra)
         {
             _compras.Add(compra);
+        }
+
+        public void AddBonus(Bonus bonus)
+        {
+            _bonus.Add(bonus);
         }
 
         public string GenerateCarteiraPatrocinador()

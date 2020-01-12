@@ -316,6 +316,8 @@ namespace Multiplix.UI.Controllers
             var totalIndividual = _servicePatrocinador.GetGanhosIndividual(DateTime.Now.Month, idAssociado);
             var totalRede = _servicePatrocinador.GetGanhosRede(DateTime.Now.Month, idAssociado);
 
+            var somaBonus = _servicePatrocinador.GetBonusPorMes(DateTime.Now.Month, associado.Id);
+
             ViewBag.NomeAssociado = associado.Usuario.Nome;
             ViewBag.Nivel = associado.Nivel;
             ViewBag.idAssociado = idAssociado;
@@ -325,7 +327,8 @@ namespace Multiplix.UI.Controllers
             ViewBag.TotalIndividual = totalIndividual;
             ViewBag.TotalRede = totalRede;
             ViewBag.Percentagem = _servicePatrocinador.GetPercentagem(pontosTotais);
-            ViewBag.TotalARecebeber = totalIndividual + totalRede;
+            ViewBag.TotalARecebeber = totalIndividual + totalRede + somaBonus;
+            ViewBag.SomaBonusMes = somaBonus;
 
             return View();
         }

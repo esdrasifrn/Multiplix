@@ -31,6 +31,7 @@ namespace Multiplix.Infrastructure.Data
         public DbSet<PlanoAssinatura> planoAssinaturas { get; set; }
         public DbSet<Cidade> Cidades { get; set; }
         public DbSet<Estado> Estados { get; set; }
+        public DbSet<Bonus> Bonus { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -95,6 +96,7 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.Entity<PlanoAssinatura>().ToTable("PlanoAssinatura");
             modelBuilder.Entity<Cidade>().ToTable("Cidade");
             modelBuilder.Entity<Estado>().ToTable("Estado");
+            modelBuilder.Entity<Bonus>().ToTable("Bonus");
 
             modelBuilder.ApplyConfiguration(new GrupoMap());          
             modelBuilder.ApplyConfiguration(new PermissaoMap());           
@@ -109,6 +111,7 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ParceiroProdutoMap());
             modelBuilder.ApplyConfiguration(new CidadeMap());
             modelBuilder.ApplyConfiguration(new EstadoMap());
+            modelBuilder.ApplyConfiguration(new BonusMap());
         }
     }
 }

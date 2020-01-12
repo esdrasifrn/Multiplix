@@ -23,12 +23,14 @@ namespace Multiplix.Domain.Services
         private readonly IPlanoAssinaturaRepository _planoAssinatura;
         private readonly ICidadeRepository _cidadeRepository;
         private readonly ICompraRepository _compraRepository;
+        private readonly IBonusRepository _bonusRepository;
 
         public ServicePatrocinador(IPatrocinadorRepository patrocinadorRepository, 
             IUsuarioRepository usuarioRepository, IBancoRepository bancoRepository, 
             IPlanoAssinaturaRepository planoAssinatura,
             ICidadeRepository cidadeRepository, 
-            ICompraRepository compraRepository)
+            ICompraRepository compraRepository,
+            IBonusRepository bonusRepository)
         {
             _patrocinadorRepository = patrocinadorRepository;
             _usuarioRepository = usuarioRepository;
@@ -36,6 +38,7 @@ namespace Multiplix.Domain.Services
             _planoAssinatura = planoAssinatura;
             _cidadeRepository = cidadeRepository;
             _compraRepository = compraRepository;
+            _bonusRepository = bonusRepository;
         }
 
         public Associado Adicionar(Associado entity)
@@ -89,6 +92,64 @@ namespace Multiplix.Domain.Services
             var ids = associadosPatrocinados;
             return associadosPatrocinados;
         }
+
+        public void GerarBonus(int associadoId)
+        {
+            int? patrocinadorIdPai1 = null;
+            int? patrocinadorIdPai2 = null;
+            int? patrocinadorIdPai3 = null;
+
+            for (int i = 1; i <= 3; i++)
+            {
+                if (i == 1) // gera o primeiro bonus para o pai
+                {
+                    patrocinadorIdPai1 = _patrocinadorRepository.ObterPorId(associadoId).PatrocinadorId.Value;
+                    if (patrocinadorIdPai1 != null && patrocinadorIdPai1 != 1)
+                    {
+                        SalvarBonus(patrocinadorIdPai1.Value, associadoId, 6);
+                    }
+                    
+                }
+                else if (i == 2)
+                {
+                    patrocinadorIdPai2 = _patrocinadorRepository.ObterPorId(patrocinadorIdPai1.Value).PatrocinadorId.Value;
+                    if (patrocinadorIdPai2 != null && patrocinadorIdPai2 != 1)
+                    {
+                        SalvarBonus(patrocinadorIdPai2.Value, associadoId, 3);
+                    }
+                }
+                else if (i == 3)
+                {
+                    if (patrocinadorIdPai3 != null && patrocinadorIdPai3 != 1)
+                    {
+                        patrocinadorIdPai3 = _patrocinadorRepository.ObterPorId(patrocinadorIdPai2.Value).PatrocinadorId.Value;
+                        SalvarBonus(patrocinadorIdPai3.Value, associadoId, 1);
+                    }                    
+                }
+            }           
+        }
+
+        public void SalvarBonus(int? associadoDonoId, int associadoGeradorId, float valor)
+        {
+            Bonus bonus = new Bonus(
+                valor: valor,
+                dataCadastro: DateTime.Now,
+                dono:_patrocinadorRepository.ObterPorId(associadoDonoId.Value),
+                gerador: _patrocinadorRepository.ObterPorId(associadoGeradorId)
+                );
+
+            _bonusRepository.Adicionar(bonus);
+        }
+
+        public float GetBonusPorMes(int mes, int associadoId)
+        {
+            var associado = _patrocinadorRepository.ObterPorId(associadoId);
+
+            var somaBonus = associado.Bonus.Where(x => x.DataCadastro.Date.Month == mes).Sum(x => x.Valor);
+            
+            return somaBonus;
+        }
+
 
         public void Remover(Associado entity)
         {
@@ -332,6 +393,7 @@ namespace Multiplix.Domain.Services
         public float GetPontosRedePorMes(int mes, int associadoId)
         {
            var redeAssociado = GetRedeAssociado(associadoId);
+           
            var pontosRede = redeAssociado.SelectMany(x => x.Compras).Where(x => x.Data.Month == mes).Sum(x => x.Pontos);
 
             return pontosRede;
@@ -470,6 +532,8 @@ namespace Multiplix.Domain.Services
                     _patrocinadorRepository.Adicionar(associado);
                     associado.IdCarteira = associado.GenerateCarteiraPatrocinador();
                     _patrocinadorRepository.Atualizar(associado);
+
+                    GerarBonus(associado.Id);
                 }
 
             }
@@ -519,7 +583,11 @@ namespace Multiplix.Domain.Services
             }
 
             return listadiasSemComprarDTO;
-        }            
+        }
+
+       
+
+
 
         /// <summary>
         /// Realiza a validação do CPF

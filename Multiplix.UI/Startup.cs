@@ -82,6 +82,8 @@ namespace Multiplix.UI
             services.AddScoped<IServiceEstado, ServiceEstado>();
             services.AddScoped<IEstadoRepository, EstadoRepository>();
 
+            services.AddScoped<IBonusRepository, BonusRepository>();
+
             #endregion
 
             #region CookieAuth
