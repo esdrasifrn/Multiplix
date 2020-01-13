@@ -166,7 +166,7 @@ namespace Multiplix.Domain.Services
         {
             // usuário
             Usuario usuario;
-            Associado associado;
+            Associado associado;            
             var atualizando = false;
            
             if (usuarioDTO.UsuarioId == 0)
@@ -449,10 +449,11 @@ namespace Multiplix.Domain.Services
             // usuário
             Usuario usuario;
             Associado associado;
+            Entrada entrada;
 
-           
-                //cria o usuário do patrocinador
-                usuario = new Usuario(
+
+            //cria o usuário do patrocinador
+            usuario = new Usuario(
                     login: usuarioDTO.Login,
                     senha: usuarioDTO.Senha,
                     nome: usuarioDTO.Nome,
@@ -486,6 +487,17 @@ namespace Multiplix.Domain.Services
                     planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId)
 
                     );
+
+
+            entrada = new Entrada(
+                descricao: "Adesão de novo afiliado",
+                data: DateTime.Now,
+                associado: associado,
+                status: (int)EStatusMovimentacao.PENDENTE,
+                valor: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId).Valor
+                );
+
+            associado.AddEntrada(entrada);
 
             UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
             usuarioGrupo.UsuarioId = associado.Usuario.UsuarioId;

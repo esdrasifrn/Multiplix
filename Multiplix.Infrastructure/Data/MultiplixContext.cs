@@ -32,7 +32,7 @@ namespace Multiplix.Infrastructure.Data
         public DbSet<Cidade> Cidades { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Bonus> Bonus { get; set; }
-
+        public DbSet<Entrada> Entrada { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -97,6 +97,7 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.Entity<Cidade>().ToTable("Cidade");
             modelBuilder.Entity<Estado>().ToTable("Estado");
             modelBuilder.Entity<Bonus>().ToTable("Bonus");
+            modelBuilder.Entity<Entrada>().ToTable("Entrada");
 
             modelBuilder.ApplyConfiguration(new GrupoMap());          
             modelBuilder.ApplyConfiguration(new PermissaoMap());           
@@ -112,6 +113,7 @@ namespace Multiplix.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new CidadeMap());
             modelBuilder.ApplyConfiguration(new EstadoMap());
             modelBuilder.ApplyConfiguration(new BonusMap());
+            modelBuilder.ApplyConfiguration(new EntradaMap());
         }
     }
 }

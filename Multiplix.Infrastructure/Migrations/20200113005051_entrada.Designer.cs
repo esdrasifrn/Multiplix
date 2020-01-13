@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Multiplix.Infrastructure.Data;
 
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    partial class MultiplixContextModelSnapshot : ModelSnapshot
+    [Migration("20200113005051_entrada")]
+    partial class entrada
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +93,7 @@ namespace Multiplix.Infrastructure.Migrations
                             Id = 1,
                             BancoId = 1,
                             IdCarteira = "201900000001",
-                            Nascimento = new DateTime(2020, 1, 12, 21, 57, 3, 633, DateTimeKind.Local).AddTicks(3705),
+                            Nascimento = new DateTime(2020, 1, 12, 21, 50, 50, 425, DateTimeKind.Local).AddTicks(2093),
                             Nivel = 0,
                             PlanoAssinaturaId = 1,
                             TipoConta = 1,
