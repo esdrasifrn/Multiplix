@@ -72,10 +72,11 @@ namespace Multiplix.UI.Controllers
 
             var totalIndividual = _servicePatrocinador.GetGanhosIndividual(DateTime.Now.Month, associado.Id);
             var totalRede = _servicePatrocinador.GetGanhosRede(DateTime.Now.Month, associado.Id);
+            var somaBonus = _servicePatrocinador.GetBonusPorMes(DateTime.Now.Month, associado.Id);
 
             var associadoRede = _servicePatrocinador.GetRedeAssociado(associado.Id);
             ViewBag.QTDRede = associadoRede.Count();
-            ViewBag.TotalARecebeber = totalIndividual + totalRede;
+            ViewBag.TotalARecebeber = totalIndividual + totalRede + somaBonus;
             ViewBag.QtdCompras = associado.Compras.Where(x => x.Data.Month == DateTime.Now.Month).Sum(x=>x.Valor);
             ViewBag.NumeroCartao = associado.IdCarteira.ToString();
             return View();           

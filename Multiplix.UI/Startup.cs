@@ -82,6 +82,7 @@ namespace Multiplix.UI
             services.AddScoped<IServiceEstado, ServiceEstado>();
             services.AddScoped<IEstadoRepository, EstadoRepository>();
 
+            services.AddScoped<IServiceBonus, ServiceBonus>();
             services.AddScoped<IBonusRepository, BonusRepository>();
 
             #endregion

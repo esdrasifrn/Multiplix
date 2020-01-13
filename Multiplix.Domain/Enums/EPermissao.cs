@@ -81,6 +81,10 @@ namespace Multiplix.Domain.Enums
                 _("pode_visualizar_dash_associado", "Pode visualizar dash do associado"),
                 _("pode_visualizar_vendas_por_parceiro", "Pode visualizar vendas por parceiro"),
 
+                #region Bonus
+                 _("pode_visualizar_meus_bonus", "Pode visualizar meus bônus"),
+                #endregion
+
             };
         }
 
