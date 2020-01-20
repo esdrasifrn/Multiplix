@@ -161,60 +161,62 @@
                         }
                     </ul>
                 </li>
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_movimentacao"))
+                {
+                    <li class=" nav-item">
+                        <a href="news-feed.html"><i class="la la-exchange"></i><span class="menu-title" data-i18n="">Movimentação</span></a>
+                        <ul class="menu-content">
+                            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_entradas"))
+                            {
 
-                <li class=" nav-item">
-                    <a href="news-feed.html"><i class="la la-exchange"></i><span class="menu-title" data-i18n="">Movimentação</span></a>
-                    <ul class="menu-content">
-                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_saldo"))
-                        {
+                                <li><a class="menu-item" href="/Entrada/Entradas"><i></i><span data-i18n="">Entradas</span></a></li>
 
-                            <li><a class="menu-item" href="/Usuario/IndexSaldo?idAssociado=@(User.FindFirst("idTipoUsuario").Value)"><i></i><span data-i18n="">Entradas</span></a></li>
+                            }
+                            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_saidas"))
+                            {
 
-                        }
-                        @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_meus_bonus"))
-                        {
+                                <li><a class="menu-item" href="/Bonus/MeusBonus"><i></i><span data-i18n="">Saídas</span></a></li>
 
-                            <li><a class="menu-item" href="/Bonus/MeusBonus"><i></i><span data-i18n="">Saídas</span></a></li>
+                            }
+                        </ul>
+                    </li>
+                  }
+                }
 
-                        }
-                    </ul>
-                </li>
-            }
+                @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_relatorio"))
+                {
+                    <li class=" navigation-header">
+                        <span data-i18n="nav.category.support">Gestão</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Relatórios"></i>
+                    </li>
 
-            @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_menu_relatorio"))
-            {
-                <li class=" navigation-header">
-                    <span data-i18n="nav.category.support">Gestão</span><i class="la la-ellipsis-h" data-toggle="tooltip" data-placement="right" data-original-title="Relatórios"></i>
-                </li>
+                    <li class=" nav-item">
+                        <a href="news-feed.html"><i class="la la-file-pdf-o"></i><span class="menu-title" data-i18n="">Relatórios</span></a>
 
-                <li class=" nav-item">
-                    <a href="news-feed.html"><i class="la la-file-pdf-o"></i><span class="menu-title" data-i18n="">Relatórios</span></a>
+                        <ul class="menu-content">
+                            <li>
+                                <a class="menu-item" href="#"><i></i><span data-i18n="">Afiliado</span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="/Relatorio/Aniversariantes"><i></i><span data-i18n="">Aniversariantes</span></a></li>
+                                    <li><a class="menu-item" href="/Relatorio/DiasSemComprar"><i></i><span data-i18n="">Dias sem consumo</span></a>
+                                    <li><a class="menu-item" href="#"><i></i><span data-i18n="">Contratos a vencer</span></a>
+                                </ul>
+                            </li>
 
-                    <ul class="menu-content">
-                        <li>
-                            <a class="menu-item" href="#"><i></i><span data-i18n="">Afiliado</span></a>
-                            <ul class="menu-content">
-                                <li><a class="menu-item" href="/Relatorio/Aniversariantes"><i></i><span data-i18n="">Aniversariantes</span></a></li>
-                                <li><a class="menu-item" href="/Relatorio/DiasSemComprar"><i></i><span data-i18n="">Dias sem consumo</span></a>
-                                <li><a class="menu-item" href="#"><i></i><span data-i18n="">Contratos a vencer</span></a>
-                            </ul>
-                        </li>
+                            <li>
+                                <a class="menu-item" href="#"><i></i><span data-i18n="">Parceiro</span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="#"><i></i><span data-i18n="">Repasse por parceiro</span></a>
+                                    <li><a class="menu-item" href="#"><i></i><span data-i18n="">Produto vendido</span></a>
+                                </ul>
+                            </li>
+                        </ul>
 
-                        <li>
-                            <a class="menu-item" href="#"><i></i><span data-i18n="">Parceiro</span></a>
-                            <ul class="menu-content">
-                                <li><a class="menu-item" href="#"><i></i><span data-i18n="">Repasse por parceiro</span></a>
-                                <li><a class="menu-item" href="#"><i></i><span data-i18n="">Produto vendido</span></a>
-                            </ul>
-                        </li>
-                    </ul>
+                    </li>
 
-                </li>
-
-            }
+                }
 
 
-        </ul>
+            </ul>
             
     </div>
 </div>

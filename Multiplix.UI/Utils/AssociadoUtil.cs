@@ -32,6 +32,17 @@ namespace Multiplix.UI.Utils
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
-
+        public static object AplicarFormatacaoStatus(string status)
+        {
+            switch (status)
+            {
+                case "Pendente":
+                    return "<div class=\"badge border-danger danger badge-border\">" + status + "</div>";                   
+                case "Pago":
+                    return "<div cl<div class=\"badge border-success success badge-border\">" + status + "</div>";
+                default:
+                    return "<div class=\"badge border-primary primary badge-border\">" + status + "</div>";
+            }
+        }
     }
 }

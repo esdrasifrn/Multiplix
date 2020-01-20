@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewData["Title"] = "Adicionar Entrada";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model Multiplix.Domain.DTOs.EntradaDTO
+@using Multiplix.Domain.Enums
+
+@section breadcrumbs{
+    <div class="content-header-left col-md-6 col-12 mb-2">
+        <h3 class="content-header-title mb-0">@ViewData["Title"]</h3>
+        <div class="row breadcrumbs-top">
+            <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Home/Dashboard">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Entrada/Entradas">Listagem de Entradas</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Cadastro de Entrada
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<partial name="_componente_form_validation_fluent_messages_container" />
+
+<section id="horizontal-form-layouts">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    @*<h4 class="card-title" id="horz-layout-basic">Dados do parceiro</h4>*@
+                    @*<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>*@
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            @*<li><a data-action="collapse"><i class="ft-minus"></i></a></li>*@
+                            @*<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>*@
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            @*<li><a data-action="close"><i class="ft-x"></i></a></li>*@
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-content collpase show">
+                    <div class="card-body">
+                        <form method="post" id="form-entrada" class="form form-horizontal">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="ft-user"></i> Tipo de gerador da entrada</h4>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="projectinput2">Afiliado</label>
+                                        <select id="Associado"
+                                                name="Associado"
+                                                class="has-select2"
+                                                data-select2-url="/Usuario/PesquisaAssociado"
+                                                data-js-callback-init-data="iniciar_Associado"
+                                                data-mapper-attr-id="AssociadoId"
+                                                data-mapper-attr-text="NomeAssociado">
+                                            <!-- Select2 -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-user"></i> Dados da entrada</h4>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="descricao">Descrição*</label>
+                                            <input type="text" id="descricao" asp-for="Descricao" class="form-control" placeholder="Descrição da entrada" name="descricao">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="dataVencimento">Vencimento*</label>
+                                            <input type="date" id="data" asp-for="DataVencimento" class="form-control" placeholder="Data de vencimento" name="dataVencimento">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="valor">Valor*</label>
+                                            <input type="text" id="valor" asp-for="Valor" class="form-control" placeholder="Valor da entrada" name="valor">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="projectinput2">Status da entrada</label>
+                                            <select class="form-control" id="Status" name="Status">
+                                                @foreach (var status in EStatusMovitacaoChoices.Choices)
+                                                {
+                                                    <option value="@status.ValueInt">@status.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="la la-check-square-o"></i> Salvar
+                                </button>
+                                <a href="/Entrada/Entradas" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts
+{
+    <partial name="_componente_form_validation_fluent_messages_script" />
+
+    <script>
+        $(document).ready(() => {
+            $("#valor").maskMoney({ prefix: '', allowNegative: false, thousands: '.', decimal: ',', affixesStay: false });
+        });
+
+        function iniciar_Associado() {
+            var objs = [];
+            objs.push({ id: "@Model.AssociadoId", text: "@Model.NomeAssociado" });
+            return objs;
+     }
+    </script>
+
+}

@@ -494,7 +494,9 @@ namespace Multiplix.Domain.Services
                 data: DateTime.Now,
                 associado: associado,
                 status: (int)EStatusMovimentacao.PENDENTE,
-                valor: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId).Valor
+                valor: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId).Valor,
+                dataVencimento: DateTime.Now.AddDays(10),
+                tipoEntrada: (int)ETipoEntrada.ADESAO
                 );
 
             associado.AddEntrada(entrada);
@@ -545,7 +547,7 @@ namespace Multiplix.Domain.Services
                     associado.IdCarteira = associado.GenerateCarteiraPatrocinador();
                     _patrocinadorRepository.Atualizar(associado);
 
-                    GerarBonus(associado.Id);
+                    //GerarBonus(associado.Id);
                 }
 
             }
