@@ -9,16 +9,19 @@ using Multiplix.Domain.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-
+using BoletoNetCore;
+using BoletoNetCore.Pdf.BoletoImpressao;
 
 namespace Multiplix.Domain.Services
 {
+    
     public class ServiceEntrada : IServiceEntrada
     {
         private readonly IEntradaRepository _entradaRepository;
         private readonly IPatrocinadorRepository _patrocinadorRepository;
         private readonly IParceiroRepository _parceiroRepository;
         private readonly IBonusRepository _bonusRepository;
+                
 
         public ServiceEntrada(IEntradaRepository entradaRepository, IPatrocinadorRepository patrocinadorRepository, IParceiroRepository parceiroRepository, IBonusRepository bonusRepository)
         {
@@ -30,6 +33,12 @@ namespace Multiplix.Domain.Services
 
         public Entrada Adicionar(Entrada entity)
         {
+            BoletoBancarioPdf  boleto = new BoletoBancarioPdf();
+            
+            BoletoNetCore.Pdf.BoletoNetCorePdfProxy t = new BoletoNetCore.Pdf.BoletoNetCorePdfProxy();
+           
+            // var boleto2 = new BoletoNetCore.Pdf.
+
             return _entradaRepository.Adicionar(entity);
         }
 

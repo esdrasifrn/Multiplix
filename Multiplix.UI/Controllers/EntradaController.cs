@@ -132,13 +132,13 @@ namespace Multiplix.UI.Controllers
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
-                entradas = _serviceEntrada.Buscar(x=> x.DataVencimento >= di && x.DataVencimento <= df)
+                entradas = _serviceEntrada.Buscar(x=> x.Data >= di && x.Data <= df)
                     .Where(x => x.Associado.Usuario.Nome.ToUpper()
                     .Contains(searchTerm.ToUpper()) || x.Associado.Usuario.Nome.ToUpper()
                     .Contains(searchTerm.ToUpper()));
             }
             else
-                entradas = _serviceEntrada.Buscar(x => x.DataVencimento >= di && x.DataVencimento <= df);
+                entradas = _serviceEntrada.Buscar(x => x.Data >= di && x.Data <= df);
 
             if (firstOrderColumnIdx.Length > 0)
             {
@@ -153,9 +153,12 @@ namespace Multiplix.UI.Controllers
                         orderByExpr = x => x.Data;
                         break;
                     case "3":
-                        orderByExpr = x => x.Valor;
+                        orderByExpr = x => x.DataVencimento;
                         break;
                     case "4":
+                        orderByExpr = x => x.Valor;
+                        break;
+                    case "5":
                         orderByExpr = x => x.Status;
                         break;
                 }
@@ -189,6 +192,7 @@ namespace Multiplix.UI.Controllers
                 entrada.EntradaId,
                 entrada.Associado.Usuario.Nome,
                 entrada.Descricao,
+                String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy}", entrada.Data),
                 String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy}", entrada.DataVencimento),
                 String.Format(new CultureInfo("pt-BR"), "{0:C}", entrada.Valor),
                 AssociadoUtil.AplicarFormatacaoStatus(EStatusMovitacaoChoices.Choices.Find(x => x.ValueInt == entrada.Status).Name)                

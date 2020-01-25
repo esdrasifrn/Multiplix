@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BoletoNetCore.PDF" Version="3.0.0" />
     <PackageReference Include="FluentValidation" Version="8.4.0" />
   </ItemGroup>
 
