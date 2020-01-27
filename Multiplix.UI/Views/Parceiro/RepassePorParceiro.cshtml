@@ -1,14 +1,14 @@
 ﻿@using Multiplix.UI.Utils
 @{
-    ViewData["Title"] = "Compras";
+    ViewData["Title"] = "Repasses";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@model Multiplix.Domain.DTOs.CompraDTO
+@model Multiplix.Domain.DTOs.ListaRepasseParceiroDTO
 
 @section breadcrumbs{
     <div class="content-header-left col-md-6 col-12 mb-2">
-        <h3 class="content-header-title mb-0">Listagem de Compras</h3>
+        <h3 class="content-header-title mb-0">Listagem de Repasses</h3>
         <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
@@ -16,7 +16,7 @@
                         <a href="/Home/Dashboard">Home</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        Compras por afiliado
+                        Repasse por parceiro
                     </li>
                 </ol>
             </div>
@@ -28,7 +28,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Escolha o afiliado</div>
+                <div class="card-title">Escolha o Parceiro</div>
             </div>
             <div class="card-body">
                 <form method="post" id="form-compra" class="form form-horizontal">
@@ -36,14 +36,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="projectinput2">Afiliado</label>
-                                    <select required id="Associado"
-                                            name="Associado"
+                                    <label for="projectinput1">Parceiro</label>
+                                    <select id="Parceiro"
+                                            name="Parceiro"
                                             class="has-select2"
-                                            data-select2-url="/Usuario/PesquisaAssociado"
-                                            data-js-callback-init-data="iniciar_Associado"
-                                            data-mapper-attr-id="AssociadoId"
-                                            data-mapper-attr-text="AssociadoNome">
+                                            data-select2-url="/Parceiro/PesquisaParceiro"
+                                            data-js-callback-init-data="iniciar_Parceiro"
+                                            data-mapper-attr-id="ParceiroId"
+                                            data-mapper-attr-text="ParceiroNome">
                                         <!-- Select2 -->
                                     </select>
                                 </div>
@@ -53,24 +53,24 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="issueinput3">Data início</label>
-                                    <input type="date" id="dataHoraInicial" asp-for="DataInicio"  class="form-control"   name="DataInicio" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Date Opened" required>
+                                    <input type="date" id="dataHoraInicial" asp-for="DataInicio" class="form-control" name="DataInicio" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Date Opened" required>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="issueinput4">Data fim</label>
-                                    <input type="date" id="dataHoraFinal" asp-for="DataFim"  class="form-control"  name="DataFim" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Date Fixed" required>
+                                    <input type="date" id="dataHoraFinal" asp-for="DataFim" class="form-control" name="DataFim" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Date Fixed" required>
                                 </div>
                             </div>
 
 
                         </div>
 
-                       
-                            <button type="submit" class="btn btn-primary">
-                                <i class="la la-check-square-o"></i> Localizar compras
-                            </button>
-                        
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="la la-check-square-o"></i> Localizar repasses
+                        </button>
+
                     </div>
                 </form>
             </div>
@@ -88,14 +88,13 @@
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
                         <div class="table-responsive">
-                            <table id="data-table-compras-associado" class="table table-striped table-bordered text-nowrap w-100">
+                            <table id="data-table-repasse-parceiro" class="table table-striped table-bordered text-nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>ID</th> <!-- ocultada pelo datatable -->
-                                        <th>Parceiro
-                                        <th>Data da compra</th>
-                                        <th>Valor Total da compra</th>
-                                        <th>Pontos Conquistados</th>                                       
+                                        <th>Parceiro                                        
+                                        <th>Valor a ser repassado</th>
+                                        <th>QTD de vendas</th>
                                         <th style="width: 5% !important" class="sorting_desc_disabled sorting_asc_disabled text-left">Ações</th>
                                     </tr>
                                 </thead>
@@ -116,20 +115,20 @@
             var podeAlterarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_alterar_compra").ToString().ToLower();
             var podeExcluirCompra = @PermissaoRequerida.TemPermissao(Context, "pode_excluir_compra").ToString().ToLower();
             var podeVisualizarCompra = @PermissaoRequerida.TemPermissao(Context, "pode_visualizar_compra").ToString().ToLower();
-            var botoes = [{ title: "Ver itens comprados", url: "/Compra/ItensComprados/?compraId=", permission: podeVisualizarCompra }];
-            generateDataTable("#data-table-compras-associado",
-                "Compras",
-                "/Compra/ListaComprasPorAssociado?AssociadoId=@Model.AssociadoId&DataInicio=@ViewBag.Di&DataFim=@ViewBag.Df",
+            var botoes = [{ title: "Ver itens comprados", url: "/Parceiro/ItensComprados/?compraId=", permission: podeVisualizarCompra }];
+            generateDataTable("#data-table-repasse-parceiro",
+                "Repasse",
+                "/Parceiro/ListaRepassePorParceiro?ParceiroId=@Model.ParceiroId&DataInicio=@ViewBag.Di&DataFim=@ViewBag.Df",
                 false,
                 "/Compra/EditarCompra/?compraId=",
                 false,
-                "/Compra/Excluir/?compraId=", botoes);
+                "/Compra/Excluir/?compraId=");
         });
 
-         function iniciar_Associado() {
-                var objs = [];
-             objs.push({ id: "@Model.AssociadoId", text: "@Model.AssociadoNome" });
-             return objs;
+         function iniciar_Parceiro() {
+            var objs = [];
+            objs.push({ id: "@Model.ParceiroId", text: "@Model.Parceiro" });
+            return objs;
         }
 
     </script>

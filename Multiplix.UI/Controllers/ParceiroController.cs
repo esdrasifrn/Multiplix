@@ -149,6 +149,35 @@ namespace Multiplix.UI.Controllers
             return View("AdicionarEditarParceiro", usuarioDTO);
         }
 
+        public IActionResult RepassePorParceiro()
+        {
+            if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_repasse_por_parceiro"))
+            {
+                return RedirectToAction("UnauthorizedResult", "Permissao");
+            }
+
+            ListaRepasseParceiroDTO listaRepasseParceiroDTO = new ListaRepasseParceiroDTO();
+            DateTime date = DateTime.Now;
+
+            listaRepasseParceiroDTO.DataInicio = new DateTime(date.Year, date.Month, 1);
+            listaRepasseParceiroDTO.DataFim = listaRepasseParceiroDTO.DataInicio.AddMonths(1).AddDays(-1);
+
+            ViewBag.Di = new DateTime(date.Year, date.Month, 1).ToString("dd-MM-yyyy HH:mm:ss");
+            ViewBag.Df = listaRepasseParceiroDTO.DataFim.ToString("dd-MM-yyyy HH:mm:ss");
+
+            return View(listaRepasseParceiroDTO);
+        }
+
+        [HttpPost]
+        public IActionResult RepassePorParceiro(ListaRepasseParceiroDTO listaRepasseParceiroDTO)
+        {
+            DateTime date = DateTime.Now;
+            ViewBag.Di = listaRepasseParceiroDTO.DataInicio.ToString("dd-MM-yyyy HH:mm:ss");
+            ViewBag.Df = listaRepasseParceiroDTO.DataFim.ToString("dd-MM-yyyy HH:mm:ss");
+
+            return View(listaRepasseParceiroDTO);
+        }
+
         [HttpPost]
         public JsonResult ListaParceiros(DataTableAjaxPostModel dataTableModel)
         {
@@ -382,6 +411,93 @@ namespace Multiplix.UI.Controllers
                 data = result_data
             });
         }
-        
+
+        [HttpPost]
+        public JsonResult ListaRepassePorParceiro(DataTableAjaxPostModel dataTableModel, string DataInicio, string DataFim)
+        {
+            /*
+             * consumido por um DataTable serverSide processing ajax POST
+             * 
+             * o código deste controlador pode ser usado como base para futuras implementações genéricas com DataTable
+             */
+
+            string searchTerm = dataTableModel.search.value?.ToUpper();
+            string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
+            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
+
+            DateTime di = DateTime.Parse(DataInicio.ToString(), new CultureInfo("pt-BR"));
+            DateTime df = DateTime.Parse(DataFim.ToString(), new CultureInfo("pt-BR"));
+
+            IEnumerable<ListaRepasseParceiroDTO> parceiros = new List<ListaRepasseParceiroDTO>();
+
+            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+            {
+                //produtos dos parceiros da cidade do associado logado e que atenda a um termo pesquisado
+                parceiros = _serviceParceiro.ListaRepasseParceiroDTO(di, df);
+
+            }
+            else//produtos dos parceiros da cidade do associado logado
+                parceiros = _serviceParceiro.ListaRepasseParceiroDTO(di, df);
+
+            if (firstOrderColumnIdx.Length > 0)
+            {
+                Func<ListaRepasseParceiroDTO, Object> orderByExpr = null;
+
+                switch (firstOrderColumnIdx)
+                {
+                    case "1":
+                        orderByExpr = x => x.Parceiro;
+                        break;
+                    case "2":
+                        orderByExpr = x => x.ValorRepasse;
+                        break;
+                    case "3":
+                        orderByExpr = x => x.NumeroVendas;
+                        break;                   
+                }
+
+                if (orderByExpr != null)
+                {
+                    if (firstOrderDirection.Length > 0 && firstOrderDirection.Equals("desc"))
+                        parceiros = parceiros.OrderByDescending(orderByExpr);
+                    else
+                        parceiros = parceiros.OrderBy(orderByExpr);
+                }
+                else
+                {
+                    parceiros = parceiros.OrderBy(x => x.Parceiro);
+                }
+            }
+            else
+            {
+                parceiros = parceiros.OrderBy(x => x.Parceiro);
+            }
+
+            // pagina a lista
+            int totalResultados = parceiros.Count();
+            parceiros = parceiros.Skip(dataTableModel.start).Take(dataTableModel.length);
+
+            // monta o resultado final
+            List<object> result_data = new List<object>();
+
+            foreach (var parceiro in parceiros)
+            {
+                List<object> result_item = new List<object> {
+                parceiro.ParceiroId,
+                parceiro.Parceiro,
+                 String.Format(new CultureInfo("pt-BR"), "{0:C}", parceiro.ValorRepasse),
+                parceiro.NumeroVendas,
+                };
+                result_data.Add(result_item);
+            }
+
+            return Json(new
+            {
+                recordsTotal = totalResultados,
+                recordsFiltered = totalResultados,
+                data = result_data
+            });
+        }
+
     }
 }

@@ -89,6 +89,8 @@ namespace Multiplix.Domain.Enums
                  _("pode_visualizar_entradas", "Pode visualizar entradas"),
                  _("pode_visualizar_saidas", "Pode visualizar saídas"),
                 _("pode_visualizar_menu_movimentacao", "Pode visualizar menu movimentação"),
+                _("pode_visualizar_repasse_por_parceiro", "Pode visualizar repasse por parceiro"),
+                
                 #endregion
 
             };

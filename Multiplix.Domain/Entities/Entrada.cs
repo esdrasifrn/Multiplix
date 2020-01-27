@@ -10,6 +10,7 @@ namespace Multiplix.Domain.Entities
         public string Descricao { get; set; }
         public DateTime Data { get; set; }
         public DateTime DataVencimento { get; set; }
+        public DateTime? DataPagamento { get; set; }
         public virtual Associado Associado { get; set; }
         public int Status { get; set; }
         public int TipoEntrada { get; set; }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Multiplix.Infrastructure.Data;
 
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    partial class MultiplixContextModelSnapshot : ModelSnapshot
+    [Migration("20200127013734_datapagamento")]
+    partial class datapagamento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +93,7 @@ namespace Multiplix.Infrastructure.Migrations
                             Id = 1,
                             BancoId = 1,
                             IdCarteira = "201900000001",
-                            Nascimento = new DateTime(2020, 1, 26, 22, 52, 1, 198, DateTimeKind.Local).AddTicks(4720),
+                            Nascimento = new DateTime(2020, 1, 26, 22, 37, 33, 209, DateTimeKind.Local).AddTicks(9738),
                             Nivel = 0,
                             PlanoAssinaturaId = 1,
                             TipoConta = 1,
@@ -228,7 +230,7 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<DateTime>("Data");
 
-                    b.Property<DateTime?>("DataPagamento");
+                    b.Property<DateTime>("DataPagamento");
 
                     b.Property<DateTime>("DataVencimento");
 

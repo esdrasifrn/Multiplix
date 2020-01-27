@@ -168,16 +168,26 @@
                         <ul class="menu-content">
                             @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_entradas"))
                             {
-
-                                <li><a class="menu-item" href="/Entrada/Entradas"><i></i><span data-i18n="">Entradas</span></a></li>
+                            <li>
+                                <a class="menu-item" href="#"><i></i><span data-i18n="">Entradas</span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="/Entrada/Entradas"><i></i><span data-i18n="">Adesão</span></a></li>
+                                    <li><a class="menu-item" href="/Parceiro/RepassePorParceiro"><i></i><span data-i18n="">Repasse por parceiro</span></a></li>
+                                </ul>
+                            </li>                          
 
                             }
                             @if (PermissaoRequerida.TemPermissao(Context, "pode_visualizar_saidas"))
                             {
-
-                                <li><a class="menu-item" href="/Bonus/MeusBonus"><i></i><span data-i18n="">Saídas</span></a></li>
+                            <li>
+                                <a class="menu-item" href="#"><i></i><span data-i18n="">Saídas</span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="#"><i></i><span data-i18n="">Pontos</span></a></li>
+                                </ul>
+                            </li>
 
                             }
+
                         </ul>
                     </li>
                   }

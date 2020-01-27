@@ -84,10 +84,13 @@ namespace Multiplix.UI.Controllers
             }
 
             CompraDTO compraDTO = new CompraDTO();
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.Now;                    
 
             compraDTO.DataInicio = new DateTime(date.Year, date.Month, 1);
-            compraDTO.DataFim = compraDTO.DataInicio.AddMonths(1).AddDays(-1);          
+            compraDTO.DataFim = compraDTO.DataInicio.AddMonths(1).AddDays(-1);
+
+            ViewBag.Di = new DateTime(date.Year, date.Month, 1).ToString("dd-MM-yyyy HH:mm:ss");
+            ViewBag.Df = compraDTO.DataFim.ToString("dd-MM-yyyy HH:mm:ss");
 
             return View(compraDTO);
         }
@@ -96,9 +99,8 @@ namespace Multiplix.UI.Controllers
         public IActionResult ComprasPorAssociado(CompraDTO compraDTO)
         {
             DateTime date = DateTime.Now;
-
-            compraDTO.DataInicio = new DateTime(date.Year, date.Month, 1);
-            compraDTO.DataFim = compraDTO.DataInicio.AddMonths(1).AddDays(-1);
+            ViewBag.Di = compraDTO.DataInicio.ToString("dd-MM-yyyy HH:mm:ss");
+            ViewBag.Df = compraDTO.DataFim.ToString("dd-MM-yyyy HH:mm:ss");
 
             return View(compraDTO);
         }
@@ -329,7 +331,7 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpPost]
-        public JsonResult ListaComprasPorAssociado(DataTableAjaxPostModel dataTableModel, int AssociadoId)
+        public JsonResult ListaComprasPorAssociado(DataTableAjaxPostModel dataTableModel, int AssociadoId, string DataInicio, string DataFim)
         {
             /*
              * consumido por um DataTable serverSide processing ajax POST
@@ -341,17 +343,20 @@ namespace Multiplix.UI.Controllers
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
             string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
 
+            DateTime di = DateTime.Parse(DataInicio.ToString(), new CultureInfo("pt-BR"));
+            DateTime df = DateTime.Parse(DataFim.ToString(), new CultureInfo("pt-BR"));
+
             IEnumerable<Compra> compras = new List<Compra>();
 
             if (!String.IsNullOrEmpty(dataTableModel.search.value))
             {
-                compras = _serviceCompra.Buscar(x => x.Associado.Id == AssociadoId)
+                compras = _serviceCompra.Buscar(x => x.Associado.Id == AssociadoId && x.Data >= di && x.Data <= df)
                     .Where(x => x.Parceiro.Usuario.Nome.ToUpper()
                     .Contains(searchTerm.ToUpper()) || x.Associado.Usuario.Nome.ToUpper()
                     .Contains(searchTerm.ToUpper()));                               
             }
             else
-                compras = _serviceCompra.Buscar(x => x.Associado.Id == AssociadoId);
+                compras = _serviceCompra.Buscar(x => x.Associado.Id == AssociadoId && x.Data >= di && x.Data <= df);
 
             if (firstOrderColumnIdx.Length > 0)
             {

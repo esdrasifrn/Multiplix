@@ -126,7 +126,7 @@ namespace Multiplix.Domain.Services
                     associado: _patrocinadorRepository.ObterPorId(entradaDTO.AssociadoId),
                     status: entradaDTO.Status,
                     valor: entradaDTO.Valor,
-                    dataVencimento: entradaDTO.DataVencimento,
+                    dataVencimento: entradaDTO.DataVencimento.Value,
                     tipoEntrada: (int)ETipoEntrada.MANUAL
                 );
 
@@ -141,6 +141,7 @@ namespace Multiplix.Domain.Services
                 entrada.Status = entradaDTO.Status;
                 entrada.Valor = entradaDTO.Valor;
                 entradaDTO.DataVencimento = entradaDTO.DataVencimento;
+               
             }
 
             ValidationResult result = new EntradaValidator().Validate(entrada);
@@ -152,12 +153,13 @@ namespace Multiplix.Domain.Services
                 else
                     _entradaRepository.Atualizar(entrada);
 
-                    if ((entrada.TipoEntrada == (int)ETipoEntrada.ADESAO) && (entradaDTO.Status ==(int)EStatusMovimentacao.PAGO))
+                    if ((entrada.TipoEntrada == (int)ETipoEntrada.ADESAO) && (entradaDTO.Status ==(int)EStatusMovimentacao.PAGO) && entrada.DataPagamento == null)
                     {
                         GerarBonus(entrada.Associado.Id);
-                        
-                       //Libera o acesso
-                       entrada.Associado.Usuario.Liberado = true;
+
+                    //Libera o acesso e gera data de pagamento
+                    entrada.DataPagamento = DateTime.Now;
+                    entrada.Associado.Usuario.Liberado = true;
                        _entradaRepository.Atualizar(entrada);
                     }
             }

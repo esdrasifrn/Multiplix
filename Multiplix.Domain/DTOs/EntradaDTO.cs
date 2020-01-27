@@ -10,7 +10,7 @@ namespace Multiplix.Domain.DTOs
         public int EntradaId { get; set; }
         public string Descricao { get; set; }
         public DateTime Data { get; set; }
-        public DateTime DataVencimento { get; set; }
+        public DateTime? DataVencimento { get; set; }
         public int Status { get; set; }
         public int TipoEntrada { get; set; }
         public DateTime DataInicio { get; set; }
