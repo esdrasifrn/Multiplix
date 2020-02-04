@@ -127,7 +127,8 @@ namespace Multiplix.UI.Controllers
             if (!PermissaoRequerida.TemPermissao(HttpContext, "pode_visualizar_link_convite"))
             {
                 return RedirectToAction("UnauthorizedResult", "Permissao");
-            }
+            }           
+
 
             if (_device.Type == DeviceType.Desktop)
             {
@@ -144,6 +145,11 @@ namespace Multiplix.UI.Controllers
             if (!usuarioLogado.Liberado == true)
             {
                 return RedirectToAction("Ativacao", "Permissao");
+            }          
+
+            if ((!_servicePatrocinador.DadosAtualizados(associado, atualizando: true) == true) && (associado.PatrocinadorId != null))
+            {
+                return RedirectToAction("AtualizarDados", "Permissao");
             }
 
             ViewBag.LinkConvite = associado.GenerateCodeInvite;
@@ -206,18 +212,91 @@ namespace Multiplix.UI.Controllers
                 PlanoAssinaturaNome = associado.PlanoAssinatura.ToString(),
                 PlanoAssinaturaId = associado.PlanoAssinatura.PlanoAssinaturaId,
                 EstadoId = associado.Cidade != null ? associado.Cidade.Estado.EstadoId : 0,
-                EstadoNome = associado.Cidade != null ? associado.Cidade.Estado.Nome : "-"
+                EstadoNome = associado.Cidade != null ? associado.Cidade.Estado.Nome : "-",
+                PatrocinadorId = associado.PatrocinadorId.Value,
+                NomeSegundoTitular = associado.NomeSegundoTitular
 
             };
 
             return View("AdicionarEditarPatrocinador", usuarioDTO);
         }
-
+     
         [HttpPost]
         public IActionResult EditarAssociado(UsuarioDTO usuarioDTO)
         {
             ViewData["Title"] = "Editar associado";
             return SalvarAssociado(usuarioDTO, "Associado alterado com sucesso!");
+        }
+
+        [HttpGet]
+        public IActionResult EditarPerfil()
+        {
+            ViewData["Title"] = "Editar Perfil";
+
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            UsuarioDTO usuarioDTO = new UsuarioDTO()
+            {                
+                Nome = associado.Usuario.Nome,
+                Nascimento = associado.Nascimento,
+                Sexo = associado.Sexo,
+                CPF = associado.CPF,                
+                Rua = associado.Rua,
+                Numero = associado.Numero,
+                CEP = associado.CEP,
+                CidadeId = associado.Cidade != null ? associado.Cidade.CidadeId : 0,
+                CidadeNome = associado.Cidade != null ? associado.Cidade.Descricao : "-",
+                Bairro = associado.Bairro,
+                Complemento = associado.Complemento,
+                Email = associado.Usuario.Email,
+                EmailAlternativo = associado.EmailAlternativo,
+                Celular = associado.Usuario.Celular,
+                BancoNome = associado.Banco != null ? associado.Banco.Nome : "-",
+                BancoId = associado.Banco != null ? associado.Banco.BancoId : 0,
+                TipoConta = associado.TipoConta,
+                Agencia = associado.Agencia,
+                Conta = associado.Conta,
+                Login = associado.Usuario.Login,              
+                EstadoId = associado.Cidade != null ? associado.Cidade.Estado.EstadoId : 0,
+                EstadoNome = associado.Cidade != null ? associado.Cidade.Estado.Nome : "-",
+                NomeSegundoTitular = associado.NomeSegundoTitular
+
+            };
+
+            return View("EditarPerfilPatrocinador", usuarioDTO);
+        }
+
+
+        [HttpPost]
+        public IActionResult EditarPerfil(UsuarioDTO usuarioDTO)
+        {
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            //informações automáticas
+            usuarioDTO.PatrocinadorId = associado.PatrocinadorId.Value;
+            usuarioDTO.Liberado = associado.Usuario.Liberado;
+            usuarioDTO.UsuarioId = associado.Usuario.UsuarioId;
+            usuarioDTO.CPF = associado.CPF;
+            usuarioDTO.Login = associado.Usuario.Login;
+            usuarioDTO.PlanoAssinaturaId = associado.PlanoAssinaturaId;
+
+
+            ViewData["Title"] = "Editar Perfil";
+            return SalvarPerfil(usuarioDTO, "Seus dados foram atualizados com sucesso!");
+        }
+
+        private IActionResult SalvarPerfil(UsuarioDTO usuarioDTO, string mensagemRetorno)
+        {
+            var result = _servicePatrocinador.SalvarAssociadoSemConvite(usuarioDTO);
+
+            if (result.IsValid)
+            {
+                TempData["success"] = mensagemRetorno;               
+                //return RedirectToAction("EditarPerfil");
+            }
+            return View("EditarPerfilPatrocinador", usuarioDTO);
         }
 
         private IActionResult SalvarAssociado(UsuarioDTO usuarioDTO, string mensagemRetorno)
@@ -265,7 +344,18 @@ namespace Multiplix.UI.Controllers
                     return RedirectToAction("UnauthorizedResult", "Permissao");
                 }
             }
+
            
+            if (!usuarioLogado.Liberado == true)
+            {
+                return RedirectToAction("Ativacao", "Permissao");
+            }
+
+            if ((!_servicePatrocinador.DadosAtualizados(associadoLogado, atualizando: true) == true) && (associadoLogado.PatrocinadorId != null))
+            {
+                return RedirectToAction("AtualizarDados", "Permissao");
+            }
+
             var associadoRede = _servicePatrocinador.GetRedeAssociado(idAssociado);            
 
             var pontosIndividual = _servicePatrocinador.GetPontosIndividuaisPorMes(DateTime.Now.Month, idAssociado);
@@ -305,6 +395,16 @@ namespace Multiplix.UI.Controllers
                 {
                     return RedirectToAction("UnauthorizedResult", "Permissao");
                 }
+            }         
+
+            if (!usuarioLogado.Liberado == true)
+            {
+                return RedirectToAction("Ativacao", "Permissao");
+            }
+
+            if ((!_servicePatrocinador.DadosAtualizados(associadoLogado, atualizando: true) == true) && (associadoLogado.PatrocinadorId != null))
+            {
+                return RedirectToAction("AtualizarDados", "Permissao");
             }
 
             var associado = _servicePatrocinador.ObterPorId(idAssociado);

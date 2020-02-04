@@ -67,8 +67,8 @@ namespace Multiplix.Domain.Services
             {
                 if (i == 1) // gera o primeiro bonus para o pai
                 {
-                    patrocinadorIdPai1 = _patrocinadorRepository.ObterPorId(associadoId).PatrocinadorId.Value;
-                    if (patrocinadorIdPai1 != null && patrocinadorIdPai1 != 1)
+                    patrocinadorIdPai1 = _patrocinadorRepository.ObterPorId(associadoId).PatrocinadorId ?? 0;
+                    if (patrocinadorIdPai1 != 0 && patrocinadorIdPai1 != 1)
                     {
                         SalvarBonus(patrocinadorIdPai1.Value, associadoId, 6);
                     }
@@ -76,15 +76,16 @@ namespace Multiplix.Domain.Services
                 }
                 else if (i == 2)
                 {
-                    patrocinadorIdPai2 = _patrocinadorRepository.ObterPorId(patrocinadorIdPai1.Value).PatrocinadorId.Value;
-                    if (patrocinadorIdPai2 != null && patrocinadorIdPai2 != 1)
+                    patrocinadorIdPai2 = _patrocinadorRepository.ObterPorId(patrocinadorIdPai1.Value).PatrocinadorId ?? 0;
+                    if (patrocinadorIdPai2 != 0 && patrocinadorIdPai2 != 1)
                     {
                         SalvarBonus(patrocinadorIdPai2.Value, associadoId, 3);
                     }
                 }
                 else if (i == 3)
                 {
-                    if (patrocinadorIdPai3 != null && patrocinadorIdPai3 != 1)
+                    patrocinadorIdPai3 = _patrocinadorRepository.ObterPorId(patrocinadorIdPai2.Value).PatrocinadorId ?? 0;
+                    if (patrocinadorIdPai3 != 0 && patrocinadorIdPai3 != 1)
                     {
                         patrocinadorIdPai3 = _patrocinadorRepository.ObterPorId(patrocinadorIdPai2.Value).PatrocinadorId.Value;
                         SalvarBonus(patrocinadorIdPai3.Value, associadoId, 1);
@@ -151,16 +152,29 @@ namespace Multiplix.Domain.Services
                 if (entrada.EntradaId == 0)
                     _entradaRepository.Adicionar(entrada);
                 else
+
+                    if (entradaDTO.Status == (int)EStatusMovimentacao.CORTESIA)
+                    {
+                        entrada.Associado.Usuario.Liberado = true;
+                    }
+
                     _entradaRepository.Atualizar(entrada);
 
-                    if ((entrada.TipoEntrada == (int)ETipoEntrada.ADESAO) && (entradaDTO.Status ==(int)EStatusMovimentacao.PAGO) && entrada.DataPagamento == null)
+                    if ((entrada.TipoEntrada == (int)ETipoEntrada.ADESAO) 
+                    && (entradaDTO.Status ==(int)EStatusMovimentacao.PAGO)                   
+                    && entrada.DataPagamento == null)
                     {
-                        GerarBonus(entrada.Associado.Id);
+                         //Não gera bônus se o patrocinador for a multiplyx
+                         if (entrada.Associado.PatrocinadorId != 1)
+                        {
+                            GerarBonus(entrada.Associado.Id);
+                        }
+                  
 
-                    //Libera o acesso e gera data de pagamento
-                    entrada.DataPagamento = DateTime.Now;
-                    entrada.Associado.Usuario.Liberado = true;
-                       _entradaRepository.Atualizar(entrada);
+                        //Libera o acesso e gera data de pagamento
+                        entrada.DataPagamento = DateTime.Now;
+                        entrada.Associado.Usuario.Liberado = true;
+                           _entradaRepository.Atualizar(entrada);
                     }
             }
             else

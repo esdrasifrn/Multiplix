@@ -84,7 +84,8 @@ namespace Multiplix.Infrastructure.Migrations
                 {
                     ProdutoId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Descricao = table.Column<string>(nullable: true)
+                    Descricao = table.Column<string>(nullable: true),
+                    PrecoMedio = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -289,8 +290,8 @@ namespace Multiplix.Infrastructure.Migrations
                     HorarioFuncionamento = table.Column<string>(type: "varchar(75)", nullable: true),
                     RamoAtividadeId = table.Column<int>(nullable: true),
                     CidadeId = table.Column<int>(nullable: true),
-                    PontoPorReal = table.Column<int>(nullable: false),
                     CNPJ = table.Column<string>(nullable: true),
+                    Responsavel = table.Column<string>(nullable: true),
                     Rua = table.Column<string>(type: "varchar(200)", nullable: true),
                     CEP = table.Column<string>(type: "varchar(15)", nullable: true),
                     Numero = table.Column<string>(type: "varchar(10)", nullable: true),
@@ -317,6 +318,60 @@ namespace Multiplix.Infrastructure.Migrations
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
                         principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bonus",
+                columns: table => new
+                {
+                    BonusId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Valor = table.Column<float>(nullable: false),
+                    DataCadastro = table.Column<DateTime>(nullable: false),
+                    AssociadoDonoId = table.Column<int>(nullable: true),
+                    AssociadoGeradorId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bonus", x => x.BonusId);
+                    table.ForeignKey(
+                        name: "FK_Bonus_Associado_AssociadoDonoId",
+                        column: x => x.AssociadoDonoId,
+                        principalTable: "Associado",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bonus_Associado_AssociadoGeradorId",
+                        column: x => x.AssociadoGeradorId,
+                        principalTable: "Associado",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Entrada",
+                columns: table => new
+                {
+                    EntradaId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Descricao = table.Column<string>(nullable: true),
+                    Data = table.Column<DateTime>(nullable: false),
+                    DataVencimento = table.Column<DateTime>(nullable: false),
+                    DataPagamento = table.Column<DateTime>(nullable: true),
+                    AssociadoId = table.Column<int>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    TipoEntrada = table.Column<int>(nullable: false),
+                    Valor = table.Column<float>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Entrada", x => x.EntradaId);
+                    table.ForeignKey(
+                        name: "FK_Entrada_Associado_AssociadoId",
+                        column: x => x.AssociadoId,
+                        principalTable: "Associado",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -356,7 +411,8 @@ namespace Multiplix.Infrastructure.Migrations
                     ProdutoId = table.Column<int>(nullable: false),
                     ParceiroId = table.Column<int>(nullable: false),
                     PontosPorRealProduto = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
-                    ValorProduto = table.Column<decimal>(type: "decimal(15, 2)", nullable: false)
+                    ValorProduto = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    PercentualRepasseAtual = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -386,7 +442,9 @@ namespace Multiplix.Infrastructure.Migrations
                     Subtotal = table.Column<float>(nullable: false),
                     SubtotalPontos = table.Column<float>(nullable: false),
                     CompraId = table.Column<int>(nullable: true),
-                    ProdutoId = table.Column<int>(nullable: true)
+                    ProdutoId = table.Column<int>(nullable: true),
+                    PercentualRepasseEfetivado = table.Column<float>(nullable: false),
+                    ValorRepasse = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -423,7 +481,7 @@ namespace Multiplix.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Associado",
                 columns: new[] { "Id", "Agencia", "Bairro", "BancoId", "CEP", "CPF", "CidadeId", "Complemento", "Conta", "EmailAlternativo", "IdCarteira", "Nascimento", "Nivel", "Numero", "PatrocinadorId", "PlanoAssinaturaId", "Rua", "Sexo", "TipoConta", "UsuarioId" },
-                values: new object[] { 1, null, null, 1, null, null, null, null, null, null, "201900000001", new DateTime(2019, 11, 21, 18, 18, 12, 910, DateTimeKind.Local).AddTicks(9443), 0, null, null, 1, null, null, 1, 1 });
+                values: new object[] { 1, null, null, 1, null, null, null, null, null, null, "201900000001", new DateTime(2020, 1, 27, 18, 48, 51, 320, DateTimeKind.Local).AddTicks(4962), 0, null, null, 1, null, null, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Associado_BancoId",
@@ -451,6 +509,16 @@ namespace Multiplix.Infrastructure.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bonus_AssociadoDonoId",
+                table: "Bonus",
+                column: "AssociadoDonoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bonus_AssociadoGeradorId",
+                table: "Bonus",
+                column: "AssociadoGeradorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cidade_EstadoId",
                 table: "Cidade",
                 column: "EstadoId");
@@ -474,6 +542,11 @@ namespace Multiplix.Infrastructure.Migrations
                 name: "IX_CompraItem_ProdutoId",
                 table: "CompraItem",
                 column: "ProdutoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Entrada_AssociadoId",
+                table: "Entrada",
+                column: "AssociadoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parceiro_CidadeId",
@@ -514,7 +587,13 @@ namespace Multiplix.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Bonus");
+
+            migrationBuilder.DropTable(
                 name: "CompraItem");
+
+            migrationBuilder.DropTable(
+                name: "Entrada");
 
             migrationBuilder.DropTable(
                 name: "ParceiroProduto");

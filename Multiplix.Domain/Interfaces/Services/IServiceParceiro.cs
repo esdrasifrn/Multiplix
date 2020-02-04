@@ -14,6 +14,7 @@ namespace Multiplix.Domain.Interfaces.Services
         List<ListaProdutoParceiroDTO> ListaProdutosParceiroDTO(int cidadeId);
 
         List<ListaRepasseParceiroDTO> ListaRepasseParceiroDTO(DateTime dataInicio, DateTime dataFim);
+        List<ListaRepasseParceiroDTO> ListaRepasseParceiroDTO(DateTime dataInicio, DateTime dataFim, int parceiroId);
 
     }
 }

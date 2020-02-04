@@ -166,11 +166,11 @@ namespace Multiplix.Domain.Services
         {
             // usuário
             Usuario usuario;
-            Associado associado;            
+            Associado associado;
             var atualizando = false;
-           
+
             if (usuarioDTO.UsuarioId == 0)
-            { 
+            {
 
                 //cria o usuário do patrocinador
                 usuario = new Usuario(
@@ -182,12 +182,12 @@ namespace Multiplix.Domain.Services
                     liberado: usuarioDTO.Liberado,
                     tipoUsuario: (int)ETipoUsuario.ASSOCIADO
                 );
-                               
+
 
                 //associa o associado ao patrocinador
                 associado = new Associado(
                     usuario: usuario,
-                    patrocinadorId: usuarioDTO.PatrocinadorId, // patrocinador raiz multiplix
+                    patrocinadorId: 1/*usuarioDTO.PatrocinadorId*/, // patrocinador raiz multiplix
                     rua: usuarioDTO.Rua,
                     numero: usuarioDTO.Numero,
                     cep: usuarioDTO.CEP,
@@ -204,9 +204,9 @@ namespace Multiplix.Domain.Services
                     agengia: usuarioDTO.Agencia,
                     conta: usuarioDTO.Conta,
                     nivel: usuarioDTO.Nivel + 1, // multiplys é o nível zero e seus convidados serão 0 + 1, e assim sucessivamente
-                    planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId)
-
-                    ) ;
+                    planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId),
+                    nomeSegundoTitular: usuarioDTO.NomeSegundoTitular
+                    );
 
 
                 UsuarioGrupo usuarioGrupo = new UsuarioGrupo();
@@ -229,7 +229,7 @@ namespace Multiplix.Domain.Services
                 if (!String.IsNullOrEmpty(usuarioDTO.Senha))
                 {
                     associado.Usuario.Senha = usuarioDTO.Senha;
-                }                
+                }
 
                 associado.Usuario.Nome = usuarioDTO.Nome;
                 associado.Usuario.Celular = usuarioDTO.Celular;
@@ -241,7 +241,7 @@ namespace Multiplix.Domain.Services
                 associado.CEP = usuarioDTO.CEP;
                 associado.Cidade = _cidadeRepository.ObterPorId(usuarioDTO.CidadeId);
                 associado.Bairro = usuarioDTO.Bairro;
-                associado.Complemento = usuarioDTO.Complemento;               
+                associado.Complemento = usuarioDTO.Complemento;
                 associado.Nascimento = usuarioDTO.Nascimento;
                 associado.Sexo = usuarioDTO.Sexo;
                 associado.CPF = usuarioDTO.CPF;
@@ -251,6 +251,7 @@ namespace Multiplix.Domain.Services
                 associado.Agencia = usuarioDTO.Agencia;
                 associado.Conta = usuarioDTO.Conta;
                 associado.PlanoAssinatura = _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId);
+                associado.NomeSegundoTitular = usuarioDTO.NomeSegundoTitular;
             }
 
             // grupos do usuário do patrocinador
@@ -270,6 +271,33 @@ namespace Multiplix.Domain.Services
             //    }
             //}
 
+            ValidationResult result = ValidarDadosAfiliado(associado, atualizando);
+
+            if (result.IsValid)
+            {
+                if (associado.Id == 0)
+                {
+                    _patrocinadorRepository.Adicionar(associado);
+                    associado.IdCarteira = associado.GenerateCarteiraPatrocinador();
+                    _patrocinadorRepository.Atualizar(associado);
+                }
+
+                else
+                {
+                    _patrocinadorRepository.Atualizar(associado);
+                }
+
+            }
+            else
+            {
+                usuarioDTO.ValidationErrors = result.Errors;
+            }
+
+            return result;
+        }
+
+        private ValidationResult ValidarDadosAfiliado(Associado associado, bool atualizando)
+        {
             ValidationResult result = new UsuarioValidator(_usuarioRepository, atualizando).Validate(associado.Usuario);
 
             if (associado.Banco == null)
@@ -285,7 +313,7 @@ namespace Multiplix.Domain.Services
             if (associado.PatrocinadorId == 0)
             {
                 result.Errors.Add(new ValidationFailure("Associado", "O patrocinador é obrigatório."));
-            }       
+            }
 
             if ((!string.IsNullOrEmpty(associado.CPF)))
             {
@@ -319,25 +347,44 @@ namespace Multiplix.Domain.Services
                 result.Errors.Add(new ValidationFailure("Cidade", "Campo obrigatório."));
             }
 
-
-            if (result.IsValid)
+            if (associado.NomeSegundoTitular == null)
             {
-                if (associado.Id == 0)
-                {
-                    _patrocinadorRepository.Adicionar(associado);
-                    associado.IdCarteira = associado.GenerateCarteiraPatrocinador();
-                    _patrocinadorRepository.Atualizar(associado);
-                }
-
-                else
-                {
-                    _patrocinadorRepository.Atualizar(associado);
-                }
-                   
+                result.Errors.Add(new ValidationFailure("NomeSegundoTitular", "Campo obrigatório."));
             }
-            else
+
+            if ((string.IsNullOrEmpty(associado.Rua)))
             {
-                usuarioDTO.ValidationErrors = result.Errors;
+                result.Errors.Add(new ValidationFailure("Rua", "Rua é obrigatória"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.Numero)))
+            {
+                result.Errors.Add(new ValidationFailure("Numero", "Número é obrigatório"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.CEP)))
+            {
+                result.Errors.Add(new ValidationFailure("CEP", "CEP é obrigatório"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.Usuario.Celular)))
+            {
+                result.Errors.Add(new ValidationFailure("Celular", "Celular é obrigatório"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.Bairro)))
+            {
+                result.Errors.Add(new ValidationFailure("Bairro", "Bairro é obrigatório"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.Agencia)))
+            {
+                result.Errors.Add(new ValidationFailure("Agencia", "Agencia é obrigatória"));
+            }
+
+            if ((string.IsNullOrEmpty(associado.Conta)))
+            {
+                result.Errors.Add(new ValidationFailure("Conta", "Conta é obrigatória"));
             }
 
             return result;
@@ -484,7 +531,8 @@ namespace Multiplix.Domain.Services
                     agengia: usuarioDTO.Agencia,
                     conta: usuarioDTO.Conta,
                     nivel: usuarioDTO.Nivel + 1, // convidado é o nível do patrocinador mais 1
-                    planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId)
+                    planoAssinatura: _planoAssinatura.ObterPorId(usuarioDTO.PlanoAssinaturaId),
+                    nomeSegundoTitular: usuarioDTO.NomeSegundoTitular
 
                     );
 
@@ -599,8 +647,12 @@ namespace Multiplix.Domain.Services
             return listadiasSemComprarDTO;
         }
 
-       
+        public bool DadosAtualizados(Associado associado, bool atualizando)
+        {
+            ValidationResult result = ValidarDadosAfiliado(associado, atualizando);
 
+            return result.IsValid;
+        }
 
 
         /// <summary>

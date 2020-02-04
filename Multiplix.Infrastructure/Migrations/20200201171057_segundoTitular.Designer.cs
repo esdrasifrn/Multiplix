@@ -10,8 +10,8 @@ using Multiplix.Infrastructure.Data;
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    [Migration("20200114210054_tipoentrada")]
-    partial class tipoentrada
+    [Migration("20200201171057_segundoTitular")]
+    partial class segundoTitular
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,6 +54,8 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<int>("Nivel");
 
+                    b.Property<string>("NomeSegundoTitular");
+
                     b.Property<string>("Numero")
                         .HasColumnName("Numero")
                         .HasColumnType("varchar(10)");
@@ -93,7 +95,7 @@ namespace Multiplix.Infrastructure.Migrations
                             Id = 1,
                             BancoId = 1,
                             IdCarteira = "201900000001",
-                            Nascimento = new DateTime(2020, 1, 14, 18, 0, 54, 198, DateTimeKind.Local).AddTicks(8737),
+                            Nascimento = new DateTime(2020, 2, 1, 14, 10, 57, 97, DateTimeKind.Local).AddTicks(6974),
                             Nivel = 0,
                             PlanoAssinaturaId = 1,
                             TipoConta = 1,
@@ -229,6 +231,8 @@ namespace Multiplix.Infrastructure.Migrations
                     b.Property<int?>("AssociadoId");
 
                     b.Property<DateTime>("Data");
+
+                    b.Property<DateTime?>("DataPagamento");
 
                     b.Property<DateTime>("DataVencimento");
 

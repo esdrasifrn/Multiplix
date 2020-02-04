@@ -32,9 +32,19 @@ namespace Multiplix.UI.Controllers
             {
                 return RedirectToAction("UnauthorizedResult", "Permissao");
             }
-
+            
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
             var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            if (!usuarioLogado.Liberado == true)
+            {
+                return RedirectToAction("Ativacao", "Permissao");
+            }
+
+            if ((!_servicePatrocinador.DadosAtualizados(associadoLogado, atualizando: true) == true) && (associadoLogado.PatrocinadorId != null))
+            {
+                return RedirectToAction("AtualizarDados", "Permissao");
+            }
 
             UsuarioDTO usuarioDTO = new UsuarioDTO();
             usuarioDTO.EstadoId = associadoLogado.Cidade.Estado.EstadoId;
@@ -413,7 +423,7 @@ namespace Multiplix.UI.Controllers
         }
 
         [HttpPost]
-        public JsonResult ListaRepassePorParceiro(DataTableAjaxPostModel dataTableModel, string DataInicio, string DataFim)
+        public JsonResult ListaRepassePorParceiro(DataTableAjaxPostModel dataTableModel, int ParceiroId, string DataInicio, string DataFim)
         {
             /*
              * consumido por um DataTable serverSide processing ajax POST
@@ -430,10 +440,10 @@ namespace Multiplix.UI.Controllers
 
             IEnumerable<ListaRepasseParceiroDTO> parceiros = new List<ListaRepasseParceiroDTO>();
 
-            if (!String.IsNullOrEmpty(dataTableModel.search.value))
+            if /*(!String.IsNullOrEmpty(dataTableModel.search.value))*/ (ParceiroId != 0)
             {
                 //produtos dos parceiros da cidade do associado logado e que atenda a um termo pesquisado
-                parceiros = _serviceParceiro.ListaRepasseParceiroDTO(di, df);
+                parceiros = _serviceParceiro.ListaRepasseParceiroDTO(di, df, ParceiroId);
 
             }
             else//produtos dos parceiros da cidade do associado logado

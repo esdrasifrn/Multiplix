@@ -17,7 +17,8 @@ namespace Multiplix.Domain.DTOs
 
         //Associado
         public int AssociadoId { get; set; }
-       
+        public string NomeSegundoTitular { get; set; }
+
 
         public int Nivel { get; set; }
         public string Nome { get; set; }

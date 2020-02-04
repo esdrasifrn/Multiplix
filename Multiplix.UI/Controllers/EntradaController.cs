@@ -194,6 +194,7 @@ namespace Multiplix.UI.Controllers
                 entrada.Descricao,
                 String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy}", entrada.Data),
                 String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy}", entrada.DataVencimento),
+                String.Format(new CultureInfo("pt-BR"),"{0:d/M/yyyy}", entrada.DataPagamento),
                 String.Format(new CultureInfo("pt-BR"), "{0:C}", entrada.Valor),
                 AssociadoUtil.AplicarFormatacaoStatus(EStatusMovitacaoChoices.Choices.Find(x => x.ValueInt == entrada.Status).Name)                
                 };

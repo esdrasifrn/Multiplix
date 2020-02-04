@@ -10,8 +10,8 @@ using Multiplix.Infrastructure.Data;
 namespace Multiplix.Infrastructure.Migrations
 {
     [DbContext(typeof(MultiplixContext))]
-    [Migration("20200127013734_datapagamento")]
-    partial class datapagamento
+    [Migration("20200127214852_inicial")]
+    partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,7 +93,7 @@ namespace Multiplix.Infrastructure.Migrations
                             Id = 1,
                             BancoId = 1,
                             IdCarteira = "201900000001",
-                            Nascimento = new DateTime(2020, 1, 26, 22, 37, 33, 209, DateTimeKind.Local).AddTicks(9738),
+                            Nascimento = new DateTime(2020, 1, 27, 18, 48, 51, 320, DateTimeKind.Local).AddTicks(4962),
                             Nivel = 0,
                             PlanoAssinaturaId = 1,
                             TipoConta = 1,
@@ -230,7 +230,7 @@ namespace Multiplix.Infrastructure.Migrations
 
                     b.Property<DateTime>("Data");
 
-                    b.Property<DateTime>("DataPagamento");
+                    b.Property<DateTime?>("DataPagamento");
 
                     b.Property<DateTime>("DataVencimento");
 

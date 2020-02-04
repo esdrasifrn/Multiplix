@@ -153,5 +153,10 @@ namespace Multiplix.UI.Controllers
         {
             return View();
         }
+
+        public IActionResult AtualizarDados()
+        {
+            return View();
+        }
     }
 }

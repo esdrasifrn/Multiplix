@@ -8,7 +8,8 @@ namespace Multiplix.Domain.Enums
     public enum EStatusMovimentacao
     {
         PENDENTE = 0,
-        PAGO = 1
+        PAGO = 1,
+        CORTESIA = 2
 
     }
 
@@ -17,7 +18,8 @@ namespace Multiplix.Domain.Enums
         public static List<EChoice> Choices = new List<EChoice>()
         {
             new EChoice(EStatusMovimentacao.PENDENTE, "Pendente"),
-            new EChoice(EStatusMovimentacao.PAGO, "Pago")
+            new EChoice(EStatusMovimentacao.PAGO, "Pago"),
+            new EChoice(EStatusMovimentacao.CORTESIA, "Cortesia")
         };
     }
 }

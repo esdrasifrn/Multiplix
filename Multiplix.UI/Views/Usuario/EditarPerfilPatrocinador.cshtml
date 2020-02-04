@@ -1,5 +1,6 @@
 ﻿
 @{
+    ViewData["Title"] = "Atualizar Dados";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,11 +17,8 @@
                     <li class="breadcrumb-item">
                         <a href="/Home/Dashboard">Home</a>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="/Usuario/Index">Listagem de afiliados</a>
-                    </li>
                     <li class="breadcrumb-item active">
-                        Cadastro de afiliado
+                        Alterar dados
                     </li>
                 </ol>
             </div>
@@ -29,6 +27,20 @@
 }
 
 <partial name="_componente_form_validation_fluent_messages_container" />
+
+@if (TempData["success"] != null) { 
+<div class="row">
+    <div class="col-xl-12 col-lg-12">
+        <div class="alert bg-success alert-icon-right alert-arrow-right alert-dismissible mb-2" role="alert">
+            <span class="alert-icon"><i class="la la-warning"></i></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <strong>Atenção!</strong> @TempData["success"]
+        </div>
+    </div>
+</div>
+}
 
 <section id="horizontal-form-layouts">
     <div class="row">
@@ -50,21 +62,9 @@
                     <div class="card-body">
                         <form method="post" id="form-patrocinador" class="form form-horizontal">
                             <div class="form-body">
-                                @*<h4 class="form-section"><i class="ft-user"></i> Patrocinador</h4>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label for="projectinput2">Patrocinador do afiliado</label>
-                <select id="Associado"
-                        name="Associado"
-                        class="has-select2"
-                        data-select2-url="/Usuario/PesquisaAssociado"
-                        data-js-callback-init-data="iniciar_Associado"
-                        data-mapper-attr-id="PatrocinadorId"
-                        data-mapper-attr-text="PatrocinadorNome">
 
-                </select>
-            </div>
-        </div>*@
+
+
                                 <h4 class="form-section"><i class="ft-user"></i> Dados pessoais</h4>
                                 <div class="form-group row">
                                     <label class="col-md-3 label-control" for="Nome">Nome completo*</label>
@@ -88,14 +88,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 label-control" for="CPF">CPF</label>
                                     <div class="col-md-9 mx-auto">
-                                        <input type="text" id="CPF" asp-for="CPF" class="form-control cpf-formatter" placeholder="CPF" name="CPF">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Liberado">Liberado</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <select asp-for="Liberado" asp-items="@BooleanUtil.SimNaoSelect()" class="form-control"></select>
+                                        <input type="text" id="CPF" asp-for="CPF" class="form-control cpf-formatter" placeholder="CPF" name="CPF" readonly disabled>
                                     </div>
                                 </div>
 
@@ -232,44 +225,13 @@
                                     </div>
                                 </div>
 
-                                <h4 class="form-section"><i class="ft-check-square"></i> Plano de Assinatura</h4>
-                                <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="PlanoAssinatura">Plano</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <select id="PlanoAssinatura"
-                                                name="PlanoAssinatura"
-                                                class="has-select2"
-                                                data-select2-url="/PlanoAssinatura/PesquisaPlanoAssinatura"
-                                                data-js-callback-init-data="iniciar_PlanoAssinatura"
-                                                data-mapper-attr-id="PlanoAssinaturaId"
-                                                data-mapper-attr-text="PlanoAssinaturaNome">
-                                            <!-- Select2 -->
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <h4 class="form-section"><i class="ft-clipboard"></i> Autenticação</h4>
-
-                                <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Login">Login*</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <input type="text" id="Login" asp-for="Login" autocomplete="off" class="form-control" placeholder="Login" name="Login">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="Senha">Senha*</label>
-                                    <div class="col-md-9 mx-auto">
-                                        <input type="password" id="Senha" disabled="disabled" autocomplete="off" class="form-control" placeholder="Senha" name="Senha">
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="la la-check-square-o"></i> Salvar
                                 </button>
-                                <a href="/Usuario/Index" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>                               
+                                <a href="/Home/DashBoard" class="btn btn-warning mr-1"><i class="ft-x"></i> Cancelar</a>
                             </div>
                         </form>
                     </div>
@@ -280,11 +242,16 @@
 </section>
 
 
+
+
+
+
 @section Scripts
 {
- <partial name="_componente_form_validation_fluent_messages_script" />
+    <partial name="_componente_form_validation_fluent_messages_script" />
 
-<script>   
+    <script>
+
 
     $(document).ready(() => {
 
@@ -292,11 +259,14 @@
             $("#Cidade").val(null).trigger("change");
         });
 
-            // Usando um pequeno delay de 100ms porque às vezes o navegador preenche o campo logo que o documento está pronto, e pode não funcionar como esperado
-            setTimeout(function () {
-                $('#Senha').removeAttr('disabled');
-            }, 1000);
-     });
+        topFunction();
+
+    });
+
+     function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+     }
 
     function iniciar_Banco() {
         var objs = [];
@@ -304,11 +274,7 @@
         return objs;
     }
 
-    function iniciar_PlanoAssinatura() {
-        var objs = [];
-        objs.push({ id: "@Model.PlanoAssinaturaId", text: "@Model.PlanoAssinaturaNome" });
-        return objs;
-    }
+
 
      function iniciar_Associado() {
             var objs = [];
@@ -349,6 +315,6 @@
 	$('.cep-formatter').formatter({
 		'pattern': "{{99}}.{{999}}-{{999}}"
 	});
-</script>
+    </script>
 
 }

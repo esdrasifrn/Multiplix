@@ -82,6 +82,9 @@ namespace Multiplix.Domain.Interfaces.Services
 
         float GetBonusPorMes(int mes, int associadoId);
 
+        bool DadosAtualizados(Associado associado, bool atualizando);
+      
+
 
     }
 }

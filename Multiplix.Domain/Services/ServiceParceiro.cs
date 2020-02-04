@@ -131,6 +131,32 @@ namespace Multiplix.Domain.Services
             return listaRepasseParceiroDTO;
         }
 
+        public List<ListaRepasseParceiroDTO> ListaRepasseParceiroDTO(DateTime dataInicio, DateTime dataFim, int parceiroId)
+        {
+            var todosParceiros = _parceiroRepository.ObterTodos();
+            List<ListaRepasseParceiroDTO> listaRepasseParceiroDTO = new List<ListaRepasseParceiroDTO>();
+
+            var parceiro = _parceiroRepository.ObterPorId(parceiroId);
+           
+                int qtdVendas = parceiro.Compras.Where(x => x.Data >= dataInicio && x.Data <= dataFim).Count();
+
+                var repasseParceiro = new ListaRepasseParceiroDTO(
+                    parceiroId: parceiro.ParceiroId,
+                    parceiro: parceiro.Usuario.Nome,
+                    valorRepasse: (Decimal)parceiro.Compras.Where(x => x.Data >= dataInicio && x.Data <= dataFim).Sum(x => x.CompraItems.Sum(y => y.ValorRepasse)),
+                    numerovendas: qtdVendas
+                    );
+
+                if (qtdVendas > 0)
+                {
+                    listaRepasseParceiroDTO.Add(repasseParceiro);
+                }
+
+           
+
+            return listaRepasseParceiroDTO;
+        }
+
         public Parceiro ObterPorId(int id)
         {
             return _parceiroRepository.ObterPorId(id);

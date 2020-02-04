@@ -47,9 +47,16 @@ namespace Multiplix.UI.Controllers
             }
 
             var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
             if (!usuarioLogado.Liberado == true)
             {
                 return RedirectToAction("Ativacao", "Permissao");
+            }
+
+            if ((!_servicePatrocinador.DadosAtualizados(associadoLogado, atualizando: true) == true) && (associadoLogado.PatrocinadorId != null))
+            {
+                return RedirectToAction("AtualizarDados", "Permissao");
             }
 
             CompraDTO compraDTO = new CompraDTO();

@@ -45,6 +45,15 @@ namespace Multiplix.UI.Controllers
             ViewBag.Di = new DateTime(date.Year, date.Month, 1).ToString("dd-MM-yyyy HH:mm:ss");
             ViewBag.Df = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            DateTime di = DateTime.Parse(bonusDTO.DataInicio.ToString(), new CultureInfo("pt-BR"));
+            DateTime df = DateTime.Parse(bonusDTO.DataFim.ToString(), new CultureInfo("pt-BR"));
+
+            var somaBonus = associadoLogado.Bonus.Where(x => x.DataCadastro >= di && x.DataCadastro <= df).Sum(x => x.Valor);
+            ViewBag.SomaBonusPeriodo = somaBonus;
+
             return View(bonusDTO);
         }
 
@@ -53,7 +62,16 @@ namespace Multiplix.UI.Controllers
         {
             DateTime date = DateTime.Now;
             ViewBag.Di = bonusDTO.DataInicio.ToString("dd-MM-yyyy HH:mm:ss");
-            ViewBag.Df = bonusDTO.DataFim.ToString("dd-MM-yyyy HH:mm:ss");
+            ViewBag.Df = bonusDTO.DataFim.AddHours(23).ToString("dd-MM-yyyy HH:mm:ss");
+
+            var usuarioLogado = UsuarioUtils.GetUsuarioLogado(HttpContext, _serviceUsuario);
+            var associadoLogado = _servicePatrocinador.Buscar(x => x.Usuario.UsuarioId == usuarioLogado.UsuarioId).FirstOrDefault();
+
+            DateTime di = DateTime.Parse(bonusDTO.DataInicio.ToString(), new CultureInfo("pt-BR"));
+            DateTime df = DateTime.Parse(bonusDTO.DataFim.AddHours(23).ToString(), new CultureInfo("pt-BR"));
+
+            var somaBonus = associadoLogado.Bonus.Where(x => x.DataCadastro >= di && x.DataCadastro <= df).Sum(x => x.Valor);
+            ViewBag.SomaBonusPeriodo = somaBonus;
 
             return View(bonusDTO);
         }
@@ -71,10 +89,10 @@ namespace Multiplix.UI.Controllers
 
             string searchTerm = dataTableModel.search.value?.ToUpper();
             string firstOrderColumnIdx = dataTableModel.order.Count > 0 ? dataTableModel.order[0].column.ToString() : "";
-            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";
+            string firstOrderDirection = dataTableModel.order.Count > 0 ? dataTableModel.order[0].dir.ToString() : "";           
 
             DateTime di = DateTime.Parse(DataInicio.ToString(), new CultureInfo("pt-BR"));
-            DateTime df = DateTime.Parse(DataFim.ToString(), new CultureInfo("pt-BR"));
+            DateTime df = DateTime.Parse(DataFim.ToString(), new CultureInfo("pt-BR"));           
 
             IEnumerable<Bonus> bonus = new List<Bonus>();
 
